@@ -5,7 +5,7 @@ const SearchData = () => {
 
     useEffect(() => {
         // Make a GET request to the server endpoint
-        fetch('/')
+        fetch('http://localhost:4000/')
             .then((res) => res.text())
             .then((data) => setResponse(data))
             .catch((error) => console.error('Error:', error));

@@ -7,9 +7,12 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <SearchData />
         Plug
+        {/* <div className="searchBar"> */}
+        <SearchData />
+        {/* </div> */}
       </header>
+
     </div>
   );
 }

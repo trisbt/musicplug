@@ -8,6 +8,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "concurrently": "^8.1.0",
+    "cors": "^2.8.5",
     "express": "^4.16.3",
     "fetch": "^1.1.0",
     "node": "^20.2.0",
@@ -19,8 +20,8 @@
   },
   "scripts": {
     "start": "concurrently \"npm run start-react\" \"npm run start-express\"",
-    "start-react": "react-scripts start",
-    "start-express": "node server.js",
+    "start-react": "PORT=3000 react-scripts start",
+    "start-express": "nodemon server/server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

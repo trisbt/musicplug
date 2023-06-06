@@ -5,13 +5,15 @@ import SearchData from './components/searchData';
 
 function App() {
   return (
+
     <div className="App">
-      <header className="App-header">
-        Plug
+      {/* <header>Plug</header> */}
+      <div className="App-search">
+        {/* Plug */}
         {/* <div className="searchBar"> */}
         <SearchData />
         {/* </div> */}
-      </header>
+      </div>
 
     </div>
   );

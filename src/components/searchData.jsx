@@ -29,28 +29,28 @@ const SearchData = () => {
             });
     };
 
-    useEffect(() => {
-        fetchData();
-    }, [inputField]);
+    // useEffect(() => {
+    //     fetchData();
+    // }, [inputField]);
+
+    const handleFormSubmit = (event) => {
+        event.preventDefault(); // Prevent the default form submission behavior
+        if (inputField.trim() !== '') {
+            fetchData(); // Fetch data when the form is submitted and inputField is not empty
+        }
+    };
 
     const handleInputChange = (event) => {
         setInputField(event.target.value);
     };
 
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault(); // Prevent the default form submission behavior
-            if (inputField.trim() !== '') {
-                fetchData(); // Fetch data when the Enter key is pressed and inputField is not empty
-            }
-        }
-    };
-
     return (
         <div>
-            <input type="text" value={inputField} onChange={handleInputChange} onKeyPress={handleKeyPress} />
+            <form onSubmit={handleFormSubmit}>
+                <input type="text" value={inputField} onChange={handleInputChange} />
+                <button type="submit">Search</button>
+            </form>
             <DisplayData data={response} />
-
         </div>
     );
 };

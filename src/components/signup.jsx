@@ -30,6 +30,7 @@ const Signup = () => {
       if (response.ok) {
         // Signup successful, handle the response or perform any necessary actions
         console.log('Signup successful');
+        window.location.href = 'http://localhost:3000';
       } else {
         // Signup failed, handle the error response
         console.log('Signup failed');

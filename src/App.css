@@ -13,9 +13,28 @@
     animation: App-logo-spin infinite 20s linear;
   }
 } */
+nav {
+  display: fixed;
+  background-color: color-mix(in srgb, rgb(2, 2, 111) 25%, rgb(121, 121, 121));
+  /* min-height: 100vh; */
+  border-color: yellow;
+  border-width: 5px;
+  display: flex;
+  justify-content: space-between;
+  /* flex-direction: column; */
+  /* align-items: center; */
+  /* justify-content: center; */
+  font-size: calc(15px + 2vmin);
+  color: white;
+
+}
 
 .App-search {
-  background-color: #282c34;
+  /* background-color: #282c34; */
+  background-image: linear-gradient(130deg, rgb(109, 97, 168)1%, #282c34 15%), linear-gradient(200deg, #282c34 5%, rgb(255, 255, 255)45%);
+  /* background-repeat: repeat-y; */
+  /* background-attachment: fixed; */
+
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -33,16 +52,23 @@ li {
   font-weight: bold;
   color: rgb(179, 199, 218);
   display: flex;
-  justify-content: center;
+  /* padding: 5em; */
+  /* justify-content: center; */
+  margin-right: auto;
+  margin-left: auto;
+  /* text-align: center; */
 
 }
 
 .search-id {
   font-weight: bold;
-  color: rgb(78, 36, 192);
+  color: rgb(255, 255, 255);
   display: flex;
   justify-content: center;
-  background-color: rgb(255, 214, 159);
+  border-radius: 4px;
+  border-color: #0b0b0b;
+  background-color: rgb(86, 86, 36);
+  margin-bottom: .7em;
 
 }
 
@@ -50,7 +76,29 @@ hr {
   color: white;
 }
 
+.star-div {
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+}
 
+.fa-star {
+  /* display: inline; */
+  /* right: 5em; */
+  /* margin-left: 3em; */
+  /* display: flex;
+  justify-content; */
+  /* margin-left: 5em; */
+}
+
+.preview {
+  display: flex;
+  /* flex-direction: column; */
+  align-self: center;
+  margin-bottom: 1em;
+  /* width: 6em;
+  height: 1em; */
+}
 
 .result-image {
   display: flex;
@@ -58,6 +106,18 @@ hr {
   height: 100px;
   object-fit: cover;
   border-radius: 50%;
+}
+
+.release-date {
+  font-size: calc(5px + 2vmin);
+  font-weight: 400;
+  color: rgb(210, 210, 210);
+}
+
+ul div {
+  font-size: calc(5px + 2vmin);
+  font-weight: 800;
+  color: rgb(210, 210, 210);
 }
 
 /* header {

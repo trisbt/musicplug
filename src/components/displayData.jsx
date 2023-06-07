@@ -8,15 +8,21 @@ const DisplayData = ({ data }) => {
     }
 
     const results = data.tracks.items.map((item) => {
-
+        // console.log(item)
         const { name, album, preview_url } = item;
+        // const artist = [];
+        const artists = item.artists.map(artist => {
+            return artist.name + '/';
+        })
+        // console.log(artists);
         const images = album.images[1].url;
         const id = item.id;
         const release_date = item.album.release_date;
-        return { name, images, id, preview_url, release_date };
+        return { name, images, id, preview_url, release_date, artists };
     });
 
     const playAudio = (previewUrl) => {
+        audioRef.current.volume = .3;
         if (previewUrl) {
             if (audioRef.current.src === previewUrl && !audioRef.current.paused) {
                 audioRef.current.pause(); // Pause the audio if it's already playing
@@ -34,12 +40,20 @@ const DisplayData = ({ data }) => {
             <ul>
                 {results.map((item, index) => (
                     <div key={index}>
-                        <span className="result-name">{item.name}</span>
+
+                        <span className='result-artist'>{item.artists}</span>
+                        <div className='star-div'>
+                            <span className="result-name">{item.name}</span>
+
+                        </div>
+                        <i class="fa-regular fa-star"></i>
                         <img className="result-image" src={item.images} alt={item.name} />
                         <span className='release-date'>Released: {item.release_date}</span>
+
                         {item.preview_url && (
-                            <button onClick={() => playAudio(item.preview_url)}>Preview track</button>
+                            <button className='preview' onClick={() => playAudio(item.preview_url)}>Preview track</button>
                         )}
+
                         <audio ref={audioRef}></audio>
                         <SearchId id={item.id} />
                         <hr />

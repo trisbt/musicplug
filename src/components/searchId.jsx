@@ -42,7 +42,7 @@ const SearchId = ({ id }) => {
                         const loudness = data.loudness;
                         const energy = data.energy;
                         // console.log(data.key);
-                        setResponse([`key: ${keySig}, tempo: ${tempo}, loudness: ${loudness}, energy: ${energy}`]); // Update the response state with the JSON data
+                        setResponse([`key: ${keySig} / tempo: ${tempo} / loudness: ${loudness} / energy: ${energy}`]); // Update the response state with the JSON data
                     })
                     .catch(error => {
                         console.error('Error:', error);
@@ -52,8 +52,12 @@ const SearchId = ({ id }) => {
                 console.error('Error:', error);
             });
     };
+    // for (const el of response) {
+    //     console.log(el)
 
+    // }
     return (
+
         <div>
             <button className='search-id' onClick={fetchData}>Get Audio Analysis</button>
             {response}

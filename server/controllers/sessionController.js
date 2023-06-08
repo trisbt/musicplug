@@ -8,7 +8,7 @@ const sessionController = {};
 */
 sessionController.isLoggedIn = (req, res, next) => {
   // write code here
-
+  return next();
 };
 
 /**
@@ -16,7 +16,9 @@ sessionController.isLoggedIn = (req, res, next) => {
 */
 sessionController.startSession = (req, res, next) => {
   //write code here
-
+  Session.create(res.locals.user, (err, session) => {
+    return next();
+  })
 };
 
 module.exports = sessionController;

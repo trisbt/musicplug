@@ -2,20 +2,10 @@
   text-align: center;
 }
 
-/* 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-} */
 
-/* @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-} */
 nav {
-  display: fixed;
-  background-color: color-mix(in srgb, rgb(2, 2, 111) 25%, rgb(121, 121, 121));
+  /* display: fixed; */
+  background-color: color-mix(in srgb, rgb(24, 24, 107) 55%, rgb(121, 121, 121));
   /* min-height: 100vh; */
   border-color: yellow;
   border-width: 5px;
@@ -29,10 +19,35 @@ nav {
 
 }
 
+.favs {
+  font-size: medium;
+  display: flex;
+  align-items: center;
+}
+
+.LOGO {
+  margin-left: .5em;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: rgb(236, 236, 236);
+}
+
+a {
+  text-decoration: none;
+  color: rgb(236, 236, 236);
+  /* font-size: medium; */
+}
+
+.signup {
+  margin-right: .5em;
+  font-size: large;
+  display: flex;
+  align-items: center;
+}
+
 .App-search {
   /* background-color: #282c34; */
   background-image: linear-gradient(130deg, rgb(109, 97, 168)1%, #282c34 15%), linear-gradient(200deg, #282c34 5%, rgb(255, 255, 255)45%);
-  /* background-repeat: repeat-y; */
+  background-repeat: repeat-y;
   /* background-attachment: fixed; */
 
   min-height: 100vh;
@@ -58,6 +73,11 @@ li {
   margin-left: auto;
   /* text-align: center; */
 
+}
+
+.result-album {
+  color: rgb(163, 164, 166);
+  font-size: calc(2px + 2vmin);
 }
 
 .search-id {
@@ -118,6 +138,14 @@ ul div {
   font-size: calc(5px + 2vmin);
   font-weight: 800;
   color: rgb(210, 210, 210);
+}
+
+.user-splash {
+  color: rgb(225, 223, 84);
+  font-size: medium;
+  display: flex;
+
+  align-items: center;
 }
 
 /* header {

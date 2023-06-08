@@ -1,5 +1,9 @@
 import SearchId from './searchId';
+import SearchGenius from './searchGenius';
 import React, { useRef } from 'react';
+
+
+
 
 const DisplayData = ({ data }) => {
     const audioRef = useRef(null);
@@ -18,7 +22,8 @@ const DisplayData = ({ data }) => {
         const images = album.images[1].url;
         const id = item.id;
         const release_date = item.album.release_date;
-        return { name, images, id, preview_url, release_date, artists };
+        const albums = item.album.name;
+        return { name, images, id, preview_url, release_date, artists, albums };
     });
 
     const playAudio = (previewUrl) => {
@@ -46,7 +51,8 @@ const DisplayData = ({ data }) => {
                             <span className="result-name">{item.name}</span>
 
                         </div>
-                        <i class="fa-regular fa-star"></i>
+                        <span className='result-album'>{item.albums}</span>
+
                         <img className="result-image" src={item.images} alt={item.name} />
                         <span className='release-date'>Released: {item.release_date}</span>
 
@@ -55,7 +61,8 @@ const DisplayData = ({ data }) => {
                         )}
 
                         <audio ref={audioRef}></audio>
-                        <SearchId id={item.id} />
+                        <SearchId id={item.id} name={item.name} artists={item.artists} album={item.albums} />
+                        {/* <SearchGenius name={item.name} /> */}
                         <hr />
                     </div>
                 ))}

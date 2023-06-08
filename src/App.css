@@ -109,13 +109,15 @@ li {
 }
 
 .search-id {
+
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, ;
   font-weight: bold;
-  color: rgb(0, 0, 0);
+  color: rgb(20, 20, 20);
   display: flex;
   justify-content: center;
   border-radius: 4px;
   border-color: #0b0b0b;
-  background-color: rgb(198, 212, 93);
+  background-color: rgb(128, 186, 111);
   margin-bottom: .7em;
 
 }
@@ -132,6 +134,11 @@ hr {
 
 .star-button {
   border-radius: 20px;
+  width: 2em;
+  height: 2em;
+  color: rgb(37, 37, 37);
+  border-style: none;
+  background-color: #d6e252;
 }
 
 .preview {
@@ -139,6 +146,10 @@ hr {
   /* flex-direction: column; */
   align-self: center;
   margin-bottom: 1em;
+  border-radius: 15px;
+  border-color: rgb(236, 165, 114);
+  border-top: none;
+  border-left: none;
   /* width: 6em;
   height: 1em; */
 }

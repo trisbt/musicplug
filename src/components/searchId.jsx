@@ -92,10 +92,15 @@ const SearchId = ({ id }) => {
                                         }
                                         const tracklistArr = data.tracklist;
                                         console.log('tracklist:', tracklistArr)
+                                        //arr where credits will be stored
                                         const creditsArr = [];
+                                        //set another song variable to take out feature
+                                        const noFeatSong = song.replace(/\(.*\)/, "").trim();
+                                        //iterate over the master tracklist
                                         for (const track of tracklistArr) {
-                                            if (track.title === song) {
-                                                console.log(track)
+                                            if (track.title.toLowerCase() === song.toLowerCase() || track.title.toLowerCase() === noFeatSong.toLowerCase()) {
+                                                // console.log(track)
+                                                //if credits are given then push into our credits arr
                                                 if (track.extraartists) {
                                                     const crew = track.extraartists
                                                     for (const per of crew) {
@@ -154,7 +159,7 @@ const SearchId = ({ id }) => {
             <div className='star'>
                 <button className='search-id' onClick={fetchData}>Get Info/Credits</button>
                 <button className='star-button'>
-                    <i onClick={handleClick} class="fa-regular fa-star"></i>
+                    <i onClick={handleClick} class="fa-solid fa-star"></i>
                 </button>
 
             </div>

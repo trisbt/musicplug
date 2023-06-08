@@ -21,11 +21,14 @@ const keyConvert = (num) => {
         return chart[num];
     }
 }
-// let discogsToken = 'ohMHComnBxgyFklMSWRgRvPPYOtwXYRHNGnJZyvs';
+let discogsToken = 'ohMHComnBxgyFklMSWRgRvPPYOtwXYRHNGnJZyvs';
 const SearchId = ({ id }) => {
     const [response, setResponse] = useState([]);
     const [currData, setCurrData] = useState({})
+    const [credits, setCredits] = useState([]);
+    // const [isVisible, setIsVisible] = useState(false);
     const fetchData = () => {
+
         //access token first fetch
         fetch('http://localhost:4000/api/accessToken')
             .then(res => res.json())
@@ -70,12 +73,52 @@ const SearchId = ({ id }) => {
                         setCurrData({ song: song, artist: artists, album: albums, image: images })
                         console.log('got currData:', currData)
                         // }
-                        ///fetch to discogs with the specifc track name
-                        // fetch(`https://api.discogs.com/database/search?q=${song}&token=${discogsToken}`)
-                        //     .then(response => response.json())
-                        //     .then(data => {
-                        //         console.log(data);
-                        //     })
+                        ///fetch to discogs with the artist and album name to get masterid
+
+                        fetch(`https://api.discogs.com/database/search?q=${artists + albums}&token=${discogsToken}`)
+                            // fetch(`https://api.discogs.com/masters/${masterId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log(data)
+                                // console.log('discogs:', data.results[0].master_id);
+                                //set masterid and then fetch
+                                const masterId = data.results[0].master_id;
+                                fetch(`https://api.discogs.com/masters/${masterId}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.message === 'Master Release not found.') {
+                                            setCredits(['No credits/Master release not found'])
+                                            return;
+                                        }
+                                        const tracklistArr = data.tracklist;
+                                        console.log('tracklist:', tracklistArr)
+                                        const creditsArr = [];
+                                        for (const track of tracklistArr) {
+                                            if (track.title === song) {
+                                                console.log(track)
+                                                if (track.extraartists) {
+                                                    const crew = track.extraartists
+                                                    for (const per of crew) {
+                                                        creditsArr.push(per.role, per.name)
+                                                    }
+                                                }
+                                            }
+                                            // setCredits(['credits not yet built'])
+                                            // return;
+                                        }
+                                        // console.log(creditsArr)
+                                        setCredits(creditsArr);
+                                        // console.log(credits)
+                                    })
+                                    .catch(err => {
+                                        console.log(err)
+                                        return;
+                                    })
+                            })
+                            .catch(err => {
+                                console.log(err);
+                                return;
+                            })
                     })
             })
             .catch(error => {
@@ -109,13 +152,20 @@ const SearchId = ({ id }) => {
 
         <div>
             <div className='star'>
-                <button className='search-id' onClick={fetchData}>Get Audio Analysis</button>
-                <button >
+                <button className='search-id' onClick={fetchData}>Get Info/Credits</button>
+                <button className='star-button'>
                     <i onClick={handleClick} class="fa-regular fa-star"></i>
                 </button>
 
             </div>
             {response}
+            {credits.map((el, index) => (
+                <ul className={index % 2 === 0 ? 'even-credit' : 'odd-credit'} key={el}>
+                    <li>{el}</li>
+                </ul>
+            ))}
+
+
         </div>
     );
 };

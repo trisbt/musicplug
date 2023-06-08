@@ -66,24 +66,39 @@ userController.verifyUser = async (req, res, next) => {
 
 userController.addFavorites = (req, res, next) => {
     const { song, artist, album, image } = req.body;
+
     User.findOneAndUpdate(
         { username: 'trisb' }, // Filter condition to find the user 'trisb'
         { $push: { favorites: { song, artist, album, image } } }, // Update to add the new favorite
         { new: true } // Option to return the updated user object
     )
-    return next();
-    // User.findOneAndUpdate()
-    // try {
-    //     const { artist, name, album } = req.body;
-    //     const user = res.locals.user; // Retrieve the user object from res.locals
-    //     user.favorites.push({ artist, name, album });
-    //     await user.save();
-    //     return next();
-    // } catch (err) {
-    //     return next(err);
-    // }
+        .then(updatedUser => {
+            // The updated user object can be accessed in the `updatedUser` variable
+            console.log('Updated user:', updatedUser);
+            return next();
+        })
+        .catch(err => {
+            // Handle any errors that occur during the update process
+            console.error('Error updating user favorites:', err);
+            return next(err);
+        });
 };
 
+userController.getFavorites = (req, res, next) => {
+
+    User.findOne(
+        { username: 'trisb' }
+    )
+        .then(user => {
+            res.locals.userFavs = user;
+
+            return next();
+        })
+        .catch(err => {
+            console.log('cannot get favs of user');
+            return next(err);
+        })
+}
 
 
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 import SearchData from './components/searchData';
 import Signup from './components/signup';
+import Favorites from './components/favs';
 import './App.css';
 
 
@@ -56,8 +57,8 @@ function App() {
   return (
     <Router>
       <nav>
-        <a className='LOGO' href="http://localhost:3000">Plug</a>
-        <div className='favs'>Favs</div>
+        <a className='LOGO' href="http://localhost:3000">Plug app</a>
+        <Link className='favs-link' to="/favs">Your Favorites</Link>
         <form onSubmit={handleLogin}>
           <input name="username" type="text" placeholder={placeholder} value={username} onChange={handleUsernameChange} />
           <input name="password" type="password" placeholder="password" value={password} onChange={handlePasswordChange} />
@@ -77,6 +78,7 @@ function App() {
           <Routes>
             <Route path="/" element={<SearchData />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/favs" element={<Favorites />} />
           </Routes>
         </div>
       </div>

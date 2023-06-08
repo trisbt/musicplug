@@ -33,6 +33,13 @@ app.post('/login', userController.verifyUser, cookieController.setSSIDCookie, (r
     res.send('Login Successful');
 })
 
+
+//get favs added when fav clicked
+app.get('/favs', userController.getFavorites, (req, res) => {
+    // console.log(res.locals.userFavs)
+    res.json(res.locals.userFavs);
+})
+
 //add favs to user
 app.post('/favs', userController.addFavorites, (req, res) => {
     console.log('fav added');

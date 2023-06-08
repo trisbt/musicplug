@@ -7,6 +7,7 @@ const SearchData = () => {
     // const [accessToken, setAccessToken] = useState(null);
 
     const fetchData = () => {
+        setResponse('')
         fetch('http://localhost:4000/api/accessToken') // Use the correct port
             .then(res => res.json())
             .then(data => {
@@ -103,7 +104,7 @@ const SearchData = () => {
     return (
         <div>
             <form onSubmit={handleFormSubmit}>
-                <input type="text" value={inputField} onChange={handleInputChange} />
+                <input placeholder='find songs' type="text" value={inputField} onChange={handleInputChange} />
                 <button type="submit">Search</button>
             </form>
             <DisplayData data={response} />

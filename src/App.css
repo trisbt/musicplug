@@ -7,8 +7,10 @@ nav {
   /* display: fixed; */
   background-color: color-mix(in srgb, rgb(24, 24, 107) 55%, rgb(121, 121, 121));
   /* min-height: 100vh; */
-  border-color: yellow;
-  border-width: 5px;
+  border: 1px solid rgb(255, 187, 0);
+  border-top: none;
+  border-left: none;
+  border-right: none;
   display: flex;
   justify-content: space-between;
   /* flex-direction: column; */
@@ -25,9 +27,18 @@ nav {
   align-items: center;
 }
 
+.favs-link {
+  margin-right: .5em;
+  font-size: large;
+  display: flex;
+  align-items: center;
+  color: #d6e252;
+  text-decoration: underline;
+}
+
 .LOGO {
   margin-left: .5em;
-  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   color: rgb(236, 236, 236);
 }
 
@@ -42,11 +53,13 @@ a {
   font-size: large;
   display: flex;
   align-items: center;
+  color: rgb(241, 237, 235);
+  text-decoration: underline;
 }
 
 .App-search {
   /* background-color: #282c34; */
-  background-image: linear-gradient(130deg, rgb(109, 97, 168)1%, #282c34 15%), linear-gradient(200deg, #282c34 5%, rgb(255, 255, 255)45%);
+  background-image: repeating-linear-gradient(140deg, rgb(109, 97, 168), #282c34 25%, rgb(80, 108, 185));
   background-repeat: repeat-y;
   /* background-attachment: fixed; */
 
@@ -61,6 +74,21 @@ a {
 
 li {
   list-style: none;
+}
+
+.credits {
+  font-size: small;
+}
+
+.even-credit {
+  font-size: small;
+  font-weight: bold;
+  color: rgb(158, 140, 140);
+}
+
+.odd-credit {
+  font-size: small;
+
 }
 
 .result-name {
@@ -82,12 +110,12 @@ li {
 
 .search-id {
   font-weight: bold;
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
   display: flex;
   justify-content: center;
   border-radius: 4px;
   border-color: #0b0b0b;
-  background-color: rgb(86, 86, 36);
+  background-color: rgb(198, 212, 93);
   margin-bottom: .7em;
 
 }
@@ -102,13 +130,8 @@ hr {
   /* align-items: center; */
 }
 
-.fa-star {
-  /* display: inline; */
-  /* right: 5em; */
-  /* margin-left: 3em; */
-  /* display: flex;
-  justify-content; */
-  /* margin-left: 5em; */
+.star-button {
+  border-radius: 20px;
 }
 
 .preview {

@@ -1,8 +1,5 @@
 // const fetch = require('node-fetch');
 
-// let clientid = 'XJTopHXtfyPWDTKMyVO4Yi8q2Z6rXSfwuohupT-kz6UnK5r1BTK-dmNLcIYFYXdU'; // Your client id
-// let clientsecret = 'ZELzWdoaH_esmE2TQimPbdgVFRStKdnGDssO1weErbXlB_sB2xNaXRSAjAiLIZFf7fXZnQFtyywDU-MMXYmcVQ'; // Your secret
-// let clientaccess_token = 'oLJ3HV2evNygH4j--uTKP0dcHb9wJ2kQ-dkI4ho3_ISU4_ifJDydJWtEBGsiUt6B';
 // // // const express = require('express');
 // // // const router = express.Router();
 

@@ -1,9 +1,10 @@
 const fetch = require('node-fetch');
 
-let client_id = 'f0bb764e36ca4e2395b1c38f84c9764c'; // Your client id
-let client_secret = 'de53aa33fd804b3e9c570370cb07b0f9'; // Your secret
+let client_id 
+let client_secret
 
 const getAccessToken = (req, res) => {
+    console.log('oauth')
     const authOptions = {
         method: 'POST',
         url: 'https://accounts.spotify.com/api/token',

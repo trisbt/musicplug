@@ -12,6 +12,7 @@ const SearchData = () => {
             .then(res => res.json())
             .then(data => {
                 const token = data.token;
+                console.log(token)
                 const searchQuery = `${encodeURIComponent(inputField)}`;
                 fetch(`https://api.spotify.com/v1/search?q=${searchQuery}&type=artist%2Ctrack&limit=50`, {
                     headers: {

@@ -46,9 +46,10 @@ const SearchId = ({ id }) => {
                         const tempo = data.tempo;
                         const loudness = data.loudness;
                         const energy = data.energy;
+
                         // console.log(data);
                         // Update the response state with the JSON data
-                        setResponse([`key: ${keySig} / tempo: ${tempo} / loudness: ${loudness} / energy: ${energy}`]);
+                        setResponse([`Key: ${keySig} / Tempo: ${tempo} / Loudness: ${loudness}db / Energy: ${energy}`]);
 
                     })
                     .catch(error => {
@@ -80,7 +81,7 @@ const SearchId = ({ id }) => {
                             .then(response => response.json())
                             .then(data => {
                                 console.log(data)
-                                // console.log('discogs:', data.results[0].master_id);
+                                // console.log('discogs:', data.results);
                                 //set masterid and then fetch
                                 const masterId = data.results[0].master_id;
                                 fetch(`https://api.discogs.com/masters/${masterId}`)

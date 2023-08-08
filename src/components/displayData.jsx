@@ -9,21 +9,18 @@ const DisplayData = ({ data }) => {
     if (!data || !data.tracks || !data.tracks.items) {
         return null;
     }
-
     const results = data.tracks.items.map((item) => {
-        // console.log(item)
         const { name, album, preview_url } = item;
-        // const artist = [];
         const artists = item.artists.map(artist => {
             return artist.name + '/';
         })
-        // console.log(artists);
         const images = album.images[1].url;
         const id = item.id;
         const release_date = item.album.release_date;
         const albums = item.album.name;
         return { name, images, id, preview_url, release_date, artists, albums };
     });
+
 
     const playAudio = (previewUrl) => {
         audioRef.current.volume = .3;
@@ -44,7 +41,6 @@ const DisplayData = ({ data }) => {
             <ul>
                 {results.map((item, index) => (
                     <div key={index}>
-
                         <span className='result-artist'>{item.artists}</span>
                         <div className='star-div'>
                             <span className="result-name">{item.name}</span>
@@ -61,7 +57,6 @@ const DisplayData = ({ data }) => {
 
                         <audio ref={audioRef}></audio>
                         <SearchId id={item.id} name={item.name} artists={item.artists} album={item.albums} />
-                        {/* <SearchGenius name={item.name} /> */}
                         <hr />
                     </div>
                 ))}

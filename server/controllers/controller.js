@@ -4,7 +4,7 @@ require('dotenv').config();
 const client_id = process.env.client_id;
 const client_secret = process.env.client_secret;
 
-const getAccessToken = (req, res) => {
+const getAccessToken = (req, res, next) => {
     const authOptions = {
         method: 'POST',
         url: 'https://accounts.spotify.com/api/token',
@@ -24,9 +24,8 @@ const getAccessToken = (req, res) => {
         .then(data => {
             if (data.access_token) {
                 const token = data.access_token;
-                // console.log('token', token)
                 res.locals.token = token;
-                return res.next()
+                return next();
             } else {
                 res.status(500).json({ error: 'Internal Server Error' });
             }
@@ -37,10 +36,65 @@ const getAccessToken = (req, res) => {
 };
 
 const getSpotifyData = (req, res, next) => {
-    console.log(res.locals.token);
+    const { token } = res.locals;
+    const query = req.query.query;
+    fetch(`https://api.spotify.com/v1/search?q=${query}&type=artist%2Ctrack&limit=50`, {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            res.locals.data = data;
+            return next();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
+
+const getSpotifyAudio = (req, res, next) => {
+    const token = res.locals.token;
+    const id  = req.query.query;
+    fetch(`https://api.spotify.com/v1/audio-features/${id}`, { 
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            res.locals.data = data;
+            return next();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+}
+
+const getSpotifyTracks = (req, res, next) => {
+    const token = res.locals.token;
+    const  id  = req.query.query;
+    fetch(`https://api.spotify.com/v1/tracks/${id}`, { // Remove the extra quotes around the id
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            res.locals.data = data;
+            return next();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+}
+
 
 module.exports = {
     getAccessToken,
     getSpotifyData,
+    getSpotifyAudio,
+    getSpotifyTracks,
 };

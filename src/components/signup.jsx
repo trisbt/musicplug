@@ -3,6 +3,11 @@ import React, { useState } from 'react';
 const Signup = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -23,8 +28,8 @@ const Signup = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
-
+        body: JSON.stringify({ username, password, email }),
+        credentials:'include',
       });
 
       if (response.ok) {
@@ -39,6 +44,7 @@ const Signup = () => {
       // Clear input fields after signup
       setUsername('');
       setPassword('');
+      setEmail('');
     } catch (error) {
       // Handle any network or server errors
       console.error('Error:', error);
@@ -47,8 +53,13 @@ const Signup = () => {
 
   return (
     <div>
-      <h2>Signup</h2>
-      <form onSubmit={handleSignup}>
+      {/* <h2>Signup</h2> */}
+      <form className='form' onSubmit={handleSignup}>
+        <label>
+          Email:
+          <input type="text" value={email} onChange={handleEmailChange} />
+        </label>
+        <br />
         <label>
           Username:
           <input type="text" value={username} onChange={handleUsernameChange} />

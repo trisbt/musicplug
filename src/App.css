@@ -57,6 +57,50 @@ a {
   text-decoration: underline;
 }
 
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Add this to your CSS file */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(255, 255, 255);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.modal button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal button:hover {
+  background-color: #0056b3;
+}
+
 .App-search {
   /* background-color: #282c34; */
   background-image: repeating-linear-gradient(140deg, rgb(109, 97, 168), #282c34 25%, rgb(80, 108, 185));
@@ -172,6 +216,7 @@ ul div {
   font-size: calc(5px + 2vmin);
   font-weight: 800;
   color: rgb(210, 210, 210);
+  width: 100%;
 }
 
 .user-splash {

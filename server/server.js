@@ -58,7 +58,7 @@ app.post('/signup', userController.createUser, (req, res) => {
 //verify user exists
 
 app.post('/login', userController.verifyUser, sessionController.startSession, cookieController.setSSIDCookie, (req, res, next) => {
-    res.status(200).json({message: "logged in"});
+    res.status(200).json({message: "logged in", user: res.locals.user});
 });
 
 app.post('/logout', userController.logoutUser, (req, res) => {

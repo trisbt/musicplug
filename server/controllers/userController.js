@@ -39,9 +39,9 @@ userController.verifyUser = async (req, res, next) => {
 
 
 userController.logoutUser = async (req, res, next) => {
-  const cookieId = req.cookies.ssid;
+  const sessionToken = req.cookies.ssid;
   try {
-    await Session.deleteOne({ cookieId });
+    await Session.deleteOne({ sessionToken });
     res.clearCookie('ssid');
     return res.status(200).json({ message: 'Logged out successfully' });
   } catch (err) {

@@ -15,9 +15,9 @@ sessionController.isLoggedIn = async (req, res, next) => {
   try {
     // Find a session with the provided session token
     const session = await Session.findOne({ sessionToken }).exec();
+
     // Check if session exists and is still valid
-    console.log(session);
-    if (session && session.createdAt > new Date()) {
+    if (session) {
       // Session is valid, proceed with the next middleware
       return next();
     } else {
@@ -30,6 +30,7 @@ sessionController.isLoggedIn = async (req, res, next) => {
   }
 };
 
+
 /**
 * startSession - create and save a new Session into the database.
 */
@@ -40,7 +41,7 @@ sessionController.startSession = async (req, res, next) => {
     const sessionToken = hash; 
     await Session.create({ sessionToken, cookieId });
     res.locals.sessionToken = sessionToken;
-    res.locals.user = null;
+    // res.locals.user = null;
     return next();
   } catch (err) {
     console.error('Error creating session:', err);

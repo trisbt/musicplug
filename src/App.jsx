@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 import SearchData from './components/searchData';
 import Signup from './components/signup';
 import Favorites from './components/favs';
+import Cookies from 'js-cookie';
 import './App.css';
 
 
@@ -10,6 +11,7 @@ function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('')
+  // const [user, setUser] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,17 +25,17 @@ function App() {
           credentials: 'include',
         });
         const data = await response.json();
-        console.log(data);
-        if (data.isLoggedIn) {
+        if (data.message === 'user validated') {
+          const userCookie = Cookies.get('plug');
+          const userData = JSON.parse(userCookie);
           setIsLoggedIn(true);
-          setLoggedInUser(data.username);
+          setLoggedInUser(userData.username);
           setShowLogoutButton(true);
         }
       } catch (error) {
         console.error('Error checking authentication:', error);
       }
     }
-
     checkAuthentication();
   }, []);
 
@@ -68,6 +70,7 @@ function App() {
         setLoggedInUser(username);
         setUsername('');
         setPassword('');
+        Cookies.set('plug', JSON.stringify(data.user));
       } else {
         setIsLoggedIn(false);
         setError(data.message)
@@ -89,7 +92,10 @@ function App() {
         credentials: 'include',
       });
       const data = await response.json();
+      console.log(data);
       setIsLoggedIn(false);
+      setShowLogoutButton(false);
+      Cookies.remove('plug');
     } catch (error) {
       console.error('Error:', error);
     }
@@ -113,7 +119,7 @@ function App() {
 
         {isLoggedIn && (
           <div className='user-splash'>
-            Welcome {loggedInUser}
+            {loggedInUser}
             {showLogoutButton && (
               <button onClick={handleLogout}>Logout</button>
             )}

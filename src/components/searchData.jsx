@@ -8,11 +8,11 @@ const SearchData = () => {
 
     const fetchData = () => {
         setResponse('')
-        fetch('http://localhost:4000/api/accessToken') // Use the correct port
+        fetch('http://localhost:4000/search') // Use the correct port
             .then(res => res.json())
             .then(data => {
                 const token = data.token;
-                console.log(token)
+                console.log(data)
                 const searchQuery = `${encodeURIComponent(inputField)}`;
                 fetch(`https://api.spotify.com/v1/search?q=${searchQuery}&type=artist%2Ctrack&limit=50`, {
                     headers: {

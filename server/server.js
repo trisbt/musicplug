@@ -1,11 +1,12 @@
 const express = require('express');
 const app = express();
-const route = require('./routes/auth route');
+// const route = require('./routes/auth route');
 const path = require('path');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const userController = require('./controllers/userController');
 const cookieController = require('./controllers/cookieController');
+const controller = require('./controllers/controller')
 // const geniusRoute = require('./routes/geniusRoute');
 // const sessionController = require('./controllers/sessionController');
 const cookieParser = require('cookie-parser');
@@ -17,9 +18,18 @@ mongoose.connect(mongoURI);
 app.use(express.json());
 app.use(cookieParser());
 
+//get token
+app.get('/access', controller.getAccessToken, (req, res) => {
+    return res.status(200);
+});
+
+app.get('/search', controller.getAccessToken, controller.getSpotifyData, (req, res) => {
+    return res.status(200);
+})
+
 //set cookie
 app.get('/', cookieController.setCookie, (req, res) => {
-    return res.status(200).send('yooo')
+    return res.status(200)
 })
 
 //sign up working -- had to set windowref in signup component
@@ -47,8 +57,8 @@ app.post('/favs', userController.addFavorites, (req, res) => {
 })
 
 app.use(express.static(path.join(__dirname, 'build')));
-app.use('/api', route);
-app.use('/oauth', route);
+
+// app.use('/oauth', route);
 // app.use('/api', geniusRoute); // Mount the geniusRoute
 
 //route handler

@@ -1,10 +1,10 @@
 const fetch = require('node-fetch');
+require('dotenv').config();
 
-let client_id 
-let client_secret
+const client_id = process.env.client_id;
+const client_secret = process.env.client_secret;
 
 const getAccessToken = (req, res) => {
-    console.log('oauth')
     const authOptions = {
         method: 'POST',
         url: 'https://accounts.spotify.com/api/token',
@@ -24,7 +24,9 @@ const getAccessToken = (req, res) => {
         .then(data => {
             if (data.access_token) {
                 const token = data.access_token;
-                res.status(200).json({ token });
+                // console.log('token', token)
+                res.locals.token = token;
+                return res.next()
             } else {
                 res.status(500).json({ error: 'Internal Server Error' });
             }
@@ -34,6 +36,11 @@ const getAccessToken = (req, res) => {
         });
 };
 
+const getSpotifyData = (req, res, next) => {
+    console.log(res.locals.token);
+}
+
 module.exports = {
-    getAccessToken
+    getAccessToken,
+    getSpotifyData,
 };

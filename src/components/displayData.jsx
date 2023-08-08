@@ -1,5 +1,4 @@
 import SearchId from './searchId';
-import SearchGenius from './searchGenius';
 import React, { useRef } from 'react';
 
 

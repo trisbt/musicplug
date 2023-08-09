@@ -1,24 +1,38 @@
 const Session = require('../models/sessionModel');
+const { nanoid } = require("nanoid");
 
 const sessionController = {};
 
-/**
-* isLoggedIn - find the appropriate session for this request in the database, then
-* verify whether or not the session is still valid.
-*/
-sessionController.isLoggedIn = (req, res, next) => {
-  // write code here
-  return next();
+sessionController.isLoggedIn = async (req, res, next) => {
+  const sessionToken = req.cookies.ssid;
+  try {
+    const session = await Session.findOne({ sessionToken }).exec();
+    if (session) {
+      return next();
+    } else {
+      return res.status(401).json({ error: 'Invalid session' });
+    }
+  } catch (err) {
+    console.error('Error validating session:', err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
-/**
-* startSession - create and save a new Session into the database.
-*/
-sessionController.startSession = (req, res, next) => {
-  //write code here
-  Session.create(res.locals.user, (err, session) => {
+sessionController.startSession = async (req, res, next) => {
+  const hash = nanoid();
+  try {
+    const cookieId = res.locals.user._id.toString();
+    const sessionToken = hash; 
+    await Session.create({ sessionToken, cookieId });
+    res.locals.sessionToken = sessionToken;
     return next();
-  })
+  } catch (err) {
+    console.error('Error creating session:', err);
+    return next(err);
+  }
 };
+
+
+
 
 module.exports = sessionController;

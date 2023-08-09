@@ -1,20 +1,32 @@
-// const fetch = require('node-fetch');
+const fetch = require('node-fetch');
+require('dotenv').config();
 
-// let token = 'ohMHComnBxgyFklMSWRgRvPPYOtwXYRHNGnJZyvs';
-// const discogsGetToken = (req, res) => {
-//     fetch('https://api.discogs.com/oauth/request_token')
-//         .then()
+const discogsToken = process.env.discogsToken;
 
+const discogsSearch = (req, res, next) => {
+    const artists = req.query.artist;
+    const albums = req.query.album;
+    fetch(`https://api.discogs.com/database/search?q=${artists + albums}&token=${discogsToken}`)
+        .then(response => response.json())
+        .then(data => {
+            const masterId = data.results[0].master_id;
+            fetch(`https://api.discogs.com/masters/${masterId}`)
+                .then(response => response.json())
+                .then(data => {
+                    res.locals.data = data;
+                    return next();
+                 })
+                 .catch(err => {
+                    console.log(err);
+                    return;
+                })
+        })
+        .catch(err => {
+            console.log(err);
+            return;
+        })
+}
 
-
-
-
-//     //     Consumer Key	JoVTOioQGSQcLhCfVQuO
-//     // Consumer Secret	mlkEYfWREGSUuJngDsPWinqROIqwrSrv
-//     // Request Token URL	https://api.discogs.com/oauth/request_token
-//     // Authorize URL	https://www.discogs.com/oauth/authorize
-//     // Access Token URL	https://api.discogs.com/oauth/access_token
-// }
-// module.exports = {
-//     discogsGetToken
-// }
+module.exports = {
+    discogsSearch,
+}

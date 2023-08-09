@@ -1,10 +1,10 @@
 const fetch = require('node-fetch');
+require('dotenv').config();
 
-let client_id 
-let client_secret
+const client_id = process.env.client_id;
+const client_secret = process.env.client_secret;
 
-const getAccessToken = (req, res) => {
-    console.log('oauth')
+const getAccessToken = (req, res, next) => {
     const authOptions = {
         method: 'POST',
         url: 'https://accounts.spotify.com/api/token',
@@ -24,7 +24,8 @@ const getAccessToken = (req, res) => {
         .then(data => {
             if (data.access_token) {
                 const token = data.access_token;
-                res.status(200).json({ token });
+                res.locals.token = token;
+                return next();
             } else {
                 res.status(500).json({ error: 'Internal Server Error' });
             }
@@ -34,6 +35,66 @@ const getAccessToken = (req, res) => {
         });
 };
 
+const getSpotifyData = (req, res, next) => {
+    const { token } = res.locals;
+    const query = req.query.query;
+    fetch(`https://api.spotify.com/v1/search?q=${query}&type=artist%2Ctrack&limit=50`, {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            res.locals.data = data;
+            return next();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+const getSpotifyAudio = (req, res, next) => {
+    const token = res.locals.token;
+    const id  = req.query.query;
+    fetch(`https://api.spotify.com/v1/audio-features/${id}`, { 
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            res.locals.data = data;
+            return next();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+}
+
+const getSpotifyTracks = (req, res, next) => {
+    const token = res.locals.token;
+    const  id  = req.query.query;
+    fetch(`https://api.spotify.com/v1/tracks/${id}`, { 
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            res.locals.data = data;
+            return next();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+}
+
+
 module.exports = {
-    getAccessToken
+    getAccessToken,
+    getSpotifyData,
+    getSpotifyAudio,
+    getSpotifyTracks,
 };

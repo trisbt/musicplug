@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 // const route = require('./routes/auth route');
+require('dotenv').config();
 const path = require('path');
 const mongoose = require('mongoose');
 const userController = require('./controllers/userController');
@@ -16,7 +17,7 @@ app.use(cors({
     credentials: true,
   }))
 
-const mongoURI = 'mongodb+srv://tristanbott30:Windmark34@plug.aiaeziw.mongodb.net/?retryWrites=true&w=majority';
+const mongoURI = process.env.mongoURI;
 mongoose.connect(mongoURI);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

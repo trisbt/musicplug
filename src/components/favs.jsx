@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
 
-function Favorites() {
+function Favorites({ username }) {
     const [userFavorites, setUserFavorites] = useState([]);
 
     useEffect(() => {
         const fetchFavorites = () => {
-            fetch('http://localhost:4000/favs')
+            fetch('http://localhost:4000/favs', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username }),
+                credentials: 'include',
+            })
                 .then(res => res.json())
                 .then(res => {
                     const favArray = res.favorites;
@@ -13,11 +20,13 @@ function Favorites() {
                 })
                 .catch(err => {
                     console.log(err);
-                })
+                });
 
         };
         fetchFavorites();
-    });
+        return () => {
+        };
+    }, []); 
 
     return (
         <div>

@@ -75,7 +75,7 @@ const getSpotifyAudio = (req, res, next) => {
 const getSpotifyTracks = (req, res, next) => {
     const token = res.locals.token;
     const  id  = req.query.query;
-    fetch(`https://api.spotify.com/v1/tracks/${id}`, { // Remove the extra quotes around the id
+    fetch(`https://api.spotify.com/v1/tracks/${id}`, { 
         headers: {
             'Authorization': 'Bearer ' + token
         }

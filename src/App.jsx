@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 import SearchData from './components/searchData';
+import DisplayData from './components/displayData';
 import Signup from './components/signup';
 import Favorites from './components/favs';
 import Cookies from 'js-cookie';
 import './App.css';
 
 
+
 function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('')
-  // const [user, setUser] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -92,7 +93,6 @@ function App() {
         credentials: 'include',
       });
       const data = await response.json();
-      console.log(data);
       setIsLoggedIn(false);
       setShowLogoutButton(false);
       Cookies.remove('plug');
@@ -101,12 +101,10 @@ function App() {
     }
   };
 
-
-
   return (
     <Router>
       <nav>
-        <a className='LOGO' href="http://localhost:3000">Plug app</a>
+        <a className='LOGO' href='/'>Plug app</a>
         <Link className='favs-link' to="/favs">Your Favorites</Link>
         {!isLoggedIn && (
           <form onSubmit={handleLogin}>
@@ -121,7 +119,7 @@ function App() {
           <div className='user-splash'>
             {loggedInUser}
             {showLogoutButton && (
-              <button onClick={handleLogout}>Logout</button>
+              <button className='logout' onClick={handleLogout}>Logout</button>
             )}
           </div>
         )}
@@ -139,15 +137,17 @@ function App() {
       )}
       <div className="App">
         <div className="App-search">
-
+          
           <Routes>
-            <Route path="/" element={<SearchData />} />
+            <Route path="/" element={<SearchData  username={loggedInUser}/>} />
             <Route path="/signup" element={<Signup />} />
-            {isLoggedIn && <Route path="/favs" element={<Favorites />} />}
+            {isLoggedIn && <Route path="/favs" element={<Favorites username={loggedInUser}/>} />}
           </Routes>
         </div>
       </div>
+      <DisplayData username={loggedInUser}/>
     </Router>
+    
   );
 }
 

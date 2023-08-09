@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 
 const keyConvert = (num) => {
@@ -17,16 +17,14 @@ const keyConvert = (num) => {
         '11': 'B',
     }
     if (num in chart) {
-        // console.log(num);
         return chart[num];
     }
 }
-// let discogsToken = 'ohMHComnBxgyFklMSWRgRvPPYOtwXYRHNGnJZyvs';
+
 const SearchId = ({ id }) => {
     const [response, setResponse] = useState([]);
-    const [currData, setCurrData] = useState({})
+    // const [currData, setCurrData] = useState({})
     const [credits, setCredits] = useState([]);
-    // const [isVisible, setIsVisible] = useState(false);
     const fetchData = () => {
         fetch(`http://localhost:4000/advancedSearch?query=${id}`)
             .then(res => res.json())
@@ -50,8 +48,8 @@ const SearchId = ({ id }) => {
                     return artist.name + '/';
                 })
                 const albums = data.album.name;
-                const images = data.album.images[1].url;
-                setCurrData({ song: song, artist: artists, album: albums, image: images })
+                // const images = data.album.images[1].url;
+                // setCurrData({ song: song, artist: artists, album: albums, image: images })
                 ///fetch to discogs with the artist and album name to get masterid
                 fetch(`http://localhost:4000/getCredits/?artist=${artists}&album=${albums}`)
                     .then(response => response.json())
@@ -79,7 +77,6 @@ const SearchId = ({ id }) => {
                             // setCredits(['credits not yet built'])
                             // return;
                         }
-                        // console.log(creditsArr)
                         setCredits(creditsArr);
                     })
                     .catch(err => {
@@ -97,33 +94,11 @@ const SearchId = ({ id }) => {
 };
 
 
-const handleClick = () => {
-    // Make an HTTP POST request to your server
-    fetch('http://localhost:4000/favs', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(currData)
-
-    })
-        .then((response) => response.text())
-        .then((result) => {
-            console.log(result); // Log the server response
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-};
 return (
 
     <div>
         <div className='star'>
             <button className='search-id' onClick={fetchData}>Get Info/Credits</button>
-            <button className='star-button'>
-                <i onClick={handleClick} class="fa-solid fa-star"></i>
-            </button>
-
         </div>
         {response}
         {credits.map((el, index) => (

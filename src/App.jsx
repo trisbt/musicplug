@@ -124,7 +124,7 @@ function App() {
           </div>
         )}
         {!isLoggedIn && (
-          <Link className='signup' to="/signup">Sign Up</Link>
+          <Link className='signup' to="/signup">Join</Link>
         )}
       </nav>
       {error && isModalOpen && (
@@ -139,7 +139,7 @@ function App() {
         <div className="App-search">
           
           <Routes>
-            <Route path="/" element={<SearchData  username={loggedInUser}/>} />
+            <Route path="/" element={<SearchData username={loggedInUser}/>} />
             <Route path="/signup" element={<Signup />} />
             {isLoggedIn && <Route path="/favs" element={<Favorites username={loggedInUser}/>} />}
           </Routes>

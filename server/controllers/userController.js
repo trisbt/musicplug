@@ -58,18 +58,29 @@ userController.addFavorites = async (req, res, next) => {
     const song = req.body.name;
     const image = req.body.images;
     const album = req.body.albums;
+    let isFavorite;
     try {
         const user = await User.findOne({ username, 'favorites.id': id });
-
         if (user) {
-            return res.status(400).json({ error: 'Favorite already exists' });
+            await User.findOneAndUpdate(
+                { username: username }, 
+                { $pull: { favorites: { id} } }, 
+                { new: true } 
+            )
+            isFavorite = 'removed'
+            res.locals.userFavs = {username, song, isFavorite};
+            return next();
         }
-
+        else{
+            isFavorite = 'added';
+        }
         await User.findOneAndUpdate(
-            { username: username }, // Filter condition to find the user 'trisb'
-            { $push: { favorites: { id, song, artist, album, image } } }, // Update to add the new favorite
-            { new: true } // Option to return the updated user object
+            { username: username }, 
+            { $push: { favorites: { id, song, artist, album, image } } }, 
+            { new: true } 
         )
+        res.locals.userFavs = {username, song, isFavorite};
+        return next();
     } catch (err) {
         return res.status(500).json({ error: 'Error updating user favorites' });
     }

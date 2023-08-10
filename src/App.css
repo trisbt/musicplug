@@ -100,13 +100,18 @@ a {
 .modal button:hover {
   background-color: #0056b3;
 }
+.searchform{
+  display: flex;
+  justify-content: center;
+  margin-top: 10px; 
+}
+
 
 .App-search {
   /* background-color: #282c34; */
   background-image: repeating-linear-gradient(140deg, rgb(109, 97, 168), #282c34 25%, rgb(80, 108, 185));
   background-repeat: repeat-y;
   /* background-attachment: fixed; */
-
   min-height: 100vh;
   display: flex;
   flex-direction: column;

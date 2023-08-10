@@ -1,5 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import DisplayData from './displayData';
+import { Button } from '@mui/material';
+import Input from '@mui/material/Input';
+import TextField from '@mui/material/TextField';
+import { FormControl } from '@mui/material';
+import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+// import { styled } from '@mui/system';
+
+const theme = createTheme({
+    palette: {
+        primary: {
+            light: '#99cbfd',
+            main: '#4d97f8',
+            dark: '#3746a2',
+            contrastText: '#fff',
+        },
+        secondary: {
+            light: '#fffbe8',
+            main: '#eec94b',
+            dark: '#9e7937',
+            contrastText: '#000',
+        },
+    },
+});
+
+const ColorButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.secondary.light,
+    backgroundColor: theme.palette.primary.main,
+    '&:hover': {
+        backgroundColor: theme.palette.primary.dark,
+    },
+    // padding: theme.spacing(1.2),
+
+}));
+const StyledInput = styled(Input)(({ theme }) => ({
+    color: theme.palette.text.primary,
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(1),
+    // borderRadius: theme.shape.borderRadius,
+
+}));
+
 
 const SearchData = ({ username }) => {
     const [response, setResponse] = useState('');
@@ -28,15 +69,31 @@ const SearchData = ({ username }) => {
         setInputField(event.target.value);
     };
 
+    
+
+
     return (
-        <div>
-            <form onSubmit={handleFormSubmit}>
-                <input placeholder='find songs' type="text" value={inputField} onChange={handleInputChange} />
-                <button type="submit">Search</button>
-            </form>
-            <DisplayData data={response} username={username} />
-        </div>
+        <ThemeProvider theme={theme}>
+            <div>
+                <form className='searchform' onSubmit={handleFormSubmit}>
+                    <FormControl>
+                        <StyledInput
+                            className='searchbox'
+                            placeholder='find songs'
+                            type='text'
+                            value={inputField}
+                            onChange={handleInputChange}
+                        />
+                    </FormControl>
+                    <ColorButton type='submit' variant='outlined'>
+                        Search
+                    </ColorButton>
+                </form>
+                <DisplayData data={response} username={username} />
+            </div>
+        </ThemeProvider>
     );
-};
+}
+
 
 export default SearchData;

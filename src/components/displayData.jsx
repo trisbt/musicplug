@@ -1,8 +1,14 @@
 import SearchId from './searchId';
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
+import IconButton from '@mui/material/IconButton';
+import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
+import GradeIcon from '@mui/icons-material/Grade';
 
 
 const DisplayData = ({ data, username }) => {
+    const [favoriteMap, setFavoriteMap] = useState({});
+    // const [isFavorite, setIsFavorite] = useState(false);
+    // const favoriteStateRef = useRef(isFavorite);
     const audioRef = useRef(null);
     if (!data || !data.tracks || !data.tracks.items) {
         return null;
@@ -24,17 +30,16 @@ const DisplayData = ({ data, username }) => {
         audioRef.current.volume = .3;
         if (previewUrl) {
             if (audioRef.current.src === previewUrl && !audioRef.current.paused) {
-                audioRef.current.pause(); 
+                audioRef.current.pause();
             } else {
-                audioRef.current.src = previewUrl; 
-                audioRef.current.play(); 
+                audioRef.current.src = previewUrl;
+                audioRef.current.play();
             }
         }
     };
 
     const handleFavorite = async (item, username) => {
-        const { id, name, artists, albums, images} = item;
-        console.log(albums);
+        const { id, name, artists, albums, images } = item;
         try {
             const response = await fetch('http://localhost:4000/addFavs', {
                 method: 'POST',
@@ -45,17 +50,25 @@ const DisplayData = ({ data, username }) => {
                 credentials: 'include',
             });
             const data = await response.json();
-            console.log('data', data)
-            if (data.username) {
-                console.log('Track added to favorites:', data.name);
+            if (data.isFavorite === 'added') {
+                //already added so make it GradeIcon
+                setFavoriteMap((prevMap) => ({
+                    ...prevMap,
+                    [id]: true,
+                }));
+                // console.log('Track added to favorites:', data.song);
             } else {
-                console.error('Failed to add track to favorites:', data.error);
+                setFavoriteMap((prevMap) => ({
+                    ...prevMap,
+                    [id]: false,
+                }));
+                //already added so make it GradeIcon
+                // console.log('Track removed from favorites', data.song);
             }
         } catch (error) {
             console.error('Error adding track to favorites:', error);
         }
     };
-
 
     return (
         <div>
@@ -78,9 +91,9 @@ const DisplayData = ({ data, username }) => {
                         )}
 
                         <audio ref={audioRef}></audio>
-                        <button className='star-button'>
-                            <i onClick={() => handleFavorite(item, username)} class="fa-solid fa-star"></i>
-                        </button>
+                        <IconButton onClick={() => handleFavorite(item, username)}>
+                            {favoriteMap[item.id]  ? <GradeIcon /> : <GradeOutlinedIcon />}
+                        </IconButton>
                         <SearchId id={item.id} name={item.name} artists={item.artists} album={item.albums} />
                         <hr />
                     </div>

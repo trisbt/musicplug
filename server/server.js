@@ -43,29 +43,28 @@ app.get('/getCredits', discogsController.discogsSearch, (req, res) => {
 
 //sign up 
 app.post('/signup', userController.createUser, (req, res) => {
-    res.redirect('/');
+    return res.redirect('/');
 });
 
 //verify user 
 app.post('/login', userController.verifyUser, sessionController.startSession, cookieController.setSSIDCookie, (req, res, next) => {
-    res.status(200).json({message: "logged in", user: res.locals.user});
+    return res.status(200).json({message: "logged in", user: res.locals.user});
 });
 app.post('/logout', userController.logoutUser, (req, res) => {
-    res.status(200).json({message: 'logged out'});
+    return res.status(200).json({message: 'logged out'});
 })
 app.get('/validate', sessionController.isLoggedIn, (req, res) => {
-    res.status(200).json({message: "user validated"});
+    return res.status(200).json({message: "user validated"});
 })
 
 //get favs 
 app.post('/favs', userController.getFavorites, (req, res) => {
-    res.json(res.locals.userFavs);
+    return res.status(200).json(res.locals.userFavs);
 });
 
 //add favs to user
 app.post('/addFavs', userController.addFavorites, (req, res) => {
-    console.log('fav added');
-    res.json(req.body);
+    return res.status(200).json(res.locals.userFavs);
 });
 
 

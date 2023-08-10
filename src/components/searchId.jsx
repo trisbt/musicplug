@@ -1,5 +1,19 @@
 import React, { useState } from 'react';
+import { Button } from '@mui/material';
+import { styled } from '@mui/material/styles';
+// import { amber } from '@mui/material/colors';
+import { blueGrey } from '@mui/material/colors';
 
+const MoreButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.primary.contrastText,
+    backgroundColor: blueGrey[400],
+    '&:hover': {
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.secondary.main,
+    },
+    fontSize: '12px',
+    // padding: theme.spacing(1.2),
+}));
 
 const keyConvert = (num) => {
     const chart = {
@@ -88,28 +102,28 @@ const SearchId = ({ id }) => {
                 console.log(err);
                 return;
             })
-            .catch (error => {
-    console.error('Error:', error);
-});
-};
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
 
 
-return (
+    return (
 
-    <div>
-        <div className='star'>
-            <button className='search-id' onClick={fetchData}>Get Info/Credits</button>
+        <div>
+            <div className='more-main'>
+                <MoreButton size="small" variant='filledTonal' onClick={fetchData}>Get Info/Credits</MoreButton>
+            </div>
+            {response}
+            {credits.map((el, index) => (
+                <ul className={index % 2 === 0 ? 'even-credit' : 'odd-credit'} key={el}>
+                    <li>{el}</li>
+                </ul>
+            ))}
+
+
         </div>
-        {response}
-        {credits.map((el, index) => (
-            <ul className={index % 2 === 0 ? 'even-credit' : 'odd-credit'} key={el}>
-                <li>{el}</li>
-            </ul>
-        ))}
-
-
-    </div>
-);
+    );
 };
 
 export default SearchId;

@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  /* text-align: center; */
 }
 
 
@@ -140,25 +140,10 @@ li {
 
 }
 
-.result-name {
-  font-weight: bold;
-  color: rgb(179, 199, 218);
-  display: flex;
-  /* padding: 5em; */
-  /* justify-content: center; */
-  margin-right: auto;
-  margin-left: auto;
-  /* text-align: center; */
 
-}
-
-.result-album {
-  color: rgb(163, 164, 166);
-  font-size: calc(2px + 2vmin);
-}
 
 .search-id {
-
+/* 
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, ;
   font-weight: bold;
   color: rgb(20, 20, 20);
@@ -167,7 +152,7 @@ li {
   border-radius: 4px;
   border-color: #0b0b0b;
   background-color: rgb(128, 186, 111);
-  margin-bottom: .7em;
+  margin-bottom: .7em; */
 
 }
 
@@ -175,34 +160,28 @@ hr {
   color: white;
 }
 
-.star-div {
+.main-info{
   display: flex;
-  justify-content: center;
-  /* align-items: center; */
+  /* justify-content: center; */
+  flex-direction: row-reverse;
+  /* width: 500px; */
 }
-
-.star-button {
-  border-radius: 20px;
-  width: 2em;
-  height: 2em;
-  color: rgb(37, 37, 37);
-  border-style: none;
-  background-color: #d6e252;
-}
-
-.preview {
+.song-info{
   display: flex;
-  /* flex-direction: column; */
-  align-self: center;
-  margin-bottom: 1em;
-  border-radius: 15px;
-  border-color: rgb(236, 165, 114);
-  border-top: none;
-  border-left: none;
-  /* width: 6em;
-  height: 1em; */
+  justify-content: space-evenly;
+  align-items: flex-start;
+  flex-direction: column;
+  margin-left: 10px;
+}
+.result-name {
+  font-weight: bold;
+  color: rgb(179, 199, 218);
 }
 
+.result-album {
+  color: rgb(163, 164, 166);
+  font-size: calc(2px + 2vmin);
+}
 .result-image {
   display: flex;
   width: 100px;
@@ -212,16 +191,27 @@ hr {
 }
 
 .release-date {
-  font-size: calc(5px + 2vmin);
+  font-size: calc(2px + 1.5vmin);
   font-weight: 400;
   color: rgb(210, 210, 210);
 }
-
+.play-star{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+.more-main{
+  margin-bottom: 10px;
+}
+/* .fav-icon{
+  margin-left: 2px;
+} */
 ul div {
   font-size: calc(5px + 2vmin);
   font-weight: 800;
   color: rgb(210, 210, 210);
-  width: 100%;
+  width: 100vw;
 }
 
 .user-splash {

@@ -38,7 +38,10 @@ const getAccessToken = (req, res, next) => {
 const getSpotifyData = (req, res, next) => {
     const { token } = res.locals;
     const query = req.query.query;
-    fetch(`https://api.spotify.com/v1/search?q=${query}&type=artist%2Ctrack&limit=50`, {
+    const limit = 50;
+    const offset = req.query.offset;
+
+    fetch(`https://api.spotify.com/v1/search?q=${query}&type=artist%2Ctrack&limit=${limit}&offset=${offset}`, {
         headers: {
             'Authorization': 'Bearer ' + token
         }
@@ -46,6 +49,8 @@ const getSpotifyData = (req, res, next) => {
         .then(response => response.json())
         .then(data => {
             res.locals.data = data;
+            // offset += limit;
+            console.log(limit, offset);
             return next();
         })
         .catch(error => {
@@ -55,8 +60,8 @@ const getSpotifyData = (req, res, next) => {
 
 const getSpotifyAudio = (req, res, next) => {
     const token = res.locals.token;
-    const id  = req.query.query;
-    fetch(`https://api.spotify.com/v1/audio-features/${id}`, { 
+    const id = req.query.query;
+    fetch(`https://api.spotify.com/v1/audio-features/${id}`, {
         headers: {
             'Authorization': 'Bearer ' + token
         }
@@ -74,8 +79,8 @@ const getSpotifyAudio = (req, res, next) => {
 
 const getSpotifyTracks = (req, res, next) => {
     const token = res.locals.token;
-    const  id  = req.query.query;
-    fetch(`https://api.spotify.com/v1/tracks/${id}`, { 
+    const id = req.query.query;
+    fetch(`https://api.spotify.com/v1/tracks/${id}`, {
         headers: {
             'Authorization': 'Bearer ' + token
         }

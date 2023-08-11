@@ -44,14 +44,16 @@ const StyledInput = styled(Input)(({ theme }) => ({
 const SearchData = ({ username }) => {
     const [response, setResponse] = useState('');
     const [inputField, setInputField] = useState('');
+    const [offset, setOffset] = useState(1);
 
-    const fetchData = () => {
+    const fetchData = (newOffset = 1) => {
         if (inputField.trim() !== '') {
             const searchQuery = encodeURIComponent(inputField);
-            fetch(`http://localhost:4000/search?query=${searchQuery}`)
+            fetch(`http://localhost:4000/search?query=${searchQuery}&offset=${newOffset}`)
                 .then(res => res.json())
                 .then(data => {
                     setResponse(data);
+                    setOffset(newOffset);
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -67,7 +69,11 @@ const SearchData = ({ username }) => {
     const handleInputChange = (event) => {
         setInputField(event.target.value);
     };
-
+    const handleLoadMore = () => {
+        const nextOffset = offset + 50;
+        fetchData(nextOffset);
+       
+    }
     
 
 
@@ -88,7 +94,7 @@ const SearchData = ({ username }) => {
                         Search
                     </ColorButton>
                 </form>
-                <DisplayData data={response} username={username} />
+                <DisplayData data={response} username={username} theme={theme} onLoadMore={handleLoadMore}/>
             </div>
         </ThemeProvider>
     );

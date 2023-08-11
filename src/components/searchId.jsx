@@ -6,13 +6,15 @@ import { blueGrey } from '@mui/material/colors';
 
 const MoreButton = styled(Button)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
-    backgroundColor: blueGrey[400],
+    backgroundColor: blueGrey[500],
     '&:hover': {
-        color: theme.palette.primary.contrastText,
+        color: theme.palette.secondary.contrastText,
         backgroundColor: theme.palette.secondary.main,
     },
     fontSize: '12px',
-    // padding: theme.spacing(1.2),
+    width:'160px',
+    height:'30px',
+    lineHeight:'0',
 }));
 
 const keyConvert = (num) => {

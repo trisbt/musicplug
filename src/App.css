@@ -158,6 +158,15 @@ li {
 
 hr {
   color: white;
+  width:95%;
+ /* margin: none; */
+ margin-left:0;
+ margin-right: 0;
+
+}
+.loadmore{
+  display: flex;
+  justify-content: center;
 }
 
 .main-info{
@@ -198,8 +207,9 @@ hr {
 .play-star{
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: flex-start;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
 }
 .more-main{
   margin-bottom: 10px;

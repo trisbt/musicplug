@@ -58,7 +58,10 @@ userController.addFavorites = async (req, res, next) => {
     const song = req.body.name;
     const image = req.body.images;
     const album = req.body.albums;
+    const key = req.body.keySig;
+    const tempo = req.body.tempo;
     let isFavorite;
+    console.log(key, tempo, song)
     try {
         const user = await User.findOne({ username, 'favorites.id': id });
         if (user) {
@@ -76,7 +79,7 @@ userController.addFavorites = async (req, res, next) => {
         }
         await User.findOneAndUpdate(
             { username: username }, 
-            { $push: { favorites: { id, song, artist, album, image } } }, 
+            { $push: { favorites: { id, song, artist, album, image, key, tempo } } }, 
             { new: true } 
         )
         res.locals.userFavs = {username, song, isFavorite};

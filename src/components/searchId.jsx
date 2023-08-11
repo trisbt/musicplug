@@ -3,6 +3,7 @@ import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 // import { amber } from '@mui/material/colors';
 import { blueGrey } from '@mui/material/colors';
+import DisplayData from './displayData';
 
 const MoreButton = styled(Button)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
@@ -39,7 +40,8 @@ const keyConvert = (num) => {
 
 const SearchId = ({ id }) => {
     const [response, setResponse] = useState([]);
-    // const [currData, setCurrData] = useState({})
+    // const [keySig, setKeySig] = useState('');
+    // const [tempo, setTempo] = useState('');
     const [credits, setCredits] = useState([]);
     const fetchData = () => {
         fetch(`http://localhost:4000/advancedSearch?query=${id}`)
@@ -50,7 +52,9 @@ const SearchId = ({ id }) => {
                 const loudness = data.loudness;
                 const energy = data.energy;
                 // Update the response state with the JSON data
-                setResponse([`Key: ${keySig} / Tempo: ${tempo} / Loudness: ${loudness}db / Energy: ${energy}`]);
+                // setKeySig(keyConvert(data.key));
+                // setTempo(data.tempo);
+                setResponse([`Key: ${keySig} | Tempo: ${tempo} | Loudness: ${loudness}db | Energy: ${energy}`]);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -122,7 +126,8 @@ const SearchId = ({ id }) => {
                     <li>{el}</li>
                 </ul>
             ))}
-
+             {/* <p>Key: {keySig} | Tempo: {tempo}</p> */}
+            {/* <DisplayData keySig={keySig} tempo={tempo}/> */}
 
         </div>
     );

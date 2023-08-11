@@ -11,7 +11,9 @@ const userSchema = new Schema({
         song: { type: String },
         artist: { type: Array },
         album: { type: String },
-        image: { type: String }
+        image: { type: String },
+        key: {type: String},
+        tempo: {type: Number},
     }]
 });
 

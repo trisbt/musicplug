@@ -52,6 +52,7 @@ const SearchData = ({ username }) => {
             fetch(`http://localhost:4000/search?query=${searchQuery}&offset=${newOffset}`)
                 .then(res => res.json())
                 .then(data => {
+                    console.log(data)
                     setResponse(data);
                     setOffset(newOffset);
                 })

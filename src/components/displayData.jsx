@@ -69,7 +69,7 @@ const LoadButton = styled(Button)(({ theme }) => ({
     // padding: theme.spacing(1.2),
 }));
 
-const DisplayData = ({ data, username, onLoadMore }) => {
+const DisplayData = ({ data, username, onLoadMore}) => {
     const [favoriteMap, setFavoriteMap] = useState({});
     const audioRef = useRef(null);
     if (!data || !data.tracks || !data.tracks.items) {
@@ -78,9 +78,6 @@ const DisplayData = ({ data, username, onLoadMore }) => {
     const results = data.tracks.items.map((item) => {
         const { name, album, preview_url } = item;
         const artists = item.artists
-        // .map(artist => {
-        //     return artist.name + ' | ';
-        // })
         const images = album.images[1].url;
         const id = item.id;
         const release_date = item.album.release_date;
@@ -109,7 +106,7 @@ const DisplayData = ({ data, username, onLoadMore }) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, id, name, artists, albums, images }),
+                body: JSON.stringify({ username, id, name, artists, albums, images, }),
                 credentials: 'include',
             });
             const data = await response.json();

@@ -231,9 +231,29 @@ hr {
   margin-bottom: 10px;
 
 }
-/* .fav-icon{
-  margin-left: 2px;
+.fav-main{
+  display: flex;
+  width: 100vw;
+  justify-content: center;
+}
+/* .album-cell{
+  width: 100px;
+  height: 100px
 } */
+.fav-info-container{
+  display: flex;
+  justify-content: space-evenly;
+  width: 300px;
+}
+.fav-info{
+  font-size: small;
+}
+div h2{
+  display: flex;
+  justify-content: center;
+}
+
+
 
 
 .user-splash {

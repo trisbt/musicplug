@@ -9,11 +9,12 @@ const userSchema = new Schema({
     favorites: [{
         id: { type: String, unique: true },
         song: { type: String },
-        artist: { type: Array },
+        artist: { type: String },
         album: { type: String },
         image: { type: String },
-        key: {type: String},
-        tempo: {type: Number},
+        key: { type: String },
+        tempo: { type: Number },
+        loudness: { type: Number },
     }]
 });
 

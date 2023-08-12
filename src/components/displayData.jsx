@@ -139,14 +139,15 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField }) => {
     };
 
     const handleFavorite = async (item, username) => {
-        const { id, name, artists, albums, images } = item;
+        console.log(item.artists.map(el => el.name))
+        const { id, name, artists, albums, images, key, tempo, loudness } = item;
         try {
             const response = await fetch('http://localhost:4000/addFavs', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, id, name, artists, albums, images, }),
+                body: JSON.stringify({ username, id, name, artists, albums, images,key, tempo, loudness, }),
                 credentials: 'include',
             });
             const data = await response.json();
@@ -162,8 +163,6 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField }) => {
                     ...prevMap,
                     [id]: false,
                 }));
-                //already added so make it GradeIcon
-                // console.log('Track removed from favorites', data.song);
             }
         } catch (error) {
             console.error('Error adding track to favorites:', error);
@@ -241,7 +240,6 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField }) => {
                         </div>
 
                         <SearchId id={item.id} name={item.name} artists={item.artists} album={item.albums} 
-                        // credits = {credits} setCredits = {setCredits}
                         />
                         <hr />
                     </div>

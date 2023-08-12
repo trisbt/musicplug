@@ -54,14 +54,14 @@ userController.logoutUser = async (req, res, next) => {
 userController.addFavorites = async (req, res, next) => {
     const id = req.body.id;
     const username = req.body.username;
-    const artist = req.body.arists;
+    const artist = req.body.artists.map(el => el.name).join(',');
     const song = req.body.name;
     const image = req.body.images;
     const album = req.body.albums;
-    const key = req.body.keySig;
+    const key = req.body.key;
     const tempo = req.body.tempo;
+    const loudness = req.body.loudness
     let isFavorite;
-    console.log(key, tempo, song)
     try {
         const user = await User.findOne({ username, 'favorites.id': id });
         if (user) {
@@ -79,7 +79,7 @@ userController.addFavorites = async (req, res, next) => {
         }
         await User.findOneAndUpdate(
             { username: username }, 
-            { $push: { favorites: { id, song, artist, album, image, key, tempo } } }, 
+            { $push: { favorites: { id, song, artist, album, image, key, tempo, loudness } } }, 
             { new: true } 
         )
         res.locals.userFavs = {username, song, isFavorite};

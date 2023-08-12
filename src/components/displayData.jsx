@@ -36,10 +36,9 @@ const FavButton = styled(Button)(({ theme }) => ({
     marginBottom: '10px',
     marginTop: '10px',
     fontSize: '12px',
-    width: '160px',
-    height: '30px',
-    lineHeight: '0',
-
+    width:'160px',
+    height:'30px',
+    lineHeight:'0',
 }));
 
 const FavSolid = styled(GradeIcon)(({ theme }) => ({
@@ -91,11 +90,11 @@ const keyConvert = (num) => {
 
 const DisplayData = ({ data, audioData, username, onLoadMore, inputField }) => {
     const [favoriteMap, setFavoriteMap] = useState({});
-    const [credits, setCredits] = useState([]);
+    // const [credits, setCredits] = useState([]);
     const audioRef = useRef(null);
-    useEffect(() => {
-        setCredits([])
-       },[inputField])
+    // useEffect(() => {
+    //     setCredits([])
+    //    },[inputField])
 
     if (!data && !audioData) {
         return null;
@@ -241,7 +240,9 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField }) => {
 
                         </div>
 
-                        <SearchId id={item.id} name={item.name} artists={item.artists} album={item.albums} credits = {credits} setCredits = {setCredits}/>
+                        <SearchId id={item.id} name={item.name} artists={item.artists} album={item.albums} 
+                        // credits = {credits} setCredits = {setCredits}
+                        />
                         <hr />
                     </div>
                 ))}

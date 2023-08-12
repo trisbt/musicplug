@@ -155,7 +155,16 @@ li {
   margin-bottom: .7em; */
 
 }
-
+ul div {
+  font-size: calc(5px + 2vmin);
+  font-weight: 800;
+  color: rgb(210, 210, 210);
+  width: 100vw;
+  /* margin-left: 5%; */
+  /* padding: 5px; */
+  /* background-color: #282c34; */
+  /* margin-right: 10px; */
+}
 hr {
   color: white;
   width:95%;
@@ -196,7 +205,7 @@ hr {
   width: 100px;
   height: 100px;
   object-fit: cover;
-  border-radius: 50%;
+  /* border-radius: 50%; */
 }
 
 .release-date {
@@ -208,7 +217,8 @@ hr {
   display: flex;
   flex-direction: column;
   font-size: 15px;
-  width:300px
+  width:300px;
+  margin-top: 10px;
 }
 .play-star{
   display: flex;
@@ -219,16 +229,12 @@ hr {
 }
 .more-main{
   margin-bottom: 10px;
+
 }
 /* .fav-icon{
   margin-left: 2px;
 } */
-ul div {
-  font-size: calc(5px + 2vmin);
-  font-weight: 800;
-  color: rgb(210, 210, 210);
-  width: 100vw;
-}
+
 
 .user-splash {
   color: rgb(225, 223, 84);

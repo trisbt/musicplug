@@ -47,11 +47,12 @@ const SearchData = ({ username }) => {
     const [audioInfo, setAudioInfo] = useState([]);
     const [inputField, setInputField] = useState('');
     const [offset, setOffset] = useState(1);
-    
+    const [loading, setLoading] = useState(false);
 
     const fetchData = (newOffset = 1) => {
         const idCache = [];
         if (inputField.trim() !== '') {
+            setLoading(true);
             const searchQuery = encodeURIComponent(inputField);
             fetch(`http://localhost:4000/search?query=${searchQuery}&offset=${newOffset}`)
                 .then(res => res.json())
@@ -72,9 +73,11 @@ const SearchData = ({ username }) => {
                         .catch(error => {
                             console.error('Error in advanced search:', error);
                         });
+                        setLoading(false);
                     setOffset(newOffset);
                 })
                 .catch(error => {
+                    setLoading(false);
                     console.error('Error:', error);
                 });
         }
@@ -83,6 +86,8 @@ const SearchData = ({ username }) => {
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
+        setResponse([]);
+        setAudioInfo([]);
         fetchData();
     };
 
@@ -100,22 +105,28 @@ const SearchData = ({ username }) => {
     return (
         <ThemeProvider theme={theme}>
             <div>
-                <form className='searchform' onSubmit={handleFormSubmit}>
-                    <FormControl>
-                        <StyledInput
-                            className='searchbox'
-                            placeholder='find songs'
-                            type='text'
-                            value={inputField}
-                            onChange={handleInputChange}
-                        />
-                    </FormControl>
-                    <ColorButton type='submit' variant='outlined'>
-                        Search
-                    </ColorButton>
-                </form>
-                <DisplayData data={response} audioData={audioInfo} username={username} theme={theme} onLoadMore={handleLoadMore} inputField={inputField} />
-            </div>
+    {!loading ? (
+        <form className='searchform' onSubmit={handleFormSubmit}>
+            <FormControl>
+                <StyledInput
+                    className='searchbox'
+                    placeholder='find songs'
+                    type='text'
+                    value={inputField}
+                    onChange={handleInputChange}
+                />
+            </FormControl>
+            <ColorButton type='submit' variant='outlined'>
+                Search
+            </ColorButton>
+        </form>
+    ) : null}
+    {loading ? (
+        <p>Plugging Results</p>
+    ) : (
+        <DisplayData data={response} audioData={audioInfo} username={username} theme={theme} onLoadMore={handleLoadMore} inputField={inputField} />
+    )}
+</div>
         </ThemeProvider>
     );
 }

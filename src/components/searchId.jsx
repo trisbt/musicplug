@@ -14,14 +14,16 @@ const MoreButton = styled(Button)(({ theme }) => ({
     },
     fontSize: '12px',
     width:'160px',
-    height:'30px',
+    height:'28px',
     lineHeight:'0',
 }));
 
 //secondary search for discogs
-const SearchId = ({ id, credits, setCredits }) => {
+const SearchId = ({ id, }) => {
+    const [credits, setCredits] = useState([]);
     const fetchData = () => {
         //get the track name by fetching to spotify again
+        console.log(id)
         fetch(`http://localhost:4000/getTracks?query=${id}`)
             .then(res => res.json())
             .then(data => {

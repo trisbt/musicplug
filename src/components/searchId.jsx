@@ -18,47 +18,45 @@ const MoreButton = styled(Button)(({ theme }) => ({
     lineHeight:'0',
 }));
 
-const keyConvert = (num) => {
-    const chart = {
-        '0': 'C',
-        '1': 'C#, Db',
-        '2': 'D',
-        '3': 'D#, Eb',
-        '4': 'E',
-        '5': 'F',
-        '6': 'F#, Gb',
-        '7': 'G',
-        '8': 'G#, Ab',
-        '9': 'A',
-        '10': 'A#, Bb',
-        '11': 'B',
-    }
-    if (num in chart) {
-        return chart[num];
-    }
-}
-
+// const keyConvert = (num) => {
+//     const chart = {
+//         '0': 'C',
+//         '1': 'C#, Db',
+//         '2': 'D',
+//         '3': 'D#, Eb',
+//         '4': 'E',
+//         '5': 'F',
+//         '6': 'F#, Gb',
+//         '7': 'G',
+//         '8': 'G#, Ab',
+//         '9': 'A',
+//         '10': 'A#, Bb',
+//         '11': 'B',
+//     }
+//     if (num in chart) {
+//         return chart[num];
+//     }
+// }
+//secondary search for spotify audio, track and discogs
 const SearchId = ({ id }) => {
-    const [response, setResponse] = useState([]);
-    // const [keySig, setKeySig] = useState('');
-    // const [tempo, setTempo] = useState('');
+    // const [response, setResponse] = useState([]);
     const [credits, setCredits] = useState([]);
     const fetchData = () => {
-        fetch(`http://localhost:4000/advancedSearch?query=${id}`)
-            .then(res => res.json())
-            .then(data => {
-                const keySig = keyConvert(data.key);
-                const tempo = data.tempo;
-                const loudness = data.loudness;
-                const energy = data.energy;
-                // Update the response state with the JSON data
-                // setKeySig(keyConvert(data.key));
-                // setTempo(data.tempo);
-                setResponse([`Key: ${keySig} | Tempo: ${tempo} | Loudness: ${loudness}db | Energy: ${energy}`]);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        // fetch(`http://localhost:4000/advancedSearch?query=${id}`)
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         const keySig = keyConvert(data.key);
+        //         const tempo = data.tempo;
+        //         const loudness = data.loudness;
+        //         const energy = data.energy;
+        //         // Update the response state with the JSON data
+        //         // setKeySig(keyConvert(data.key));
+        //         // setTempo(data.tempo);
+        //         setResponse([`Key: ${keySig} | Tempo: ${tempo} | Loudness: ${loudness}db | Energy: ${energy}`]);
+        //     })
+        //     .catch(error => {
+        //         console.error('Error:', error);
+        //     });
         //get the track name by fetching to spotify again
         fetch(`http://localhost:4000/getTracks?query=${id}`)
             .then(res => res.json())
@@ -118,9 +116,9 @@ const SearchId = ({ id }) => {
 
         <div>
             <div className='more-main'>
-                <MoreButton size="small" variant='filledTonal' onClick={fetchData}>Get Info/Credits</MoreButton>
+                <MoreButton size="small" variant='filledTonal' onClick={fetchData}>Credits</MoreButton>
             </div>
-            {response}
+            {/* {response} */}
             {credits.map((el, index) => (
                 <ul className={index % 2 === 0 ? 'even-credit' : 'odd-credit'} key={el}>
                     <li>{el}</li>

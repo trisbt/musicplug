@@ -69,13 +69,37 @@ const LoadButton = styled(Button)(({ theme }) => ({
     // padding: theme.spacing(1.2),
 }));
 
-const DisplayData = ({ data, username, onLoadMore}) => {
+const keyConvert = (num) => {
+    const chart = {
+        '0': 'C',
+        '1': 'C#, Db',
+        '2': 'D',
+        '3': 'D#, Eb',
+        '4': 'E',
+        '5': 'F',
+        '6': 'F#, Gb',
+        '7': 'G',
+        '8': 'G#, Ab',
+        '9': 'A',
+        '10': 'A#, Bb',
+        '11': 'B',
+    }
+    if (num in chart) {
+        return chart[num];
+    }
+}
+
+const DisplayData = ({ data, audioData, username, onLoadMore }) => {
     const [favoriteMap, setFavoriteMap] = useState({});
     const audioRef = useRef(null);
     if (!data || !data.tracks || !data.tracks.items) {
         return null;
     }
-    const results = data.tracks.items.map((item) => {
+    if (!audioData || !audioData.audio_features) {
+        return null;
+    }
+
+    const basicData = data.tracks.items.map((item) => {
         const { name, album, preview_url } = item;
         const artists = item.artists
         const images = album.images[1].url;
@@ -84,6 +108,24 @@ const DisplayData = ({ data, username, onLoadMore}) => {
         const albums = item.album.name;
         return { name, images, id, preview_url, release_date, artists, albums };
     });
+    const audioFeatures = audioData.audio_features.map((item) => {
+        const key = keyConvert(item.key);
+        const tempo = item.tempo;
+        const loudness = item.loudness;
+        const energy = item.energy;
+        return { key, tempo, loudness, energy };
+    });
+    const results = [];
+    for (let i = 0; i < basicData.length; i++) {
+        const combinedObject = {
+            ...basicData[i],
+            ...audioFeatures[i]
+        };
+        results.push(combinedObject);
+    }
+
+    console.log(results)
+   
 
 
     const playAudio = (previewUrl) => {
@@ -154,6 +196,12 @@ const DisplayData = ({ data, username, onLoadMore}) => {
                             </div>
                             <img className="result-image" src={item.images} alt={item.name} />
                         </div>
+                        <div className='audio-features'>
+                           <span>Key: {item.key}</span>
+                           <span>Tempo: {item.tempo}</span>
+                           <span>Loudness: {item.loudness}</span>
+                           <span>Energy: {item.energy}</span>
+                        </div>
                         <div className='play-star'>
                             <FavButton
 
@@ -200,9 +248,9 @@ const DisplayData = ({ data, username, onLoadMore}) => {
             </ul>
             <div className='loadmore'>
                 <LoadButton
-                    onClick={onLoadMore} 
+                    onClick={onLoadMore}
                     variant='outlined'
-                    size = 'large'
+                    size='large'
                     sx={{
                         // display: 'flex',
                         marginBottom: '30px',

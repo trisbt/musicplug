@@ -204,6 +204,12 @@ hr {
   font-weight: 400;
   color: rgb(210, 210, 210);
 }
+.audio-features{
+  display: flex;
+  flex-direction: column;
+  font-size: 15px;
+  width:300px
+}
 .play-star{
   display: flex;
   flex-direction: column;

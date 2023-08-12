@@ -41,11 +41,13 @@ const StyledInput = styled(Input)(({ theme }) => ({
 }));
 
 //main search to spotify
+//need to fix load more data; replacing the data before it and when it renders user is navigated to the bottom
 const SearchData = ({ username }) => {
-    const [response, setResponse] = useState('');
+    const [response, setResponse] = useState([]);
     const [audioInfo, setAudioInfo] = useState([]);
     const [inputField, setInputField] = useState('');
     const [offset, setOffset] = useState(1);
+    
 
     const fetchData = (newOffset = 1) => {
         const idCache = [];
@@ -54,19 +56,22 @@ const SearchData = ({ username }) => {
             fetch(`http://localhost:4000/search?query=${searchQuery}&offset=${newOffset}`)
                 .then(res => res.json())
                 .then(data => {
-                    data.tracks.items.map((item) => {
+                    // console.log(data)
+                    data.tracks.items.forEach((item) => {
                         idCache.push(item.id);
                     })
+                    const searchData = data.tracks.items;
+                    // console.log(searchData)
+                    setResponse(prev => [...prev, ...searchData]);
                     fetch(`http://localhost:4000/advancedSearch?query=${idCache.join(',')}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        const additionalAudioData = data;
-                        setAudioInfo(additionalAudioData);
-                    })
-                    .catch(error => {
-                        console.error('Error in advanced search:', error);
-                    });
-                    setResponse(data);
+                        .then(res => res.json())
+                        .then(data => {
+                            const additionalData = data.audio_features
+                            setAudioInfo(prev => [...prev, ...additionalData]);
+                        })
+                        .catch(error => {
+                            console.error('Error in advanced search:', error);
+                        });
                     setOffset(newOffset);
                 })
                 .catch(error => {
@@ -87,9 +92,9 @@ const SearchData = ({ username }) => {
     const handleLoadMore = () => {
         const nextOffset = offset + 50;
         fetchData(nextOffset);
-       
+
     }
-    
+
 
 
     return (
@@ -109,7 +114,7 @@ const SearchData = ({ username }) => {
                         Search
                     </ColorButton>
                 </form>
-                <DisplayData data={response} audioData = {audioInfo} username={username} theme={theme} onLoadMore={handleLoadMore}/>
+                <DisplayData data={response} audioData={audioInfo} username={username} theme={theme} onLoadMore={handleLoadMore} inputField={inputField} />
             </div>
         </ThemeProvider>
     );

@@ -1,5 +1,5 @@
 import SearchId from './searchId';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 // import IconButton from '@mui/material/IconButton';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
@@ -89,17 +89,19 @@ const keyConvert = (num) => {
     }
 }
 
-const DisplayData = ({ data, audioData, username, onLoadMore }) => {
+const DisplayData = ({ data, audioData, username, onLoadMore, inputField }) => {
     const [favoriteMap, setFavoriteMap] = useState({});
+    const [credits, setCredits] = useState([]);
     const audioRef = useRef(null);
-    if (!data || !data.tracks || !data.tracks.items) {
-        return null;
-    }
-    if (!audioData || !audioData.audio_features) {
-        return null;
-    }
+    useEffect(() => {
+        setCredits([])
+       },[inputField])
 
-    const basicData = data.tracks.items.map((item) => {
+    if (!data && !audioData) {
+        return null;
+    }
+    
+    const basicData = data.map((item) => {
         const { name, album, preview_url } = item;
         const artists = item.artists
         const images = album.images[1].url;
@@ -108,7 +110,8 @@ const DisplayData = ({ data, audioData, username, onLoadMore }) => {
         const albums = item.album.name;
         return { name, images, id, preview_url, release_date, artists, albums };
     });
-    const audioFeatures = audioData.audio_features.map((item) => {
+
+    const audioFeatures = audioData.map((item) => {
         const key = keyConvert(item.key);
         const tempo = item.tempo;
         const loudness = item.loudness;
@@ -123,10 +126,6 @@ const DisplayData = ({ data, audioData, username, onLoadMore }) => {
         };
         results.push(combinedObject);
     }
-
-    console.log(results)
-   
-
 
     const playAudio = (previewUrl) => {
         audioRef.current.volume = .3;
@@ -174,6 +173,8 @@ const DisplayData = ({ data, audioData, username, onLoadMore }) => {
 
     return (
         <div>
+            {results.length > 0 && (
+        <>
             <h4 style={{ textAlign: 'center', fontSize: '20px' }}>Search Results:</h4>
             <ul>
                 {results.map((item, index) => (
@@ -240,7 +241,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore }) => {
 
                         </div>
 
-                        <SearchId id={item.id} name={item.name} artists={item.artists} album={item.albums} />
+                        <SearchId id={item.id} name={item.name} artists={item.artists} album={item.albums} credits = {credits} setCredits = {setCredits}/>
                         <hr />
                     </div>
                 ))}
@@ -258,6 +259,8 @@ const DisplayData = ({ data, audioData, username, onLoadMore }) => {
                 >Load More...
                 </LoadButton>
             </div>
+            </>
+    )}
         </div>
     );
 };

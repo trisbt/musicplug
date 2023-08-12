@@ -49,8 +49,6 @@ const getSpotifyData = (req, res, next) => {
         .then(response => response.json())
         .then(data => {
             res.locals.data = data;
-            // offset += limit;
-            console.log(limit, offset);
             return next();
         })
         .catch(error => {

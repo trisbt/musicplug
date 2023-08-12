@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 // import { amber } from '@mui/material/colors';
 import { blueGrey } from '@mui/material/colors';
-import DisplayData from './displayData';
+
 
 const MoreButton = styled(Button)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
@@ -18,45 +18,9 @@ const MoreButton = styled(Button)(({ theme }) => ({
     lineHeight:'0',
 }));
 
-// const keyConvert = (num) => {
-//     const chart = {
-//         '0': 'C',
-//         '1': 'C#, Db',
-//         '2': 'D',
-//         '3': 'D#, Eb',
-//         '4': 'E',
-//         '5': 'F',
-//         '6': 'F#, Gb',
-//         '7': 'G',
-//         '8': 'G#, Ab',
-//         '9': 'A',
-//         '10': 'A#, Bb',
-//         '11': 'B',
-//     }
-//     if (num in chart) {
-//         return chart[num];
-//     }
-// }
-//secondary search for spotify audio, track and discogs
-const SearchId = ({ id }) => {
-    // const [response, setResponse] = useState([]);
-    const [credits, setCredits] = useState([]);
+//secondary search for discogs
+const SearchId = ({ id, credits, setCredits }) => {
     const fetchData = () => {
-        // fetch(`http://localhost:4000/advancedSearch?query=${id}`)
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         const keySig = keyConvert(data.key);
-        //         const tempo = data.tempo;
-        //         const loudness = data.loudness;
-        //         const energy = data.energy;
-        //         // Update the response state with the JSON data
-        //         // setKeySig(keyConvert(data.key));
-        //         // setTempo(data.tempo);
-        //         setResponse([`Key: ${keySig} | Tempo: ${tempo} | Loudness: ${loudness}db | Energy: ${energy}`]);
-        //     })
-        //     .catch(error => {
-        //         console.error('Error:', error);
-        //     });
         //get the track name by fetching to spotify again
         fetch(`http://localhost:4000/getTracks?query=${id}`)
             .then(res => res.json())
@@ -66,8 +30,6 @@ const SearchId = ({ id }) => {
                     return artist.name + '/';
                 })
                 const albums = data.album.name;
-                // const images = data.album.images[1].url;
-                // setCurrData({ song: song, artist: artists, album: albums, image: images })
                 ///fetch to discogs with the artist and album name to get masterid
                 fetch(`http://localhost:4000/getCredits/?artist=${artists}&album=${albums}`)
                     .then(response => response.json())
@@ -92,8 +54,6 @@ const SearchId = ({ id }) => {
                                     }
                                 }
                             }
-                            // setCredits(['credits not yet built'])
-                            // return;
                         }
                         setCredits(creditsArr);
                     })
@@ -106,9 +66,7 @@ const SearchId = ({ id }) => {
                 console.log(err);
                 return;
             })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+         
     };
 
 
@@ -118,14 +76,11 @@ const SearchId = ({ id }) => {
             <div className='more-main'>
                 <MoreButton size="small" variant='filledTonal' onClick={fetchData}>Credits</MoreButton>
             </div>
-            {/* {response} */}
             {credits.map((el, index) => (
                 <ul className={index % 2 === 0 ? 'even-credit' : 'odd-credit'} key={el}>
                     <li>{el}</li>
                 </ul>
             ))}
-             {/* <p>Key: {keySig} | Tempo: {tempo}</p> */}
-            {/* <DisplayData keySig={keySig} tempo={tempo}/> */}
 
         </div>
     );

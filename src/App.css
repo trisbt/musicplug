@@ -251,8 +251,12 @@ hr {
 div h2{
   display: flex;
   justify-content: center;
+  align-items: center;
 }
-
+#tableTitle{
+  display: flex;
+  justify-content: center;
+}
 
 
 

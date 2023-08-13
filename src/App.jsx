@@ -5,6 +5,7 @@ import DisplayData from './components/displayData';
 import Signup from './components/signup';
 import Favorites from './components/favs';
 import Cookies from 'js-cookie';
+import ResponsiveAppBar from './components/navbar';
 import './App.css';
 
 
@@ -103,6 +104,7 @@ function App() {
 
   return (
     <Router>
+      {/* <ResponsiveAppBar/> */}
       <nav>
         <a className='LOGO' href='/'>Plug app</a>
         <Link className='favs-link' to="/favs">Your Favorites</Link>

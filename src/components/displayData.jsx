@@ -88,18 +88,17 @@ const keyConvert = (num) => {
     }
 }
 
-const DisplayData = ({ data, audioData, username, onLoadMore, inputField }) => {
+const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFav }) => {
     const [favoriteMap, setFavoriteMap] = useState({});
-    // const [credits, setCredits] = useState([]);
-    const audioRef = useRef(null);
-    // useEffect(() => {
-    //     setCredits([])
-    //    },[inputField])
 
+    const audioRef = useRef(null);
+    useEffect(() => {
+       setFavoriteMap(userFav)
+       },[userFav])
     if (!data && !audioData) {
         return null;
     }
-    
+  
     const basicData = data.map((item) => {
         const { name, album, preview_url } = item;
         const artists = item.artists
@@ -137,9 +136,8 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField }) => {
             }
         }
     };
-
+   
     const handleFavorite = async (item, username) => {
-        console.log(item.artists.map(el => el.name))
         const { id, name, artists, albums, images, key, tempo, loudness } = item;
         try {
             const response = await fetch('http://localhost:4000/addFavs', {
@@ -203,16 +201,12 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField }) => {
                         </div>
                         <div className='play-star'>
                             <FavButton
-
                                 className='fav-icon'
                                 onClick={() => handleFavorite(item, username)}
                                 sx={{
                                     padding: '0',
                                     display: 'flex',
                                     justifyContent: "space-evenly",
-                                    // '&:hover': {
-                                    //     backgroundColor: 'transparent',
-                                    // },
                                 }}
                             >
                                 {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
@@ -220,14 +214,6 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField }) => {
                             </FavButton>
                             {item.preview_url && (
                                 <PrevButton
-                                    // variant='outlined'
-                                    sx={{
-                                        // display:'flex',
-
-                                        // '&:hover': {
-                                        //     backgroundColor: 'transparent',
-                                        // },
-                                    }}
                                     className='preview'
                                     onClick={() => playAudio(item.preview_url)}
                                     startIcon={<PlayCircleFilledWhiteOutlinedIcon />} // Replace YourIconComponent with the actual icon you want to use

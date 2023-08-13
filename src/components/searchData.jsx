@@ -46,6 +46,7 @@ const SearchData = ({ username }) => {
     const [response, setResponse] = useState([]);
     const [audioInfo, setAudioInfo] = useState([]);
     const [inputField, setInputField] = useState('');
+    const [userFav, setUserFav] = useState([])
     const [offset, setOffset] = useState(1);
     const [loading, setLoading] = useState(false);
 
@@ -73,7 +74,30 @@ const SearchData = ({ username }) => {
                         .catch(error => {
                             console.error('Error in advanced search:', error);
                         });
+                        fetch('http://localhost:4000/favs', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ username }),
+                            credentials: 'include',
+                        })
+                            .then(res => res.json())
+                            .then(res => {
+                                const favArray = res.favorites.map(el => el.id);
+                                const obj = {};
+                                for(const el of favArray){
+                                    if(!obj[el]){
+                                        obj[el] = true;
+                                    }
+                                }
+                                setUserFav(obj);
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });    
                         setLoading(false);
+                    //need a fetch to favorites to check if already fav and pass prop to display    
                     setOffset(newOffset);
                 })
                 .catch(error => {
@@ -82,6 +106,7 @@ const SearchData = ({ username }) => {
                 });
         }
     };
+
 
 
     const handleFormSubmit = (event) => {
@@ -124,7 +149,7 @@ const SearchData = ({ username }) => {
     {loading ? (
         <p>Plugging Results</p>
     ) : (
-        <DisplayData data={response} audioData={audioInfo} username={username} theme={theme} onLoadMore={handleLoadMore} inputField={inputField} />
+        <DisplayData data={response} audioData={audioInfo} userFav = {userFav} username={username} theme={theme} onLoadMore={handleLoadMore} inputField={inputField} />
     )}
 </div>
         </ThemeProvider>

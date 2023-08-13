@@ -178,7 +178,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Nutrition
+          Your Favorites
         </Typography>
       )}
 
@@ -264,9 +264,9 @@ export default function EnhancedTable({favorites}) {
     setPage(0);
   };
 
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
+//   const handleChangeDense = (event) => {
+//     setDense(event.target.checked);
+//   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
@@ -285,7 +285,7 @@ export default function EnhancedTable({favorites}) {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
+      <Paper  variant="outlined" square sx={{ width: '100%', mb: 2, }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
@@ -332,12 +332,11 @@ export default function EnhancedTable({favorites}) {
                       scope="row"
                       padding="none"
                     >
-                      {row.name}
+                      {row.song}
                     </TableCell>
-                    <TableCell align="right">{row.song}</TableCell>
-                    <TableCell align="right">{row.artist}</TableCell>
-                    <TableCell align="right">{row.album}</TableCell>
-                    <TableCell align="right">{row.key}</TableCell>
+                    <TableCell align="left">{row.artist}</TableCell>
+                    <TableCell align="left">{row.album}</TableCell>
+                    <TableCell align="left">{row.key}</TableCell>
                     <TableCell align="right">{row.tempo}</TableCell>
                   </TableRow>
                 );
@@ -364,10 +363,10 @@ export default function EnhancedTable({favorites}) {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
+      {/* <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
-      />
+      /> */}
     </Box>
   );
 }

@@ -6,10 +6,10 @@ const userController = {};
 
 userController.createUser = async (req, res, next) => {
     try {
-        const { username, password, email } = req.body;
+        const { username, password, email, firstname, lastname } = req.body;
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-        const user = { username: username, password: hashedPassword, email: email };
+        const user = { firstname: firstname, lastname:lastname, username: username, password: hashedPassword, email: email };
         res.locals.user = await User.create(user);
         return next();
     } catch (err) {
@@ -25,6 +25,7 @@ userController.verifyUser = async (req, res, next) => {
             const isPasswordValid = await bcrypt.compare(password, user1.password);
             if (isPasswordValid) {
                 res.locals.user = user1;
+                console.log('loggedin server')
                 return next();
             } else {
                 return res.status(401).json({ message: 'Invalid password' });

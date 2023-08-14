@@ -74,29 +74,29 @@ const SearchData = ({ username }) => {
                         .catch(error => {
                             console.error('Error in advanced search:', error);
                         });
-                        fetch('http://localhost:4000/favs', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ username }),
-                            credentials: 'include',
-                        })
-                            .then(res => res.json())
-                            .then(res => {
-                                const favArray = res.favorites.map(el => el.id);
-                                const obj = {};
-                                for(const el of favArray){
-                                    if(!obj[el]){
-                                        obj[el] = true;
-                                    }
+                    fetch('http://localhost:4000/favs', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username }),
+                        credentials: 'include',
+                    })
+                        .then(res => res.json())
+                        .then(res => {
+                            const favArray = res.favorites.map(el => el.id);
+                            const obj = {};
+                            for (const el of favArray) {
+                                if (!obj[el]) {
+                                    obj[el] = true;
                                 }
-                                setUserFav(obj);
-                            })
-                            .catch(err => {
-                                console.log(err);
-                            });    
-                        setLoading(false);
+                            }
+                            setUserFav(obj);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                    setLoading(false);
                     //need a fetch to favorites to check if already fav and pass prop to display    
                     setOffset(newOffset);
                 })
@@ -130,28 +130,28 @@ const SearchData = ({ username }) => {
     return (
         <ThemeProvider theme={theme}>
             <div>
-    {!loading ? (
-        <form className='searchform' onSubmit={handleFormSubmit}>
-            <FormControl>
-                <StyledInput
-                    className='searchbox'
-                    placeholder='find songs'
-                    type='text'
-                    value={inputField}
-                    onChange={handleInputChange}
-                />
-            </FormControl>
-            <ColorButton type='submit' variant='outlined'>
-                Search
-            </ColorButton>
-        </form>
-    ) : null}
-    {loading ? (
-        <p>Plugging Results</p>
-    ) : (
-        <DisplayData data={response} audioData={audioInfo} userFav = {userFav} username={username} theme={theme} onLoadMore={handleLoadMore} inputField={inputField} />
-    )}
-</div>
+                {!loading ? (
+                    <form className='searchform' onSubmit={handleFormSubmit}>
+                        <FormControl>
+                            <StyledInput
+                                className='searchbox'
+                                placeholder='find songs'
+                                type='text'
+                                value={inputField}
+                                onChange={handleInputChange}
+                            />
+                        </FormControl>
+                        <ColorButton type='submit' variant='outlined'>
+                            Search
+                        </ColorButton>
+                    </form>
+                ) : null}
+                {loading ? (
+                    <p>Plugging Results</p>
+                ) : (
+                    <DisplayData data={response} audioData={audioInfo} userFav={userFav} username={username} theme={theme} onLoadMore={handleLoadMore} inputField={inputField} />
+                )}
+            </div>
         </ThemeProvider>
     );
 }

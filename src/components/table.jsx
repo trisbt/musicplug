@@ -26,7 +26,7 @@ import { blueGrey } from '@mui/material/colors';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-      backgroundColor: blueGrey[500],
+      backgroundColor: blueGrey[300],
       color: theme.palette.common.white,
     },
     [`&.${tableCellClasses.body}`]: {
@@ -164,7 +164,7 @@ function EnhancedTableToolbar(props) {
   return (
     <Toolbar
       sx={{
-        backgroundColor: 'black',
+        backgroundColor: blueGrey[700],
         color:'white',
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
@@ -188,7 +188,7 @@ function EnhancedTableToolbar(props) {
         <Typography
           sx={{ 
             flex: '1 1 100%',
-            
+            // color:'black'
             
         }}
           variant="h6"

@@ -67,7 +67,7 @@ function ResponsiveAppBar() {
                             textDecoration: 'none',
                         }}
                     >
-                        <Link to="/" >Plug</Link>
+                        <Link to="/">Plug</Link>
                         {/* Plug */}
                     </Typography>
 

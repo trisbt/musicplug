@@ -17,7 +17,8 @@ const userSchema = new Schema({
         key: { type: String },
         tempo: { type: Number },
         loudness: { type: Number },
-    }]
+    }],
+    keepMeLoggedIn:{type: String, unique:true}
 });
 
 module.exports = mongoose.model('User', userSchema);

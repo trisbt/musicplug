@@ -18,14 +18,14 @@ userController.createUser = async (req, res, next) => {
 };
 
 userController.verifyUser = async (req, res, next) => {
-    const { username, password } = req.body;
+
+    const { username, password, rememberMe } = req.body;
     try {
         const user1 = await User.findOne({ username: `${username}` }).exec();
         if (user1) {
             const isPasswordValid = await bcrypt.compare(password, user1.password);
             if (isPasswordValid) {
-                res.locals.user = user1;
-                console.log('loggedin server')
+                res.locals.user = {user1, rememberMe};
                 return next();
             } else {
                 return res.status(401).json({ message: 'Invalid password' });
@@ -44,6 +44,7 @@ userController.logoutUser = async (req, res, next) => {
     try {
         await Session.deleteOne({ sessionToken });
         res.clearCookie('ssid');
+        res.clearCookie('plugKeepMeLoggedIn')
         return res.status(200).json({ message: 'Logged out successfully' });
     } catch (err) {
         console.error('Error logging out:', err);

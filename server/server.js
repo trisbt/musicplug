@@ -47,8 +47,8 @@ app.post('/signup', userController.createUser, (req, res) => {
 });
 
 //verify user 
-app.post('/login', userController.verifyUser, sessionController.startSession, cookieController.setSSIDCookie, (req, res, next) => {
-    return res.status(200).json({message: "logged in", user: res.locals.user});
+app.post('/login', userController.verifyUser, sessionController.startSession, cookieController.setSSIDCookie, cookieController.setRememberMeCookie, (req, res, next) => {
+    return res.status(200).json({message: "logged in"});
 });
 app.post('/logout', userController.logoutUser, (req, res) => {
     return res.status(200).json({message: 'logged out'});
@@ -56,6 +56,10 @@ app.post('/logout', userController.logoutUser, (req, res) => {
 app.get('/validate', sessionController.isLoggedIn, (req, res) => {
     return res.status(200).json({message: "user validated"});
 })
+//remember me
+app.get('/check-remember-me', cookieController.checkRememberMeCookie, (req, res) => {
+    return res.status(200).json({valid: res.locals.valid, username: res.locals.userFound});
+});
 
 //get favs 
 app.post('/favs', userController.getFavorites, (req, res) => {

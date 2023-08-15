@@ -1,4 +1,3 @@
-
 a {
   text-decoration: none;
   color: rgb(236, 236, 236);
@@ -6,14 +5,15 @@ a {
 }
 
 
-.searchform{
+.searchform {
   display: flex;
   justify-content: center;
-  margin-top: 10px; 
+  margin-top: 10px;
 }
-.message{
+
+.message {
   display: flex;
-  
+
   /* height: 30vh; */
 }
 
@@ -63,32 +63,43 @@ ul div {
   /* background-color: #282c34; */
   /* margin-right: 10px; */
 }
-hr {
-  color: white;
-  width:95%;
- /* margin: none; */
- margin-left:0;
- margin-right: 0;
 
+hr {
+  /* color: white; */
+  width: 95%;
+  /* margin: none; */
+  margin-left: 0;
+  margin-right: 0;
 }
-.loadmore{
+
+/* #search-hr {
+  background-color: rgb(214, 159, 48);
+  border: none;
+  height: 3px;
+  margin-left: 0;
+  margin-right: 0;
+} */
+
+.loadmore {
   display: flex;
   justify-content: center;
 }
 
-.main-info{
+.main-info {
   display: flex;
   /* justify-content: center; */
   flex-direction: row-reverse;
   /* width: 500px; */
 }
-.song-info{
+
+.song-info {
   display: flex;
   justify-content: space-evenly;
   align-items: flex-start;
   flex-direction: column;
   margin-left: 10px;
 }
+
 .result-name {
   font-weight: bold;
   color: rgb(179, 199, 218);
@@ -98,6 +109,7 @@ hr {
   color: rgb(163, 164, 166);
   font-size: calc(2px + 2vmin);
 }
+
 .result-image {
   display: flex;
   width: 100px;
@@ -111,47 +123,55 @@ hr {
   font-weight: 400;
   color: rgb(210, 210, 210);
 }
-.audio-features{
+
+.audio-features {
   display: flex;
   flex-direction: column;
   font-size: 15px;
-  width:300px;
+  width: 300px;
   margin-top: 10px;
 }
-.play-star{
+
+.play-star {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   /* margin-bottom: 10px; */
 }
-.more-main{
+
+.more-main {
   margin-bottom: 10px;
 
 }
-.fav-main{
+
+.fav-main {
   display: flex;
   width: 100vw;
   justify-content: center;
 }
+
 /* .album-cell{
   width: 100px;
   height: 100px
 } */
-.fav-info-container{
+.fav-info-container {
   display: flex;
   justify-content: space-evenly;
   width: 300px;
 }
-.fav-info{
+
+.fav-info {
   font-size: small;
 }
-div h2{
+
+div h2 {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-#tableTitle{
+
+#tableTitle {
   display: flex;
   justify-content: center;
 }
@@ -193,7 +213,7 @@ div h2{
 } */
 
 /* .App { */
-  /* text-align: center; */
+/* text-align: center; */
 /* } */
 
 

@@ -10,8 +10,7 @@ import SignUp from './components/signup';
 
 function App() {
   const {isValidated, isLoggedIn, loggedInUser, logout } = useAuth();
-console.log('logged in', isLoggedIn)
-console.log(isValidated)
+  
   return (
     <Router>
       <ResponsiveAppBar />

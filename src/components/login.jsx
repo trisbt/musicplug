@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -31,34 +32,40 @@ function Copyright(props) {
 
 
 const defaultTheme = createTheme({
-    palette: {
-        primary: {
-          main: '#0052cc',
-        },
-        secondary: {
-          main: '#edf2ff',
-        },
-      },
+  palette: {
+    primary: {
+      main: '#0052cc',
+    },
+    secondary: {
+      main: '#edf2ff',
+    },
+  },
 });
 
 export default function SignIn() {
-    const { handleLogin } = useAuth();
-    
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        const username = event.target.username.value;
-        const password = event.target.password.value;
+  const [rememberMe, setRememberMe] = useState(false);
+  const { handleLogin } = useAuth();
 
-        try {
-            await handleLogin(username, password);
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
+  const handleCheckboxChange = (event) => {
+    setRememberMe(event.target.checked);
+
+  };
+ 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const username = event.target.username.value;
+    const password = event.target.password.value;
+    console.log(rememberMe)
+    try {
+      await handleLogin(username, password, rememberMe);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs" sx ={{
+      <Container component="main" maxWidth="xs" sx={{
         backgroundColor: 'white',
         // opacity: 0.5
       }}>
@@ -75,7 +82,7 @@ export default function SignIn() {
           <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5" sx ={{color: 'black'}}>
+          <Typography component="h1" variant="h5" sx={{ color: 'black' }}>
             Sign in
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -100,8 +107,15 @@ export default function SignIn() {
               autoComplete="current-password"
             />
             <FormControlLabel
-            sx ={{color: 'black'}}
-              control={<Checkbox value="remember" color="primary" />}
+              sx={{ color: 'black' }}
+              control={
+                <Checkbox
+                  value="remember"
+                  color="primary"
+                  checked={rememberMe} // Checked status
+                  onChange={handleCheckboxChange} // Change handler
+                />
+              }
               label="Remember me"
             />
             <Button
@@ -114,8 +128,8 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2" sx ={{
-                    color:'black'
+                <Link href="#" variant="body2" sx={{
+                  color: 'black'
                 }}>
                   Forgot password?
                 </Link>

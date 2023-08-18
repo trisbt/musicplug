@@ -85,12 +85,12 @@ hr {
   justify-content: center;
 }
 
-.main-info {
+/* .main-info {
   display: flex;
-  /* justify-content: center; */
+
   flex-direction: row-reverse;
-  /* width: 500px; */
-}
+
+} */
 
 .song-info {
   display: flex;
@@ -128,7 +128,7 @@ hr {
   display: flex;
   flex-direction: column;
   font-size: 15px;
-  width: 300px;
+  /* width: 300px; */
   margin-top: 10px;
 }
 
@@ -175,6 +175,7 @@ div h2 {
   display: flex;
   justify-content: center;
 }
+
 
 
 

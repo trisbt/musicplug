@@ -9,8 +9,7 @@ import SignIn from './components/login';
 import SignUp from './components/signup';
 
 function App() {
-  const {isValidated, isLoggedIn, loggedInUser, logout } = useAuth();
-  
+  const {isLoggedIn, loggedInUser, logout } = useAuth();
   return (
     <Router>
       <ResponsiveAppBar />
@@ -20,7 +19,7 @@ function App() {
             <Route path="/" element={<SearchData username={loggedInUser} />} />
             <Route path = "/signup" element = {<SignUp/>}/>
             {!isLoggedIn && <Route path="/login" element={<SignIn />} />}
-            {isValidated && <Route path="/favs" element={<Favorites username={loggedInUser} />} />}
+            {isLoggedIn && <Route path="/favs" element={<Favorites username={loggedInUser} />} />}
           </Routes>
         </div>
       </div>

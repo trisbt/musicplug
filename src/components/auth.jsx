@@ -10,7 +10,7 @@ export function useAuth() {
 export function AuthProvider({ children }) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState('');
-    const [isValidated, setIsValidated] = useState(false);
+    // const [isValidated, setIsValidated] = useState(false);
     const [logout, setLogout] = useState(false);
 
 
@@ -18,7 +18,7 @@ export function AuthProvider({ children }) {
         if (!isLoggedIn) {
             fetchRm();
         }
-    }, []);
+    }, [isLoggedIn]);
     const fetchRm = async () => {
         try {
             const rememberMeResponse = await fetch('http://localhost:4000/check-remember-me', {
@@ -43,9 +43,9 @@ export function AuthProvider({ children }) {
             });
             const data = await response.json();
             if (data.message === 'user validated') {
-                console.log('validated');
+                // console.log('validated');
                 setIsLoggedIn(true);
-                setIsValidated(true);
+                // setIsValidated(true);
                 setLogout(false);
             }
         } catch (error) {
@@ -147,10 +147,10 @@ export function AuthProvider({ children }) {
         handleLogin,
         handleSignup,
         // handleRememberLogin,
-        isValidated,
+        // isValidated,
         logout,
 
-    }), [isLoggedIn, loggedInUser, isValidated, logout]);
+    }), [isLoggedIn, loggedInUser, logout]);
 
     return (
         <AuthContext.Provider value={value}>

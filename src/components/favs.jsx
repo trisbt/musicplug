@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-
+import CircleOfFifths from './circleOfFifths';
 import EnhancedTable from './table';
 
 function Favorites({ username }) {
     const [userFavorites, setUserFavorites] = useState([]);
-    const [initialRenderDone, setInitialRenderDone] = useState(false); 
+    const [initialRenderDone, setInitialRenderDone] = useState(false);
 
     useEffect(() => {
         const fetchFavorites = () => {
@@ -31,7 +31,11 @@ function Favorites({ username }) {
 
 
     return (
-        <EnhancedTable favorites={userFavorites} initialRenderDone = {initialRenderDone} />
+        <div>
+            <CircleOfFifths />
+            <EnhancedTable favorites={userFavorites} initialRenderDone={initialRenderDone} />
+
+        </div>
     );
 }
 

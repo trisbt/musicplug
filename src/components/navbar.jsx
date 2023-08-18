@@ -52,14 +52,11 @@ function ResponsiveAppBar() {
                     <Typography
                         variant="h6"
                         noWrap
-                        // component="a"
-                        // href="/"
                         sx={{
                             mr: 1,
                             display: { xs: 'none', md: 'flex' },
                             fontFamily: 'Rafika, arial',
                             // textShadow:'4px 4px 4px 4px #aaa',
-
                             // fontFamily: "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
                             //   fontWeight: 700,
                             letterSpacing: '.2rem',
@@ -136,7 +133,6 @@ function ResponsiveAppBar() {
                                     Favorites
                                 </Link>
                             )
-
                                 : (
                                     <Button
                                         key={page}
@@ -155,11 +151,12 @@ function ResponsiveAppBar() {
                             <Tooltip title="Open settings">
                                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                     <Avatar>{userInitial}</Avatar>
-
                                 </IconButton>
                             </Tooltip>
                             <Menu
-                                sx={{ mt: '45px' }}
+                                sx={{ 
+                                    mt: '45px', 
+                                }}
                                 id="menu-appbar"
                                 anchorEl={anchorElUser}
                                 anchorOrigin={{
@@ -175,18 +172,18 @@ function ResponsiveAppBar() {
                                 onClose={handleCloseUserMenu}
                             >
                                 {settings.map((setting) => (
-                                    setting === 'Logout' ? ( // Check for Logout setting
+                                    setting === 'Logout' ? ( 
                                         <MenuItem key={setting} onClick={() => { handleCloseUserMenu(); handleLogout(); }}>
-                                            <Typography textAlign="center">{setting}</Typography>
+                                            <Typography textAlign="center" color="black">{setting}</Typography>
                                         </MenuItem>
                                     ) : (
                                         <MenuItem key={setting} onClick={handleCloseUserMenu}>
                                             {setting === 'Favorites' ? (
-                                                <Link to="/favs" sx={{ my: 2, color: 'white', display: 'block' }} onClick={handleCloseNavMenu}>
-                                                    <Typography textAlign="center">{setting}</Typography>
+                                                <Link to="/favs"  onClick={handleCloseNavMenu}>
+                                                    <Typography textAlign="center" color="black">{setting} </Typography>
                                                 </Link>
                                             ) : (
-                                                <Typography textAlign="center">{setting}</Typography>
+                                                <Typography textAlign="center"color="black">{setting}</Typography>
                                             )}
                                         </MenuItem>
                                     )

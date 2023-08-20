@@ -1,29 +1,30 @@
 import React, { useState } from 'react';
 import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
-// import { amber } from '@mui/material/colors';
+import { Box } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
+import { lightBlue } from '@mui/material/colors';
 
 
 const MoreButton = styled(Button)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
-    backgroundColor: blueGrey[500],
+    backgroundColor: lightBlue[700],
     '&:hover': {
         color: theme.palette.secondary.contrastText,
         backgroundColor: theme.palette.secondary.main,
     },
     fontSize: '12px',
-    width:'160px',
-    height:'28px',
-    lineHeight:'0',
+    width: '200px',
+    height: '50px',
+    lineHeight: '0',
 }));
 
 //secondary search for discogs
-const SearchId = ({ id, }) => {
+const SearchId = ({ id }) => {
     const [credits, setCredits] = useState([]);
+    const [showCredits, setShowCredits] = useState(false);
     const fetchData = () => {
         //get the track name by fetching to spotify again
-        console.log(id)
         fetch(`http://localhost:4000/getTracks?query=${id}`)
             .then(res => res.json())
             .then(data => {
@@ -36,6 +37,7 @@ const SearchId = ({ id, }) => {
                 fetch(`http://localhost:4000/getCredits/?artist=${artists}&album=${albums}`)
                     .then(response => response.json())
                     .then(data => {
+
                         if (data.message === 'Master Release not found.' || data.message === 'The requested resource was not found.') {
                             setCredits(['No credits/Master release not found'])
                             return;
@@ -58,6 +60,7 @@ const SearchId = ({ id, }) => {
                             }
                         }
                         setCredits(creditsArr);
+                        setShowCredits(true);
                     })
                     .catch(err => {
                         console.log(err);
@@ -68,22 +71,49 @@ const SearchId = ({ id, }) => {
                 console.log(err);
                 return;
             })
-         
-    };
 
+    };
+    const handleMoreButtonClick = () => {
+        setShowCredits(!showCredits);
+        if (!showCredits) {
+            fetchData();
+        }
+    };
 
     return (
 
-        <div>
-            <div className='more-main'>
-                <MoreButton size="small" variant='filledTonal' onClick={fetchData}>Credits</MoreButton>
-            </div>
-            {credits.map((el, index) => (
-                <ul className={index % 2 === 0 ? 'even-credit' : 'odd-credit'} key={el}>
-                    <li>{el}</li>
-                </ul>
-            ))}
-
+        <div className='credits-container'>
+            <MoreButton className='credits-button' size="small" variant='filledTonal' onClick={handleMoreButtonClick}>Credits</MoreButton>
+            {showCredits && (
+               <Box
+               sx={{
+               
+                   border: 1,
+                   borderColor: "grey.300",
+                   borderRadius: 2,
+                   padding: 2,
+                   overflow: "auto",
+                   maxHeight: 300  ,
+                   width: 700,
+               }}
+           >
+               <ul style={{
+                   columns: '2',
+                   columnGap: '16px',
+                   margin: 0,
+                   padding: 0
+               }}>
+                   {credits.map((el, index) => (
+                       <li
+                           key={el}
+                           className={index % 2 === 0 ? 'even-credit' : 'odd-credit'}
+                       >
+                           {el}
+                       </li>
+                   ))}
+               </ul>
+           </Box>
+            )}
         </div>
     );
 };

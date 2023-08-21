@@ -262,13 +262,15 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFa
                                                         display: 'flex',
                                                         flexDirection: 'row',
                                                         justifyContent: 'flex-start',
-                                                        marginLeft:'55px',
+                                                        marginLeft:'60px',
                             
                                                         // height: '60px',
-                                                        // "@media (max-width: 900px)": {
-                                                        //     flexDirection: 'column',
-                                                        //     alignItems: 'center',
-                                                        // }
+                                                        "@media (max-width: 900px)": {
+                                                            flexDirection: 'column',
+                                                            // alignItems: 'center',
+                                                            // justifyContent:'flex-start',
+                                                            margin:'0 25px 0'
+                                                        }
                                                     }}
                                                 >
                                                 
@@ -280,7 +282,13 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFa
                                                             paddingRight: '5px',
                                                             display: 'flex',
                                                             justifyContent: "space-evenly",
-                                                            marginRight:'55px',
+                                                            marginRight:'5px',
+                                                            "@media (max-width: 900px)": {
+                                                                // flexDirection: 'column',
+                                                                // alignItems: 'center',
+                                                                // justifyContent:'center',
+                                                                margin:'0 0 10px'
+                                                            }
                                                         }}
                                                     >
                                                         {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}

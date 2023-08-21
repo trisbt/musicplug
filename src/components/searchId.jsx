@@ -18,7 +18,13 @@ const MoreButton = styled(Button)(({ theme }) => ({
     height: '50px',
     lineHeight: '0',
 }));
-
+function getStringBeforeParenthesis(str) {
+    const indexOfParenthesis = str.indexOf('(');
+    if (indexOfParenthesis !== -1) {
+        return str.substring(0, indexOfParenthesis).trim(); // trim to remove any spaces before '('
+    }
+    return str;
+}
 //secondary search for discogs
 const SearchId = ({ id }) => {
     const [credits, setCredits] = useState([]);
@@ -37,8 +43,7 @@ const SearchId = ({ id }) => {
                 fetch(`http://localhost:4000/getCredits/?artist=${artists}&album=${albums}`)
                     .then(response => response.json())
                     .then(data => {
-
-                        if (data.message === 'Master Release not found.' || data.message === 'The requested resource was not found.') {
+                        if (data.message === 'Master Release not found.' || data.message === 'The requested resource was not found.' || data === 'No masters found with extra artists.') {
                             setCredits(['No credits/Master release not found'])
                             return;
                         }
@@ -49,7 +54,8 @@ const SearchId = ({ id }) => {
                         const noFeatSong = song.replace(/\(.*\)/, "").trim();
                         //iterate over the master tracklist
                         for (const track of tracklistArr) {
-                            if (track.title.toLowerCase() === song.toLowerCase() || track.title.toLowerCase() === noFeatSong.toLowerCase()) {
+                            
+                            if (track.title.toLowerCase() === song.toLowerCase() || track.title.toLowerCase() === noFeatSong.toLowerCase() || song.toLowerCase() === getStringBeforeParenthesis(track.title.toLowerCase())) {
                                 //if credits are given then push into our credits arr
                                 if (track.extraartists) {
                                     const crew = track.extraartists

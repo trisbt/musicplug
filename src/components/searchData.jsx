@@ -131,6 +131,7 @@ const SearchData = ({ username }) => {
         <ThemeProvider theme={theme}>
             <div>
                 {!loading ? (
+                    <div className='searchform-container'>
                     <form className='searchform' onSubmit={handleFormSubmit}>
                         <FormControl>
                             <StyledInput
@@ -145,6 +146,7 @@ const SearchData = ({ username }) => {
                             Search
                         </ColorButton>
                     </form>
+                    </div>
                 ) : null}
                 {loading ? (
                     <p>Plugging Results</p>

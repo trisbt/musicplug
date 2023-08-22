@@ -21,19 +21,21 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import { Container } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { blueGrey } from '@mui/material/colors';
 
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: blueGrey[300],
-      color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-  }));
-  
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: blueGrey[300],
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
 function createData(song, artist, album, key, tempo) {
   return {
     song, artist, album, key, tempo,
@@ -165,7 +167,7 @@ function EnhancedTableToolbar(props) {
     <Toolbar
       sx={{
         backgroundColor: blueGrey[700],
-        color:'white',
+        color: 'white',
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
@@ -180,17 +182,17 @@ function EnhancedTableToolbar(props) {
           color="inherit"
           variant="subtitle1"
           component="div"
-          
+
         >
           {numSelected} selected
         </Typography>
       ) : (
         <Typography
-          sx={{ 
+          sx={{
             flex: '1 1 100%',
             // color:'black'
-            
-        }}
+
+          }}
           variant="h6"
           id="tableTitle"
           component="div"
@@ -207,9 +209,9 @@ function EnhancedTableToolbar(props) {
         </Tooltip>
       ) : (
         <Tooltip title="Filter list"
-        sx={{
-            color:'white'
-        }}
+          sx={{
+            color: 'white'
+          }}
         >
           <IconButton>
             <FilterListIcon />
@@ -224,7 +226,8 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function EnhancedTable({favorites, initialRenderDone}) {
+export default function EnhancedTable({ favorites, initialRenderDone, activeSlice }) {
+
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('song');
   const [selected, setSelected] = useState([]);
@@ -232,13 +235,18 @@ export default function EnhancedTable({favorites, initialRenderDone}) {
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const rows = favorites.map(favorite => createData(
+  let rows = favorites.map(favorite => createData(
     favorite.song,
     favorite.artist,
     favorite.album,
     favorite.key,
     favorite.tempo
   ));
+
+  if (activeSlice) {
+    rows = rows.filter(row => row.key === activeSlice);
+  }
+
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -296,16 +304,29 @@ export default function EnhancedTable({favorites, initialRenderDone}) {
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
       ),
-    [initialRenderDone, order, orderBy, page, rowsPerPage],
+    [initialRenderDone, order, orderBy, page, rowsPerPage, rows],
   );
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Paper  variant="outlined" square sx={{ width: '100%', mb: 2, border: "1px solid black" }}>
+    <Container maxWidth="sm" sx ={{
+      "@media (max-width: 900px)": {
+        display: 'flex',
+        width: '100vw',
+      }
+    }}>
+
+    <Box sx={{
+        width: '100%',
+    }}>
+      <Paper variant="outlined" square sx={{
+        width: '100%',
+        mb: 2,
+        border: "1px solid black",
+      }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
-            sx={{ minWidth: 750 }}
+            // sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
             size='medium'
           >
@@ -350,7 +371,7 @@ export default function EnhancedTable({favorites, initialRenderDone}) {
                     >
                       {row.song}
                     </TableCell>
-            
+
                     <TableCell align="left">{row.artist}</TableCell>
                     <TableCell align="left">{row.album}</TableCell>
                     <TableCell align="left">{row.key}</TableCell>
@@ -361,7 +382,7 @@ export default function EnhancedTable({favorites, initialRenderDone}) {
               {emptyRows > 0 && (
                 <TableRow
                   style={{
-                    height: (33) * emptyRows,
+                    height: (30) * emptyRows,
                   }}
                 >
                   <TableCell colSpan={6} />
@@ -370,16 +391,17 @@ export default function EnhancedTable({favorites, initialRenderDone}) {
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination 
-        rowsPerPageOptions={[5, 10, 25]}
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage} 
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </Box>
+    </Container>
   );
 }

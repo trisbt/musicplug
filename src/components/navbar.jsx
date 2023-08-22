@@ -42,6 +42,7 @@ function ResponsiveAppBar() {
     const userInitial = loggedInUser ? loggedInUser[0].toUpperCase() : '';
     return (
         <AppBar position="static"
+
             sx={{ background: 'linear-gradient(169deg, rgba(0,0,0,1) 0%, rgba(41,5,111,1) 40%, rgba(52,3,109,1) 55%, rgba(8,1,97,1) 82%)' }}
         >
             <Container maxWidth="xl">
@@ -113,8 +114,9 @@ function ResponsiveAppBar() {
                                 </IconButton>
                             </Tooltip>
                             <Menu
-                                sx={{ 
-                                    mt: '45px', 
+                                disableScrollLock={true}
+                                sx={{
+                                    mt: '45px',
                                 }}
                                 id="menu-appbar"
                                 anchorEl={anchorElUser}
@@ -131,18 +133,18 @@ function ResponsiveAppBar() {
                                 onClose={handleCloseUserMenu}
                             >
                                 {settings.map((setting) => (
-                                    setting === 'Logout' ? ( 
+                                    setting === 'Logout' ? (
                                         <MenuItem key={setting} onClick={() => { handleCloseUserMenu(); handleLogout(); }}>
                                             <Typography textAlign="center" color="black">{setting}</Typography>
                                         </MenuItem>
                                     ) : (
                                         <MenuItem key={setting} onClick={handleCloseUserMenu}>
                                             {setting === 'Favorites' ? (
-                                                <Link to="/favs"  onClick={handleCloseNavMenu}>
+                                                <Link to="/favs" onClick={handleCloseNavMenu}>
                                                     <Typography textAlign="center" color="black">{setting} </Typography>
                                                 </Link>
                                             ) : (
-                                                <Typography textAlign="center"color="black">{setting}</Typography>
+                                                <Typography textAlign="center" color="black">{setting}</Typography>
                                             )}
                                         </MenuItem>
                                     )
@@ -153,10 +155,10 @@ function ResponsiveAppBar() {
                     ) : (
                         <Box
                             sx={{
-                                display: 'flex',                            
+                                display: 'flex',
                                 '& > a': {
                                     textDecoration: 'none',
-                                    color: 'white', 
+                                    color: 'white',
                                     margin: '0 10px',
                                     fontWeight: 'bold',
                                 },

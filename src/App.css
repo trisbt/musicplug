@@ -1,3 +1,6 @@
+
+
+
 a {
   text-decoration: none;
   color: rgb(236, 236, 236);
@@ -8,22 +11,23 @@ a {
 .searchform {
   display: flex;
   justify-content: center;
+  /* margin-top: 10px; */
+}
+.searchform-container{
+  /* position: sticky;  */
+  justify-content: center;
+  display: flex;
   margin-top: 10px;
 }
 
-.message {
-  display: flex;
 
-  /* height: 30vh; */
-}
 
 
 .App-search {
-  /* background-color: #282c34; */
   background-image: repeating-linear-gradient(140deg, rgb(109, 97, 168), #282c34 25%, rgb(80, 108, 185));
   background-repeat: repeat-y;
-  /* background-attachment: fixed; */
   min-height: 100vh;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -55,7 +59,7 @@ li {
   display: flex;
   position: relative;
 } */
-.credits-container{
+.credits-container {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -130,11 +134,40 @@ div h2 {
   justify-content: center;
 }
 
+
 @media (max-width: 900px) {
+  /* .card-buttons {
+    display: flex;
+    flex-direction: column;
+    height: 120px;
+    justify-content: flex-end;
+  } */
+
+  .pie-container {
+    /* display: flex; */
+    /* justify-content: flex-start; */
+    /* flex-direction: row-reverse; */
+    /* width: 500px; */
+    /* height: 260px; */
+    /* margin: 0; */
+  }
+}
+
+@media (max-width: 500px) {
   .card-buttons {
     display: flex;
     flex-direction: column;
     height: 120px;
     justify-content: flex-end;
   }
+
+  .pie-container {
+    display: flex;
+    /* justify-content: flex-start; */
+    /* flex-direction: row-reverse; */
+    width: 500px;
+    height: 260px;
+    /* margin: 0; */
+  }
+
 }

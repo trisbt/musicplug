@@ -71,6 +71,10 @@ app.post('/addFavs', userController.addFavorites, (req, res) => {
     return res.status(200).json(res.locals.userFavs);
 });
 
+//delete favs from table
+app.post('/removefavs', userController.deleteFavorites, (req, res) => {
+    return res.status(200).json({ message: "Favorites deleted successfully." });
+})
 
 app.use((err, req, res, next) => {
     //Define a default error object

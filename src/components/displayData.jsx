@@ -69,7 +69,6 @@ const SmallFavButton = styled(IconButton)(({ theme }) => ({
   height: '40px',
 }));
 
-
 const FavSolid = styled(GradeIcon)(({ theme }) => ({
   color: theme.palette.secondary.main,
   '&:hover': {
@@ -381,7 +380,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFa
                               variant="elevated"
                               className='fav-icon-button'
                               onClick={() => handleFavorite(item, username)}
-                              noWrap
+                              // noWrap
                               sx={{
                                 display: { xs: 'none', sm: 'flex', md: 'flex' },
                                 padding: '0',
@@ -403,7 +402,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFa
                             <SmallFavButton
                               size='small'
                               className='small-fav-icon-button'
-                              noWrap
+                              // noWrap
                               onClick={() => handleFavorite(item, username)}
                               sx={{
                                 display: { xs: 'flex', sm: 'none', md: 'none' },

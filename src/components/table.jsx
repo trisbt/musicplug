@@ -26,6 +26,7 @@ import { visuallyHidden } from '@mui/utils';
 import { blueGrey } from '@mui/material/colors';
 
 
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: blueGrey[300],
@@ -36,9 +37,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-function createData(song, artist, album, key, tempo) {
+function createData(song, artist, album, key, tempo, id) {
   return {
-    song, artist, album, key, tempo,
+    song, artist, album, key, tempo, id
   };
 }
 
@@ -161,7 +162,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, handleDelete } = props;
 
   return (
     <Toolbar
@@ -203,7 +204,7 @@ function EnhancedTableToolbar(props) {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={handleDelete}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -226,13 +227,12 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function EnhancedTable({ favorites, initialRenderDone, activeSlice }) {
+export default function EnhancedTable({ favorites, initialRenderDone, activeSlice, username, setFavDeleteRender }) {
 
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('song');
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
-  const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   let rows = favorites.map(favorite => createData(
@@ -240,12 +240,39 @@ export default function EnhancedTable({ favorites, initialRenderDone, activeSlic
     favorite.artist,
     favorite.album,
     favorite.key,
-    favorite.tempo
+    favorite.tempo,
+    favorite.id
   ));
 
   if (activeSlice) {
     rows = rows.filter(row => row.key === activeSlice);
   }
+
+  const handleDelete = (event) => {
+    const idsToDelete = selected.map(item => item.id);
+    console.log(idsToDelete)
+    console.log(username)
+    fetch('http://localhost:4000/removefavs', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, idsToDelete }),
+      credentials: 'include',
+    })
+      .then(res => res.json())
+      .then(res => {
+        setSelected([]);
+        setFavDeleteRender(true);
+        console.log(res);
+        setTimeout(() => {
+          setFavDeleteRender(false); // reset after 5 seconds
+      }, 1000);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
 
   const handleRequestSort = (event, property) => {
@@ -256,19 +283,20 @@ export default function EnhancedTable({ favorites, initialRenderDone, activeSlic
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
+      const newSelected = rows.map((n) => ({ song: n.song, id: n.id }));
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+
+  const handleClick = (event, name, id) => {
+    const selectedIndex = selected.findIndex(item => item.song === name);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, { song: name, id: id });
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -283,6 +311,7 @@ export default function EnhancedTable({ favorites, initialRenderDone, activeSlic
     setSelected(newSelected);
   };
 
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -292,7 +321,8 @@ export default function EnhancedTable({ favorites, initialRenderDone, activeSlic
     setPage(0);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const isSelected = (name) => selected.some(item => item.song === name);
+
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -308,100 +338,100 @@ export default function EnhancedTable({ favorites, initialRenderDone, activeSlic
   );
 
   return (
-    <Container maxWidth="sm" sx ={{
+    <Container maxWidth="xl" sx={{
       "@media (max-width: 900px)": {
         display: 'flex',
         width: '100vw',
       }
     }}>
 
-    <Box sx={{
+      <Box sx={{
         width: '100%',
-    }}>
-      <Paper variant="outlined" square sx={{
-        width: '100%',
-        mb: 2,
-        border: "1px solid black",
       }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            // sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size='medium'
-          >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected(row.name);
-                const labelId = `enhanced-table-checkbox-${index}`;
+        <Paper variant="outlined" square sx={{
+          width: '100%',
+          mb: 2,
+          border: "1px solid black",
+        }}>
+          <EnhancedTableToolbar numSelected={selected.length} handleDelete={handleDelete} />
+          <TableContainer>
+            <Table
+              // sx={{ minWidth: 750 }}
+              aria-labelledby="tableTitle"
+              size='medium'
+            >
+              <EnhancedTableHead
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length}
+              />
+              <TableBody>
+                {visibleRows.map((row, index) => {
+                  const isItemSelected = isSelected(row.song, row.id);
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
-                return (
-                  <TableRow
-                    hover
-                    onClick={(event) => handleClick(event, row.name)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.name}
-                    selected={isItemSelected}
-                    sx={{ cursor: 'pointer' }}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          'aria-labelledby': labelId,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
+                  return (
+                    <TableRow
+                      hover
+                      onClick={(event) => handleClick(event, row.song, row.id)}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.song}
+                      selected={isItemSelected}
+                      sx={{ cursor: 'pointer' }}
                     >
-                      {row.song}
-                    </TableCell>
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          color="primary"
+                          checked={isItemSelected}
+                          inputProps={{
+                            'aria-labelledby': labelId,
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
+                      >
+                        {row.song}
+                      </TableCell>
 
-                    <TableCell align="left">{row.artist}</TableCell>
-                    <TableCell align="left">{row.album}</TableCell>
-                    <TableCell align="left">{row.key}</TableCell>
-                    <TableCell align="right">{row.tempo}</TableCell>
+                      <TableCell align="left">{row.artist}</TableCell>
+                      <TableCell align="left">{row.album}</TableCell>
+                      <TableCell align="left">{row.key}</TableCell>
+                      <TableCell align="right">{row.tempo}</TableCell>
+                    </TableRow>
+                  );
+                })}
+                {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: (30) * emptyRows,
+                    }}
+                  >
+                    <TableCell colSpan={6} />
                   </TableRow>
-                );
-              })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (30) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-    </Box>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+      </Box>
     </Container>
   );
 }

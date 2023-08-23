@@ -6,6 +6,7 @@ function Favorites({ username }) {
   const [userFavorites, setUserFavorites] = useState([]);
   const [initialRenderDone, setInitialRenderDone] = useState(false);
   const [activeSlice, setActiveSlice] = useState(null);
+  const [favDeleteRender, setFavDeleteRender] = useState(false);
 
   useEffect(() => {
     const fetchFavorites = () => {
@@ -28,13 +29,13 @@ function Favorites({ username }) {
         });
     };
     fetchFavorites();
-  }, [username]);
+  }, [username, favDeleteRender]);
 
 
   return (
     <div>
       <CircleOfFifths activeSlice={activeSlice} setActiveSlice={setActiveSlice} />
-      <EnhancedTable favorites={userFavorites} initialRenderDone={initialRenderDone} activeSlice={activeSlice} />
+      <EnhancedTable username = {username} favorites={userFavorites} initialRenderDone={initialRenderDone} setFavDeleteRender={setFavDeleteRender} activeSlice={activeSlice} />
 
     </div>
   );

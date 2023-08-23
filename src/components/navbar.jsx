@@ -52,7 +52,7 @@ function ResponsiveAppBar() {
                     />
                     <Typography
                         variant="h6"
-                        noWrap
+                        // noWrap
                         sx={{
                             mr: 1,
                             display: { xs: 'none', md: 'flex' },
@@ -69,7 +69,7 @@ function ResponsiveAppBar() {
                     </Typography>
                     <Typography
                         variant="h5"
-                        noWrap
+                        // noWrap
                         component="a"
                         href="/"
                         sx={{

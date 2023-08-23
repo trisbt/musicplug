@@ -1,6 +1,3 @@
-
-
-
 a {
   text-decoration: none;
   color: rgb(236, 236, 236);
@@ -13,7 +10,8 @@ a {
   justify-content: center;
   /* margin-top: 10px; */
 }
-.searchform-container{
+
+.searchform-container {
   /* position: sticky;  */
   justify-content: center;
   display: flex;
@@ -135,6 +133,7 @@ div h2 {
 }
 
 
+
 @media (max-width: 900px) {
   /* .card-buttons {
     display: flex;
@@ -166,7 +165,7 @@ div h2 {
     /* justify-content: flex-start; */
     /* flex-direction: row-reverse; */
     width: 500px;
-    height: 260px;
+    height: 200px;
     /* margin: 0; */
   }
 

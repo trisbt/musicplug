@@ -65,49 +65,65 @@ export default function CircleOfFifths({ activeSlice, setActiveSlice }) {
 
   return (
     <div className='pie-container'>
-      <Grid container spacing={2}sx ={{
-        height:'283px',
-        margin:'0',
-          // marginBottom:'10px',
+      <Grid container spacing={2} sx={{
+        height: '220px',
+        margin: '0',
+        borderRadius: '5px',
+        // backgroundColor:'rgb(100,100,100,0.2)',
+        // boxShadow:'5'
+        // marginBottom:'10px',
+      }}>
+        <Grid item xs={4} sx={{
+           display: 'flex',
+           justifyContent:'flex-end',
         }}>
-        <Grid item xs={4}>
-        {/* <Box sx={{
-          display: 'flex',
-          justifyContent:'center',
-          backgroundColor:'rgba(129, 212, 250, 0.3)',
-          height:'200px',
-          alignItems:'center',
-          // textAlign:'center',
-          borderRadius:'5px',
-          boxShadow:'5',
-        }}>
-          <Typography className='song-sub-info' variant="h4" color="text.priimary" component="div" sx={{
-            fontSize: '25px'
-          }}
-          >
-            Filter by key
-          </Typography>
-        </Box> */}
+          <Box sx={{
+            display: 'flex',
+            height: '200px',
+            alignItems: 'center',
+            width: '400px',
+            "@media (max-width: 600px)": {
+              display: 'flex',
+              width: '100px',
+              fontSize:'12px'
+            }
+          }}>
+            <Typography className='song-sub-info' variant="h4" color="white" component="div" sx={{
+              fontSize: '25px',
+              display: 'flex',
+              textAlign: 'center',
+              "@media (max-width: 600px)": {
+                fontSize:'12px'
+              }
+            }}
+            >
+              FILTER YOUR FAVORTIES BY KEY
+            </Typography>
+          </Box>
         </Grid>
 
-        <Grid item xs={4}>
-        <Pie
-          data={chartData}
-          plugins={[ChartDataLabels]}
-          height={300}
-          width={300}
-          options={{
-            ...options,
-            onClick: (evt, elements) => {
-              if (elements.length) {
-                const label = chartData.labels[elements[0].index];
-                setActiveSlice(prev => prev === label ? null : label);
+        <Grid item xs={4} sx={{
+          height: '200px',
+          
+        }}>
+          <Pie
+            data={chartData}
+            plugins={[ChartDataLabels]}
+            height={300}
+            width={300}
+            options={{
+              ...options,
+              onClick: (evt, elements) => {
+                if (elements.length) {
+                  const label = chartData.labels[elements[0].index];
+                  setActiveSlice(prev => prev === label ? null : label);
+                }
               }
-            }
-          }}
-        />
-        </Grid>     
+            }}
+          />
+        </Grid>
       </Grid>
+
     </div>
   );
 }

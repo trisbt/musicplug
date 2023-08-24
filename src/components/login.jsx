@@ -67,6 +67,8 @@ export default function SignIn() {
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs" sx={{
         backgroundColor: 'white',
+        // backdropFilter: 'blur(10px)',
+        // backgroundColor: 'rgba(255, 255, 255, 0.4)', 
         // opacity: 0.5
       }}>
         <CssBaseline />

@@ -11,6 +11,7 @@ import CardMedia from '@mui/material/CardMedia';
 import { Container } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import StopIcon from '@mui/icons-material/Stop';
 import { Button } from '@mui/material';
 import { IconButton } from '@mui/material';
 import { grey } from '@mui/material/colors';
@@ -42,6 +43,7 @@ const SmallPlayButton = styled(IconButton)(({ theme }) => ({
   width: '40px',
   height: '40px',
 }));
+
 
 const FavButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
@@ -118,11 +120,14 @@ function tempoRound(num) {
 
 const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFav }) => {
   const [favoriteMap, setFavoriteMap] = useState({});
-
+  const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState(null);
   const audioRef = useRef(null);
+
+  //needed to show user favorites in search results
   useEffect(() => {
     setFavoriteMap(userFav)
   }, [userFav])
+
   if (!data && !audioData) {
     return null;
   }
@@ -164,9 +169,15 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFa
     if (previewUrl) {
       if (audioRef.current.src === previewUrl && !audioRef.current.paused) {
         audioRef.current.pause();
+        setCurrentlyPlayingUrl(null);
       } else {
+        if (!audioRef.current.paused) {
+          // Stop currently playing audio if there is any
+          audioRef.current.pause();
+        }
         audioRef.current.src = previewUrl;
         audioRef.current.play();
+        setCurrentlyPlayingUrl(previewUrl);
       }
     }
   };
@@ -203,7 +214,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFa
 
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', overflow:'hidden' }}>
       <Container maxWidth="xl" sx={{
         "@media (max-width: 900px)": {
           width: '110vw',
@@ -301,8 +312,8 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFa
                               <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
                                 "@media (max-width: 600px)": {
                                   fontSize: '20px',
-                                  display:'flex',
-                                  justifyContent:'center',
+                                  display: 'flex',
+                                  justifyContent: 'center',
                                   width: '70px',
                                 }
                               }}>
@@ -422,15 +433,30 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFa
                                 display: { xs: 'none', sm: 'flex', md: 'flex' },
                               }}
                                 onClick={() => playAudio(item.preview_url)}>
-                                <PlayArrowIcon aria-label="play/pause"
-                                  sx={{
-                                    height: 35,
-                                    width: 35,
-                                  }}
-                                />
-                                Preview track
+                                {currentlyPlayingUrl === item.preview_url ? (
+                                  <>
+                                    <StopIcon aria-label="stop"
+                                      sx={{
+                                        height: 35,
+                                        width: 35,
+                                      }}
+                                    />
+                                    Stop track
+                                  </>
+                                ) : (
+                                  <>
+                                    <PlayArrowIcon aria-label="play/pause"
+                                      sx={{
+                                        height: 35,
+                                        width: 35,
+                                      }}
+                                    />
+                                    Preview track
+                                  </>
+                                )}
                               </PlayButton>
                             )}
+
                             {item.preview_url && (
                               <SmallPlayButton className='preview-button' sx={{
                                 boxShadow: 3,
@@ -438,14 +464,25 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFa
                                 display: { xs: 'flex', sm: 'none', md: 'none' },
                               }}
                                 onClick={() => playAudio(item.preview_url)}>
-                                <PlayArrowIcon aria-label="play/pause"
-                                  sx={{
-                                    // height: 35,
-                                    // width: 35,
-
-                                  }}
-                                />
-
+                                {currentlyPlayingUrl === item.preview_url ? (
+                                  <>
+                                    <StopIcon aria-label="stop"
+                                      sx={{
+                                        height: 35,
+                                        width: 35,
+                                      }}
+                                    />
+                                  </>
+                                ) : (
+                                  <>
+                                    <PlayArrowIcon aria-label="play/pause"
+                                      sx={{
+                                        height: 35,
+                                        width: 35,
+                                      }}
+                                    />
+                                  </>
+                                )}
                               </SmallPlayButton>
                             )}
                             <audio ref={audioRef}></audio>

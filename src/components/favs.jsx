@@ -35,7 +35,7 @@ function Favorites({ username }) {
   return (
     <div>
       <CircleOfFifths activeSlice={activeSlice} setActiveSlice={setActiveSlice} />
-      <EnhancedTable username = {username} favorites={userFavorites} initialRenderDone={initialRenderDone} setFavDeleteRender={setFavDeleteRender} activeSlice={activeSlice} />
+      <EnhancedTable username = {username} favorites={userFavorites} initialRenderDone={initialRenderDone} favDeleteRender={favDeleteRender}setFavDeleteRender={setFavDeleteRender} activeSlice={activeSlice} />
 
     </div>
   );

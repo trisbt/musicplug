@@ -21,15 +21,18 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import {Alert} from '@mui/material';
+import {AlertTitle} from '@mui/material';
 import { Container } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { blueGrey } from '@mui/material/colors';
+import {indigo} from '@mui/material/colors';
 
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: blueGrey[300],
+    backgroundColor: indigo[300],
     color: theme.palette.common.white,
   },
   [`&.${tableCellClasses.body}`]: {
@@ -167,13 +170,14 @@ function EnhancedTableToolbar(props) {
   return (
     <Toolbar
       sx={{
-        backgroundColor: blueGrey[700],
+        backgroundColor: indigo[700],
         color: 'white',
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
           bgcolor: (theme) =>
             alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+            color:'black',
         }),
       }}
     >
@@ -227,13 +231,13 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function EnhancedTable({ favorites, initialRenderDone, activeSlice, username, setFavDeleteRender }) {
+export default function EnhancedTable({ favorites, initialRenderDone, activeSlice, username, setFavDeleteRender, favDeleteRender }) {
 
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('song');
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
 
   let rows = favorites.map(favorite => createData(
     favorite.song,
@@ -250,8 +254,6 @@ export default function EnhancedTable({ favorites, initialRenderDone, activeSlic
 
   const handleDelete = (event) => {
     const idsToDelete = selected.map(item => item.id);
-    console.log(idsToDelete)
-    console.log(username)
     fetch('http://localhost:4000/removefavs', {
       method: 'POST',
       headers: {
@@ -264,10 +266,9 @@ export default function EnhancedTable({ favorites, initialRenderDone, activeSlic
       .then(res => {
         setSelected([]);
         setFavDeleteRender(true);
-        console.log(res);
         setTimeout(() => {
-          setFavDeleteRender(false); // reset after 5 seconds
-      }, 1000);
+          setFavDeleteRender(false); 
+        }, 2000);
       })
       .catch(err => {
         console.log(err);
@@ -352,8 +353,17 @@ export default function EnhancedTable({ favorites, initialRenderDone, activeSlic
           width: '100%',
           mb: 2,
           border: "1px solid black",
+          
         }}>
           <EnhancedTableToolbar numSelected={selected.length} handleDelete={handleDelete} />
+          {
+            favDeleteRender &&
+            <Alert severity="success">
+              <AlertTitle>Removed from favorites</AlertTitle>
+              {/* This is a success alert — <strong>check it out!</strong> */}
+            </Alert>
+          }
+
           <TableContainer>
             <Table
               // sx={{ minWidth: 750 }}
@@ -422,7 +432,7 @@ export default function EnhancedTable({ favorites, initialRenderDone, activeSlic
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[25, 50, 100]}
             component="div"
             count={rows.length}
             rowsPerPage={rowsPerPage}

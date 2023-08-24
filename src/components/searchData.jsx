@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import DisplayData from './displayData';
 import { Button } from '@mui/material';
 import Input from '@mui/material/Input';
@@ -41,14 +42,22 @@ const StyledInput = styled(Input)(({ theme }) => ({
 }));
 
 //main search to spotify
-//need to fix load more data; replacing the data before it and when it renders user is navigated to the bottom
 const SearchData = ({ username }) => {
     const [response, setResponse] = useState([]);
     const [audioInfo, setAudioInfo] = useState([]);
-    const [inputField, setInputField] = useState('');
     const [userFav, setUserFav] = useState([])
     const [offset, setOffset] = useState(1);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const initialSearchQuery = searchParams.get('q') || '';
+    const [inputField, setInputField] = useState(initialSearchQuery);
+
+    useEffect(() => {
+        if (initialSearchQuery) {
+            fetchData();
+        }
+    }, []);
 
     const fetchData = (newOffset = 1) => {
         const idCache = [];
@@ -58,12 +67,11 @@ const SearchData = ({ username }) => {
             fetch(`http://localhost:4000/search?query=${searchQuery}&offset=${newOffset}`)
                 .then(res => res.json())
                 .then(data => {
-                    // console.log(data)
                     data.tracks.items.forEach((item) => {
                         idCache.push(item.id);
                     })
                     const searchData = data.tracks.items;
-                    // console.log(searchData)
+                    navigate(`/?q=${searchQuery}`)
                     setResponse(prev => [...prev, ...searchData]);
                     fetch(`http://localhost:4000/advancedSearch?query=${idCache.join(',')}`)
                         .then(res => res.json())
@@ -132,20 +140,20 @@ const SearchData = ({ username }) => {
             <div>
                 {!loading ? (
                     <div className='searchform-container'>
-                    <form className='searchform' onSubmit={handleFormSubmit}>
-                        <FormControl>
-                            <StyledInput
-                                className='searchbox'
-                                placeholder='find songs'
-                                type='text'
-                                value={inputField}
-                                onChange={handleInputChange}
-                            />
-                        </FormControl>
-                        <ColorButton type='submit' variant='outlined'>
-                            Search
-                        </ColorButton>
-                    </form>
+                        <form className='searchform' onSubmit={handleFormSubmit}>
+                            <FormControl>
+                                <StyledInput
+                                    className='searchbox'
+                                    placeholder='find songs'
+                                    type='text'
+                                    value={inputField}
+                                    onChange={handleInputChange}
+                                />
+                            </FormControl>
+                            <ColorButton type='submit' variant='outlined'>
+                                Search
+                            </ColorButton>
+                        </form>
                     </div>
                 ) : null}
                 {loading ? (

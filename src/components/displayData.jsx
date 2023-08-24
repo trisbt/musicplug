@@ -1,6 +1,5 @@
 import SearchId from './searchId';
 import React, { useState, useRef, useEffect } from 'react';
-// import { useTheme } from '@mui/material/styles';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
 import { styled } from '@mui/material/styles';

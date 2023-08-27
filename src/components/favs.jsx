@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import CircleOfFifths from './circleOfFifths';
-import EnhancedTable from './table';
+import CircleOfFifths from './CircleOfFifths';
+import EnhancedTable from './Table';
 
 function Favorites({ username }) {
   const [userFavorites, setUserFavorites] = useState([]);

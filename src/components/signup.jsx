@@ -10,7 +10,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useAuth } from './auth';
+import { useAuth } from './Auth';
 
 function Copyright(props) {
   return (
@@ -28,26 +28,26 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-    const { handleSignup } = useAuth();
-    
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        const username = event.target.username.value;
-        const password = event.target.password.value;
-        const email = event.target.email.value;
-        const firstname = event.target.firstname.value;
-        const lastname = event.target.lastname.value;
-        try {
-            await handleSignup(username, email, password, firstname, lastname);
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    
+  const { handleSignup } = useAuth();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const username = event.target.username.value;
+    const password = event.target.password.value;
+    const email = event.target.email.value;
+    const firstname = event.target.firstname.value;
+    const lastname = event.target.lastname.value;
+    try {
+      await handleSignup(username, email, password, firstname, lastname);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
-       <Container component="main" maxWidth="xs" sx ={{
+      <Container component="main" maxWidth="xs" sx={{
         backgroundColor: 'white',
         // opacity: 0.5
       }}>
@@ -63,7 +63,7 @@ export default function SignUp() {
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5"sx ={{color: 'black'}}>
+          <Typography component="h1" variant="h5" sx={{ color: 'black' }}>
             Sign up
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>

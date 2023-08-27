@@ -1,5 +1,5 @@
-import SearchId from './searchId';
-import React, { useState, useRef, useEffect } from 'react';
+import SearchId from './SearchId';
+import React, { useState, useRef, useEffect, } from 'react';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
 import { styled } from '@mui/material/styles';
@@ -117,7 +117,7 @@ function tempoRound(num) {
   return Math.round(num * 2) / 2;
 }
 
-const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFav }) => {
+const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchResult }) => {
   const [favoriteMap, setFavoriteMap] = useState({});
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState(null);
   const audioRef = useRef(null);
@@ -213,7 +213,8 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFa
 
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', overflow:'hidden' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'hidden' }}>
+
       <Container maxWidth="xl" sx={{
         "@media (max-width: 900px)": {
           width: '110vw',
@@ -221,7 +222,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFa
       }}>
         {results.length > 0 && (
           <>
-            <h4 style={{ textAlign: 'center', fontSize: '20px' }}>Search Results:</h4>
+            <h4 style={{ textAlign: 'center', fontSize: '20px' }}>Search Results for {searchResult}:</h4>
             <ul style={{ width: '100%', margin: '0 auto', padding: '0' }}>
               {results.map((item, index) => (
                 <div key={index} >
@@ -386,7 +387,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFa
                               }
                             }}
                           >
-                            <FavButton
+                            {/* <FavButton
                               variant="elevated"
                               className='fav-icon-button'
                               onClick={() => handleFavorite(item, username)}
@@ -407,8 +408,8 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFa
                             >
                               {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
                               add to Favorites
-                            </FavButton>
-
+                            </FavButton> */}
+                            {/* 
                             <SmallFavButton
                               size='small'
                               className='small-fav-icon-button'
@@ -423,9 +424,9 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFa
                               }}
                             >
                               {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
-                            </SmallFavButton>
+                            </SmallFavButton> */}
 
-                            {item.preview_url && (
+                            {/* {item.preview_url && (
                               <PlayButton className='preview-button' sx={{
                                 boxShadow: 3,
                                 borderRadius: '50px',
@@ -454,9 +455,9 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFa
                                   </>
                                 )}
                               </PlayButton>
-                            )}
+                            )} */}
 
-                            {item.preview_url && (
+                            {/* {item.preview_url && (
                               <SmallPlayButton className='preview-button' sx={{
                                 boxShadow: 3,
                                 borderRadius: '50px',
@@ -483,7 +484,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFa
                                   </>
                                 )}
                               </SmallPlayButton>
-                            )}
+                            )} */}
                             <audio ref={audioRef}></audio>
                           </Box>
 
@@ -529,6 +530,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, inputField, userFa
         )
         }
       </Container >
+
     </div >
   );
 };

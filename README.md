@@ -1,1 +1,1 @@
-# plug-spotify-api
+# musicplug

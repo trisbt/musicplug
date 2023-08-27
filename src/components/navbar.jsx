@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigation, useSearchParams } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -17,7 +18,7 @@ import { Card } from '@mui/material';
 import { Paper } from '@mui/material';
 // import plugLogo from '../assets/pluglogo.png';
 import musicpluglogow from '../assets/musicpluglogow.png';
-import { useAuth } from './auth';
+import { useAuth } from './Auth';
 
 
 
@@ -28,6 +29,8 @@ function ResponsiveAppBar() {
     const { loggedInUser, isLoggedIn, handleLogout } = useAuth();
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
+    const [searchParams, setSearchParams] = useSearchParams();
+    // const navigate = useNavigation();
 
     // const handleOpenNavMenu = (event) => {
     //     setAnchorElNav(event.currentTarget);
@@ -44,6 +47,12 @@ function ResponsiveAppBar() {
         setAnchorElUser(null);
     };
     const userInitial = loggedInUser ? loggedInUser[0].toUpperCase() : '';
+
+    const handleHomeClick = (event) => {
+        event.preventDefault();
+        setSearchParams({ q: '' });
+        window.location.href = '/';
+    }
     return (
         <AppBar position="static"
             sx={{
@@ -53,7 +62,7 @@ function ResponsiveAppBar() {
                 boxShadow: '6',
                 backdropFilter: 'blur(10px)',
                 // backgroundColor: 'rgba(250, 250, 250, 0.4)',
-                backgroundColor:'#0047d4',
+                backgroundColor: '#0047d4',
                 // borderRadius:'8px'
             }}
         >
@@ -89,30 +98,11 @@ function ResponsiveAppBar() {
                                 // backgroundColor: 'blue',
                                 boxShadow: '0'
                             }}>
-                                <Link to="/">
+                                <Link to="/" onClick={handleHomeClick}>
                                     <img src={musicpluglogow} alt="Plug Logo" className='plug-logo' />
                                 </Link>
                             </Card>
                         </Box>
-                        {/* <Box sx={{display: 'flex'}}>
-                            {pages.map((page) => (
-                                page === 'Favorites' ? (
-                                    <Link key={page} to="/favs" sx={{ my: 2, color: 'white', display: 'block' }} onClick={handleCloseNavMenu}>
-                                        Favorites
-                                    </Link>
-                                )
-                                    : (
-                                        <Button
-                                            key={page}
-                                            onClick={handleCloseNavMenu}
-                                            sx={{ my: 2, color: 'white', display: 'block' }}
-                                        >
-                                            {page}
-                                        </Button>
-                                    )
-                            ))}
-                        </Box> */}
-
                         {isLoggedIn ? (
                             <Box
                                 sx={{}}

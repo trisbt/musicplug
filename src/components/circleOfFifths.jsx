@@ -67,8 +67,6 @@ export default function CircleOfFifths({ activeSlice, setActiveSlice }) {
     <div className='pie-container'>
       <Grid container spacing={0} sx={{
         height: '220px',
-        marginTop:'10px',
-        // margin: '0',
         borderRadius: '5px',
         paddingLeft: 0, 
         paddingTop: 0
@@ -105,7 +103,8 @@ export default function CircleOfFifths({ activeSlice, setActiveSlice }) {
 
         <Grid item xs={4} sx={{
           height: '200px',
-          paddingLeft: 0, paddingTop: 0
+          paddingLeft: 0, paddingTop: 0,
+                  marginTop:'10px',
           
         }}>
           <Pie

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import DisplayData from './displayData';
+import { Card } from '@mui/material';
+import DisplayData from './DisplayData';
 import { Button } from '@mui/material';
 import Input from '@mui/material/Input';
 import { FormControl } from '@mui/material';
@@ -30,19 +31,15 @@ const ColorButton = styled(Button)(({ theme }) => ({
     '&:hover': {
         backgroundColor: theme.palette.primary.dark,
     },
-    // padding: theme.spacing(1.2),
-
 }));
 const StyledInput = styled(Input)(({ theme }) => ({
     color: theme.palette.text.primary,
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(1),
-    // borderRadius: theme.shape.borderRadius,
-
 }));
 
 //main search to spotify
-const SearchData = ({ username }) => {
+const SearchData = ({ username, setShowSplash }) => {
     const [response, setResponse] = useState([]);
     const [audioInfo, setAudioInfo] = useState([]);
     const [userFav, setUserFav] = useState([])
@@ -51,18 +48,25 @@ const SearchData = ({ username }) => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const initialSearchQuery = searchParams.get('q') || '';
-    const [inputField, setInputField] = useState(initialSearchQuery);
+    const [inputField, setInputField] = useState('');
+    //to display text for user search
+    const [searchResult, setSearchResult] = useState('');
+    const searchInputRef = useRef(null);
 
     useEffect(() => {
         if (initialSearchQuery) {
+            setInputField(initialSearchQuery);
             fetchData();
+            setShowSplash(false);
         }
     }, []);
+
 
     const fetchData = (newOffset = 1) => {
         const idCache = [];
         if (inputField.trim() !== '') {
             setLoading(true);
+            setShowSplash(false);
             const searchQuery = encodeURIComponent(inputField);
             fetch(`http://localhost:4000/search?query=${searchQuery}&offset=${newOffset}`)
                 .then(res => res.json())
@@ -73,6 +77,7 @@ const SearchData = ({ username }) => {
                     const searchData = data.tracks.items;
                     navigate(`/?q=${searchQuery}`)
                     setResponse(prev => [...prev, ...searchData]);
+                    // setSearchResult(inputField);
                     fetch(`http://localhost:4000/advancedSearch?query=${idCache.join(',')}`)
                         .then(res => res.json())
                         .then(data => {
@@ -119,18 +124,18 @@ const SearchData = ({ username }) => {
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
+        // const searchValue = searchInputRef.current.value;
+        // setInputField(searchValue)
         setResponse([]);
         setAudioInfo([]);
         fetchData();
     };
-
     const handleInputChange = (event) => {
         setInputField(event.target.value);
     };
     const handleLoadMore = () => {
-        const nextOffset = offset + 50;
+        const nextOffset = offset + 25;
         fetchData(nextOffset);
-
     }
 
 
@@ -146,6 +151,7 @@ const SearchData = ({ username }) => {
                                     className='searchbox'
                                     placeholder='find songs'
                                     type='text'
+                                    // inputRef = {searchInputRef}
                                     value={inputField}
                                     onChange={handleInputChange}
                                 />
@@ -159,7 +165,7 @@ const SearchData = ({ username }) => {
                 {loading ? (
                     <p>Plugging Results</p>
                 ) : (
-                    <DisplayData data={response} audioData={audioInfo} userFav={userFav} username={username} theme={theme} onLoadMore={handleLoadMore} inputField={inputField} />
+                    <DisplayData data={response} audioData={audioInfo} userFav={userFav} username={username} theme={theme} onLoadMore={handleLoadMore} searchResult={searchResult} />
                 )}
             </div>
         </ThemeProvider>

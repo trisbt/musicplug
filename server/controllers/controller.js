@@ -38,7 +38,7 @@ const getAccessToken = (req, res, next) => {
 const getSpotifyData = (req, res, next) => {
     const { token } = res.locals;
     const query = req.query.query;
-    const limit = 50;
+    const limit = 25;
     const offset = req.query.offset;
 
     fetch(`https://api.spotify.com/v1/search?q=${query}&type=artist%2Ctrack&limit=${limit}&offset=${offset}`, {

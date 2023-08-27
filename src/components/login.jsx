@@ -12,10 +12,8 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-// import { redirect } from "react-router-dom";
-// import Cookies from 'js-cookie';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useAuth } from './auth';
+import { useAuth } from './Auth';
 
 function Copyright(props) {
   return (
@@ -50,7 +48,7 @@ export default function SignIn() {
     setRememberMe(event.target.checked);
 
   };
- 
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const username = event.target.username.value;

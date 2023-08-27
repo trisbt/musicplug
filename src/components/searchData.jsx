@@ -56,18 +56,19 @@ const SearchData = ({ username, setShowSplash }) => {
     useEffect(() => {
         if (initialSearchQuery) {
             setInputField(initialSearchQuery);
-            fetchData();
+            fetchData(1, initialSearchQuery);
             setShowSplash(false);
         }
     }, []);
+    
 
 
-    const fetchData = (newOffset = 1) => {
+    const fetchData = (newOffset = 1, query = inputField) => {
         const idCache = [];
-        if (inputField.trim() !== '') {
+        if (query.trim() !== '') {
             setLoading(true);
             setShowSplash(false);
-            const searchQuery = encodeURIComponent(inputField);
+            const searchQuery = encodeURIComponent(query);
             fetch(`http://localhost:4000/search?query=${searchQuery}&offset=${newOffset}`)
                 .then(res => res.json())
                 .then(data => {
@@ -77,7 +78,7 @@ const SearchData = ({ username, setShowSplash }) => {
                     const searchData = data.tracks.items;
                     navigate(`/?q=${searchQuery}`)
                     setResponse(prev => [...prev, ...searchData]);
-                    // setSearchResult(inputField);
+                    setSearchResult(query||inputField);
                     fetch(`http://localhost:4000/advancedSearch?query=${idCache.join(',')}`)
                         .then(res => res.json())
                         .then(data => {
@@ -124,21 +125,20 @@ const SearchData = ({ username, setShowSplash }) => {
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
-        // const searchValue = searchInputRef.current.value;
-        // setInputField(searchValue)
+        const searchValue = searchInputRef.current.value;
+        setInputField(searchValue)
         setResponse([]);
         setAudioInfo([]);
-        fetchData();
+        fetchData(1, searchValue);
     };
-    const handleInputChange = (event) => {
-        setInputField(event.target.value);
-    };
+
     const handleLoadMore = () => {
         const nextOffset = offset + 25;
         fetchData(nextOffset);
     }
 
 
+console.log('inputField',inputField)
 
     return (
         <ThemeProvider theme={theme}>
@@ -151,9 +151,9 @@ const SearchData = ({ username, setShowSplash }) => {
                                     className='searchbox'
                                     placeholder='find songs'
                                     type='text'
-                                    // inputRef = {searchInputRef}
-                                    value={inputField}
-                                    onChange={handleInputChange}
+                                    inputRef = {searchInputRef}
+                                    // value={inputField}
+                                    // onChange={handleInputChange}
                                 />
                             </FormControl>
                             <ColorButton type='submit' variant='outlined'>

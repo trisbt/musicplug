@@ -226,7 +226,6 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                   <Card sx={{
                     margin: '10px 10px 0',
                     boxShadow: 3,
-
                   }}
                   >
                     <Box>
@@ -266,7 +265,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                               width: 151,
                               "@media (max-width: 500px)": {
                                 width: '75%',
-                                height: '50%'
+                                // height: '50%'
                               }
                             }}
                             image={item.images}

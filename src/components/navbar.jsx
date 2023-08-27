@@ -56,9 +56,7 @@ function ResponsiveAppBar() {
     return (
         <AppBar position="static"
             sx={{
-                // background: 'linear-gradient(169deg, rgba(0,0,0,1) 0%, rgba(41,5,111,1) 40%, rgba(52,3,109,1) 55%, rgba(8,1,97,1) 82%)',
-                // background: "linear-gradient(180deg, rgba(209,203,255,1) 0%, rgba(255,255,255,1) 100%)",
-                // background: "linear-gradient(257deg, rgba(253,255,255,1) 6%, rgba(80,141,252,0.7595413165266106) 100%)",
+
                 boxShadow: '6',
                 backdropFilter: 'blur(10px)',
                 // backgroundColor: 'rgba(250, 250, 250, 0.4)',
@@ -66,11 +64,15 @@ function ResponsiveAppBar() {
                 // borderRadius:'8px'
             }}
         >
-            <Container maxWidth="xl">
+            <Container maxWidth="xl"
+                sx={{
+                    paddingLeft: 0,
+                    paddingRight: 1,
+                }}>
                 <Toolbar disableGutters sx={{
                     minHeight: '45px',
                     '@media (max-width: 600px)': {
-                        minHeight: '45px',
+                        minHeight: '52px',
                     }
                 }}>
                     <Box display="flex" justifyContent="space-between" alignItems={'center'} width="100%">

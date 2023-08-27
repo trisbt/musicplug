@@ -62,7 +62,7 @@ body {
   background-repeat: repeat-y;
   /* background: rgb(27,20,80); */
   /* background: radial-gradient(circle, rgba(27,20,80,1) 39%, rgba(61,34,94,1) 100%); */
-  min-height: 100vh;
+  min-height: 90vh;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -173,24 +173,16 @@ div h2 {
 
 
 @media (max-width: 900px) {
-  /* .card-buttons {
-    display: flex;
-    flex-direction: column;
-    height: 120px;
-    justify-content: flex-end;
-  } */
-
-  .pie-container {
-    /* display: flex; */
-    /* justify-content: flex-start; */
-    /* flex-direction: row-reverse; */
-    /* width: 500px; */
-    /* height: 260px; */
-    /* margin: 0; */
+  .splash {
+    position: absolute;
+    top: 10%;
+    /* left: 10%; */
+    right: 0;
+    bottom: 0;
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .card-buttons {
     display: flex;
     flex-direction: column;
@@ -204,5 +196,21 @@ div h2 {
     height: 200px;
     /* margin: 0; */
   }
+  .splash {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    right: 0;
+    bottom: 0;
+  }
 
+}
+@media (orientation: landscape) and (max-width: 900px) {
+  .splash {
+    position: absolute;
+    top: 20%;
+    right: 0;
+    bottom: 0;
+    font-size: 12px;
+  }
 }

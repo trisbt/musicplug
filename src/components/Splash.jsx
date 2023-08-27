@@ -15,6 +15,9 @@ const Splash = () => {
                 height: '30vh',
                 backgroundColor: 'transparent',
                 boxShadow: 0,
+                '@media (max-width: 600px)': {
+                    width: '80vw',
+                }
             }}>
                 <Typography variant='h2' component="h2" sx={{
                     color: '#e8eaf6',
@@ -28,6 +31,24 @@ const Splash = () => {
                     padding: '0.5rem',
                     borderRadius: '5px',
                     textTransform: 'uppercase',
+                    '@media (max-width: 1100px)': {
+                        fontSize:'44px'
+                    },
+                    '@media (max-width: 600px)': {
+                        fontSize:'34px'
+                    },
+                    '@media (max-width: 300px)': {
+                        fontSize:'24px'
+                    },
+                    '@media (max-width: 900px), and (orientation: landscape)': {
+                        fontSize:'34px'
+                    },
+                    // '@media (max-width: 900px), screen and (orientation: landscape)': {
+                    //     fontSize:'44px'
+                    // },
+                   
+            
+                  
                 }}>
                     Find A Song's Key, Tempo, Loudness and Credits
                 </Typography>

@@ -15,9 +15,6 @@ import { Button } from '@mui/material';
 import { IconButton } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
-
-
-
 const PlayButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
   backgroundColor: grey[900],
@@ -387,7 +384,8 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                               }
                             }}
                           >
-                            {/* <FavButton
+                            
+                            <FavButton
                               variant="elevated"
                               className='fav-icon-button'
                               onClick={() => handleFavorite(item, username)}
@@ -408,8 +406,8 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                             >
                               {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
                               add to Favorites
-                            </FavButton> */}
-                            {/* 
+                            </FavButton>
+                            
                             <SmallFavButton
                               size='small'
                               className='small-fav-icon-button'
@@ -424,9 +422,9 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                               }}
                             >
                               {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
-                            </SmallFavButton> */}
+                            </SmallFavButton>
 
-                            {/* {item.preview_url && (
+                            {item.preview_url && (
                               <PlayButton className='preview-button' sx={{
                                 boxShadow: 3,
                                 borderRadius: '50px',
@@ -455,9 +453,9 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                                   </>
                                 )}
                               </PlayButton>
-                            )} */}
+                            )}
 
-                            {/* {item.preview_url && (
+                            {item.preview_url && (
                               <SmallPlayButton className='preview-button' sx={{
                                 boxShadow: 3,
                                 borderRadius: '50px',
@@ -484,7 +482,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                                   </>
                                 )}
                               </SmallPlayButton>
-                            )} */}
+                            )}
                             <audio ref={audioRef}></audio>
                           </Box>
 

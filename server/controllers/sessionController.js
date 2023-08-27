@@ -19,9 +19,10 @@ sessionController.isLoggedIn = async (req, res, next) => {
 };
 
 sessionController.startSession = async (req, res, next) => {
+  const id = res.locals.user.user1._id
   const hash = nanoid();
   try {
-    const cookieId = res.locals.user._id.toString();
+    const cookieId = id.toString();
     const sessionToken = hash; 
     await Session.create({ sessionToken, cookieId });
     res.locals.sessionToken = sessionToken;

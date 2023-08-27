@@ -1,113 +1,69 @@
-.App {
-  text-align: center;
-}
-
-
-nav {
-  /* display: fixed; */
-  background-color: color-mix(in srgb, rgb(24, 24, 107) 55%, rgb(121, 121, 121));
-  /* min-height: 100vh; */
-  border: 1px solid rgb(255, 187, 0);
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  display: flex;
-  justify-content: space-between;
-  /* flex-direction: column; */
-  /* align-items: center; */
-  /* justify-content: center; */
-  font-size: calc(15px + 2vmin);
-  color: white;
-
-}
-
-.favs {
-  font-size: medium;
-  display: flex;
-  align-items: center;
-}
-
-.favs-link {
-  margin-right: .5em;
-  font-size: large;
-  display: flex;
-  align-items: center;
-  color: #d6e252;
-  text-decoration: underline;
-}
-
-.LOGO {
-  margin-left: .5em;
-  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  color: rgb(236, 236, 236);
-}
-
 a {
   text-decoration: none;
   color: rgb(236, 236, 236);
   /* font-size: medium; */
 }
 
-.signup {
-  margin-right: .5em;
-  font-size: large;
-  display: flex;
-  align-items: center;
-  color: rgb(241, 237, 235);
-  text-decoration: underline;
+body {
+  overscroll-behavior-y: none;
+  overflow-x: hidden;
+  /* background-color: #212121; */
+  /* background-color: #eeeeee; */
+  /* background-image: repeating-linear-gradient(140deg, rgb(109, 97, 168), #282c34 25%, rgb(80, 108, 185)); */
+  margin: 0;
+  padding: 0;
+  /* background: repeating-linear-gradient(140deg, rgb(109, 97, 168, 0.4), #282c34 25%, rgb(80, 108, 185, 0.4)), url("../src/assets/pxfuel.jpg"); */
+  /* background-size: cover; */
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+html,
+body {
+  overflow-x: hidden;
 }
 
-/* Add this to your CSS file */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+
+
+.plug-logo {
   display: flex;
-  align-items: center;
+  width: 200px;
+  height: 200px;
+
+  /* margin-bottom: 10px; */
+  /* background-color:rgba(0, 0, 0, 0.2) */
+}
+
+.splash {
+  position: absolute;
+  top: 13%;
+  left: 20%;
+  right: 0;
+  bottom: 0;
+}
+
+
+
+.searchform {
+  display: flex;
   justify-content: center;
-  z-index: 9999;
-  background-color: rgba(0, 0, 0, 0.5);
+  /* margin-top: 10px; */
 }
 
-.modal-content {
+.searchform-container {
+  /* position: sticky;  */
+  justify-content: center;
   display: flex;
-  flex-direction: column;
-  background-color: rgb(255, 255, 255);
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  text-align: center;
-}
-
-.modal button {
   margin-top: 10px;
-  padding: 8px 16px;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
-}
 
-.modal button:hover {
-  background-color: #0056b3;
 }
 
 .App-search {
-  /* background-color: #282c34; */
-  background-image: repeating-linear-gradient(140deg, rgb(109, 97, 168), #282c34 25%, rgb(80, 108, 185));
+  /* background-image: repeating-linear-gradient(140deg, rgb(109, 97, 168), #282c34 25%, rgb(80, 108, 185)); */
+  /* background-color: rgb(243,242,239); */
   background-repeat: repeat-y;
-  /* background-attachment: fixed; */
-
-  min-height: 100vh;
+  /* background: rgb(27,20,80); */
+  /* background: radial-gradient(circle, rgba(27,20,80,1) 39%, rgba(61,34,94,1) 100%); */
+  min-height: 90vh;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -135,16 +91,52 @@ li {
 
 }
 
+/* .card-button-group{
+  display: flex;
+  position: relative;
+} */
+.credits-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+
+ul div {
+  font-size: calc(5px + 2vmin);
+  font-weight: 800;
+  color: rgb(210, 210, 210);
+}
+
+hr {
+  /* color: white; */
+  /* width: 95%; */
+  margin: 10px;
+  /* margin-left: 0; */
+  /* margin-right: 0; */
+}
+
+
+
+.loadmore {
+  display: flex;
+  justify-content: center;
+}
+
+
+
+.song-info {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
 .result-name {
   font-weight: bold;
   color: rgb(179, 199, 218);
-  display: flex;
-  /* padding: 5em; */
-  /* justify-content: center; */
-  margin-right: auto;
-  margin-left: auto;
-  /* text-align: center; */
-
 }
 
 .result-album {
@@ -152,103 +144,73 @@ li {
   font-size: calc(2px + 2vmin);
 }
 
-.search-id {
-
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, ;
-  font-weight: bold;
-  color: rgb(20, 20, 20);
-  display: flex;
-  justify-content: center;
-  border-radius: 4px;
-  border-color: #0b0b0b;
-  background-color: rgb(128, 186, 111);
-  margin-bottom: .7em;
-
-}
-
-hr {
-  color: white;
-}
-
-.star-div {
-  display: flex;
-  justify-content: center;
-  /* align-items: center; */
-}
-
-.star-button {
-  border-radius: 20px;
-  width: 2em;
-  height: 2em;
-  color: rgb(37, 37, 37);
-  border-style: none;
-  background-color: #d6e252;
-}
-
-.preview {
-  display: flex;
-  /* flex-direction: column; */
-  align-self: center;
-  margin-bottom: 1em;
-  border-radius: 15px;
-  border-color: rgb(236, 165, 114);
-  border-top: none;
-  border-left: none;
-  /* width: 6em;
-  height: 1em; */
-}
-
 .result-image {
   display: flex;
   width: 100px;
   height: 100px;
   object-fit: cover;
-  border-radius: 50%;
+  /* border-radius: 50%; */
 }
 
 .release-date {
-  font-size: calc(5px + 2vmin);
+  font-size: calc(2px + 1.5vmin);
   font-weight: 400;
   color: rgb(210, 210, 210);
 }
 
-ul div {
-  font-size: calc(5px + 2vmin);
-  font-weight: 800;
-  color: rgb(210, 210, 210);
-  width: 100%;
-}
 
-.user-splash {
-  color: rgb(225, 223, 84);
-  font-size: medium;
+div h2 {
   display: flex;
-
-  align-items: center;
-}
-
-/* header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  padding-top: 20px;
-  font-size: calc(20px + 2vmin);
-  color: white;
-} */
+  align-items: center;
+}
 
-/* .App-link {
-  color: #61dafb;
-} */
+#tableTitle {
+  display: flex;
+  justify-content: center;
+}
 
-/* @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+
+
+@media (max-width: 900px) {
+  .splash {
+    position: absolute;
+    top: 10%;
+    /* left: 10%; */
+    right: 0;
+    bottom: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .card-buttons {
+    display: flex;
+    flex-direction: column;
+    height: 120px;
+    justify-content: flex-end;
   }
 
-  to {
-    transform: rotate(360deg);
+  .pie-container {
+    display: flex;
+    width: 500px;
+    height: 200px;
+    /* margin: 0; */
   }
-} */
+  .splash {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    right: 0;
+    bottom: 0;
+  }
+
+}
+@media (orientation: landscape) and (max-width: 900px) {
+  .splash {
+    position: absolute;
+    top: 20%;
+    right: 0;
+    bottom: 0;
+    font-size: 12px;
+  }
+}

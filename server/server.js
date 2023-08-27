@@ -43,31 +43,38 @@ app.get('/getCredits', discogsController.discogsSearch, (req, res) => {
 
 //sign up 
 app.post('/signup', userController.createUser, (req, res) => {
-    res.redirect('/');
+    return res.redirect('/');
 });
 
 //verify user 
-app.post('/login', userController.verifyUser, sessionController.startSession, cookieController.setSSIDCookie, (req, res, next) => {
-    res.status(200).json({message: "logged in", user: res.locals.user});
+app.post('/login', userController.verifyUser, sessionController.startSession, cookieController.setSSIDCookie, cookieController.setRememberMeCookie, (req, res, next) => {
+    return res.status(200).json({message: "logged in"});
 });
 app.post('/logout', userController.logoutUser, (req, res) => {
-    res.status(200).json({message: 'logged out'});
+    return res.status(200).json({message: 'logged out'});
 })
 app.get('/validate', sessionController.isLoggedIn, (req, res) => {
-    res.status(200).json({message: "user validated"});
+    return res.status(200).json({message: "user validated"});
 })
+//remember me
+app.get('/check-remember-me', cookieController.checkRememberMeCookie, (req, res) => {
+    return res.status(200).json({valid: res.locals.valid, username: res.locals.userFound});
+});
 
 //get favs 
 app.post('/favs', userController.getFavorites, (req, res) => {
-    res.json(res.locals.userFavs);
+    return res.status(200).json(res.locals.userFavs);
 });
 
 //add favs to user
 app.post('/addFavs', userController.addFavorites, (req, res) => {
-    console.log('fav added');
-    res.json(req.body);
+    return res.status(200).json(res.locals.userFavs);
 });
 
+//delete favs from table
+app.post('/removefavs', userController.deleteFavorites, (req, res) => {
+    return res.status(200).json({ message: "Favorites deleted successfully." });
+})
 
 app.use((err, req, res, next) => {
     //Define a default error object

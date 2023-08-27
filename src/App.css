@@ -12,8 +12,6 @@ body {
   /* background-image: repeating-linear-gradient(140deg, rgb(109, 97, 168), #282c34 25%, rgb(80, 108, 185)); */
   margin: 0;
   padding: 0;
-  /* background: repeating-linear-gradient(140deg, rgb(109, 97, 168, 0.4), #282c34 25%, rgb(80, 108, 185, 0.4)), url("../src/assets/pxfuel.jpg"); */
-  /* background-size: cover; */
 }
 
 html,
@@ -57,12 +55,8 @@ body {
 }
 
 .App-search {
-  /* background-image: repeating-linear-gradient(140deg, rgb(109, 97, 168), #282c34 25%, rgb(80, 108, 185)); */
-  /* background-color: rgb(243,242,239); */
   background-repeat: repeat-y;
-  /* background: rgb(27,20,80); */
-  /* background: radial-gradient(circle, rgba(27,20,80,1) 39%, rgba(61,34,94,1) 100%); */
-  min-height: 90vh;
+  min-height: 100vh;
   position: relative;
   display: flex;
   flex-direction: column;

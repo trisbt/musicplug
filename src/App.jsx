@@ -25,7 +25,7 @@ function MainContent() {
   const [showSplash, setShowSplash] = useState(true);
   const location = useLocation();
 
-useEffect(() => {
+  useEffect(() => {
     if (successfulLogin) {
       setSuccessfulLogin(false);
       return <Navigate to="/" replace={true} />;
@@ -35,15 +35,16 @@ useEffect(() => {
       return <Navigate to="/" replace={true} />;
     }
   }, [successfulLogin, successfulLogout, setSuccessfulLogin, setSuccessfulLogout])
-  
+
 
 
   const getBackgroundStyle = (path) => {
     if (showSplash && location.pathname !== '/favs') {
       return {
-        backgroundImage: `repeating-linear-gradient(140deg, rgb(109, 97, 168, 0.4), #282c34 25%, rgb(80, 108, 185, 0.4)), url(${backgroundImg})`,
+        // backgroundImage: `repeating-linear-gradient(140deg, rgb(109, 97, 168, 0.4), #282c34 25%, rgb(80, 108, 185, .4)), url(${backgroundImg})`,
+        backgroundImage: `linear-gradient(rgb(5,12,24, 0.7), rgb(5,12,24,.5)), url(${backgroundImg})`,
         backgroundSize: 'cover',
-        backgroundPosition: 'center'
+        backgroundPosition: 'center',
       };
     } else {
       return {
@@ -51,7 +52,7 @@ useEffect(() => {
       };
     }
   };
-  
+
   const backgroundStyle = getBackgroundStyle(location.pathname);
   return (
     <>

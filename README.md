@@ -11,3 +11,4 @@ MusicPlug is a song search engine powered by the Spotify and Discogs APIs.
 ## Future Plans
 
 Stay tuned for continued updates!
+

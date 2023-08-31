@@ -31,6 +31,7 @@ const discogsSearch = async (req, res, next) => {
   try {
     //search for masters
     const response = await fetch(`https://api.discogs.com/database/search?q=${artists + albums}&token=${discogsToken}`);
+    // const response = await fetch(`https://api.discogs.com/masters/1000`);
     const data = await response.json();
     let found = false;
     const creditsArr = [];
@@ -64,7 +65,6 @@ const discogsSearch = async (req, res, next) => {
               creditsArr.push(per.role, per.name);
             }
             res.locals.data = creditsArr;
-            console.log(creditsArr)
             found = true;
             break;
           }
@@ -86,32 +86,6 @@ const discogsSearch = async (req, res, next) => {
 
 }
 
-
-
-
-// const discogsSearch = (req, res, next) => {
-//     const artists = req.query.artist;
-//     const albums = req.query.album;
-//     fetch(`https://api.discogs.com/database/search?q=${artists + albums}&token=${discogsToken}`)
-//         .then(response => response.json())
-//         .then(data => {
-//             const masterId = data.results[0].master_id;
-//             fetch(`https://api.discogs.com/masters/${masterId}`)
-//                 .then(response => response.json())
-//                 .then(data => {
-//                     res.locals.data = data;
-//                     return next();
-//                  })
-//                  .catch(err => {
-//                     console.log(err);
-//                     return;
-//                 })
-//         })
-//         .catch(err => {
-//             console.log(err);
-//             return;
-//         })
-// }
 
 module.exports = {
   discogsSearch,

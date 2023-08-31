@@ -1,14 +1,11 @@
 a {
   text-decoration: none;
   color: rgb(236, 236, 236);
-  /* font-size: medium; */
 }
 
 body {
   overscroll-behavior-y: none;
   overflow-x: hidden;
-  /* background-color: #212121; */
-  /* background-color: #eeeeee; */
   /* background-image: repeating-linear-gradient(140deg, rgb(109, 97, 168), #282c34 25%, rgb(80, 108, 185)); */
   margin: 0;
   padding: 0;
@@ -38,16 +35,12 @@ body {
   bottom: 0;
 }
 
-
-
 .searchform {
   display: flex;
   justify-content: center;
-  /* margin-top: 10px; */
 }
 
 .searchform-container {
-  /* position: sticky;  */
   justify-content: center;
   display: flex;
   margin-top: 10px;
@@ -85,17 +78,12 @@ li {
 
 }
 
-/* .card-button-group{
-  display: flex;
-  position: relative;
-} */
 .credits-container {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
 }
-
 
 ul div {
   font-size: calc(5px + 2vmin);
@@ -104,21 +92,13 @@ ul div {
 }
 
 hr {
-  /* color: white; */
-  /* width: 95%; */
   margin: 10px;
-  /* margin-left: 0; */
-  /* margin-right: 0; */
 }
-
-
 
 .loadmore {
   display: flex;
   justify-content: center;
 }
-
-
 
 .song-info {
   display: flex;
@@ -170,7 +150,6 @@ div h2 {
   .splash {
     position: absolute;
     top: 10%;
-    /* left: 10%; */
     right: 0;
     bottom: 0;
   }
@@ -188,7 +167,6 @@ div h2 {
     display: flex;
     width: 500px;
     height: 200px;
-    /* margin: 0; */
   }
   .splash {
     position: absolute;

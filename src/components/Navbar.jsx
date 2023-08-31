@@ -6,17 +6,12 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
-import PowerTwoToneIcon from '@mui/icons-material/PowerTwoTone';
 import { Card } from '@mui/material';
-import { Paper } from '@mui/material';
-// import plugLogo from '../assets/pluglogo.png';
 import musicpluglogow from '../assets/musicpluglogow.png';
 import { useAuth } from './Auth';
 
@@ -30,11 +25,7 @@ function ResponsiveAppBar() {
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
     const [searchParams, setSearchParams] = useSearchParams();
-    // const navigate = useNavigation();
 
-    // const handleOpenNavMenu = (event) => {
-    //     setAnchorElNav(event.currentTarget);
-    // };
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
@@ -59,9 +50,7 @@ function ResponsiveAppBar() {
 
                 boxShadow: '6',
                 backdropFilter: 'blur(10px)',
-                // backgroundColor: 'rgba(250, 250, 250, 0.4)',
                 backgroundColor: '#0047d4',
-                // borderRadius:'8px'
             }}
         >
             <Container maxWidth="xl"
@@ -76,7 +65,6 @@ function ResponsiveAppBar() {
                     }
                 }}>
                     <Box display="flex" justifyContent="space-between" alignItems={'center'} width="100%">
-                        {/* <Box sx={{ display: 'flex', alignItems: 'center', }}></Box> */}
                         <Box sx={{
                             // ml:'30em',
                             // ml:2,
@@ -95,9 +83,7 @@ function ResponsiveAppBar() {
                                 width: '175px',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                // opacity:'30%',
                                 backgroundColor: 'transparent',
-                                // backgroundColor: 'blue',
                                 boxShadow: '0'
                             }}>
                                 <Link to="/" onClick={handleHomeClick}>

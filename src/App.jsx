@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect} from 'react';
 import SearchData from './components/SearchData';
 // import DisplayData from './components/DisplayData';
 import Favorites from './components/Favs';
@@ -41,10 +41,9 @@ function MainContent() {
   const getBackgroundStyle = (path) => {
     if (showSplash && location.pathname !== '/favs') {
       return {
-        // backgroundImage: `repeating-linear-gradient(140deg, rgb(109, 97, 168, 0.4), #282c34 25%, rgb(80, 108, 185, .4)), url(${backgroundImg})`,
-        backgroundImage: `linear-gradient(rgb(5,12,24, 0.7), rgb(5,12,24,.5)), url(${backgroundImg})`,
+        backgroundImage: `linear-gradient(rgb(40, 60, 80, 0.7), rgb(5,12,24, 0.7)), url(${backgroundImg})`,
         backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundPosition: 'center 26%',
       };
     } else {
       return {

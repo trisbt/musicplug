@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Card } from '@mui/material';
 import DisplayData from './DisplayData';
 import { Button } from '@mui/material';
 import Input from '@mui/material/Input';
@@ -136,9 +135,6 @@ const SearchData = ({ username, setShowSplash }) => {
         const nextOffset = offset + 25;
         fetchData(nextOffset);
     }
-
-
-console.log('inputField',inputField)
 
     return (
         <ThemeProvider theme={theme}>

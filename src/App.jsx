@@ -9,6 +9,7 @@ import './App.css';
 import SignIn from './components/Login';
 import SignUp from './components/Signup';
 import Splash from './components/Splash';
+import SongPage from './components/SongPage';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import backgroundImg from './assets/Musicplugbg.jpg';
 
@@ -67,6 +68,7 @@ function MainContent() {
             <Routes>
               <Route path="/" element={<SearchData username={loggedInUser} showSplash={showSplash} setShowSplash={setShowSplash} />} />
               <Route path="/signup" element={<SignUp />} />
+              <Route path="/:name/:artist/:id" element={<SongPage />} />
               {!isLoggedIn && <Route path="/login" element={<SignIn />} />}
               {isLoggedIn && <Route path="/favs" element={<Favorites username={loggedInUser} />} />}
             </Routes>

@@ -1,4 +1,5 @@
 import SearchId from './SearchId';
+import { Link } from 'react-router-dom';
 import React, { useState, useRef, useEffect, } from 'react';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
@@ -131,7 +132,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
   const basicData = data.map((item) => {
     const { name, album, preview_url } = item;
     const artists = item.artists
-    const images = album.images[1].url;
+    const images = album.images[0].url;
     const id = item.id;
     const release_date = item.album.release_date;
     const albums = item.album.name;
@@ -222,293 +223,316 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
             <h4 style={{ textAlign: 'center', fontSize: '20px' }}>Search Results for {searchResult}:</h4>
             <ul style={{ width: '100%', margin: '0 auto', padding: '0' }}>
               {results.map((item, index) => (
-                <div key={index} >
-                  <Card sx={{
-                    margin: '10px 10px 0',
-                    boxShadow: 3,
-                  }}
-                  >
-                    <Box>
-                      <CardContent sx={{
-                        display: 'flex', flex: '1 0 auto', flexDirection: 'row', justifyContent: 'space-between',
-                      }}>
-                        <Box sx={{
-                          display: 'flex', flexDirection: 'column', width: '35%',
-                          "@media (max-width: 500px)": {
-                            width: '50%',
-                          }
-                        }}>
-                          <Typography component="div" color="text.primary" variant="h5">
-                            {item.name}
-                          </Typography>
-                          <Typography variant="h6" color="text.secondary" component="div">
-                            {item.artists.map((artist, index) => (
-                              <span key={index}>
-                                {artist.name}
-                                {index < item.artists.length - 1 && (
-                                  <span style={{ color: '#B3C7ED', fontStyle: 'italic', marginLeft: '5px', marginRight: '5px' }}>|</span>
-                                )}
-                              </span>
-                            ))}
-                          </Typography>
-                          <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
-                            "@media (max-width: 600px)": {
-                              fontSize: '13px',
-                            }
-                          }}>
-                            {item.albums}
-                          </Typography>
-
-                          <CardMedia
-                            component="img"
-                            sx={{
-                              width: 151,
-                              "@media (max-width: 500px)": {
-                                width: '75%',
-                                // height: '50%'
-                              }
-                            }}
-                            image={item.images}
-                            alt={item.name}
-                          />
-                          <Typography variant="subtitle2" color="text.secondary" component="div" sx={{
-                            "@media (max-width: 500px)": {
-                              fontSize: '10px'
-                            }
-                          }} >
-                            Released: {item.release_date}
-                          </Typography>
-                        </Box>
-                        <Box sx={{
-                          display: 'flex', flexDirection: 'column', width: '70%', justifyContent: 'space-between',
-                          "@media (max-width: 500px)": {
-                            justifyContent: 'space-between',
-                            marginRight: '0',
-                            width: '50%'
-                          }
+                <Link 
+                to={{
+                  pathname: `/${encodeURIComponent(item.name)}/${encodeURIComponent(item.artists[0].name)}/${item.id}`,
+                }}
+                state ={{
+                  songDetails: {
+                    id: item.id,
+                    name: item.name,
+                    artists: item.artists,
+                    albums: item.albums,
+                    images: item.images,
+                    key: item.key,
+                    tempo: item.tempo,
+                    loudness: item.loudness
+                  },
+                  username: username
+                }}
+                key={index}
+                >
+                  <div key={index} >
+                    <Card sx={{
+                      margin: '10px 10px 0',
+                      boxShadow: 3,
+                      "&:hover": {
+                        backgroundColor: "#eee",
+                      }
+                    }}
+                    >
+                      <Box>
+                        <CardContent sx={{
+                          display: 'flex', flex: '1 0 auto', flexDirection: 'row', justifyContent: 'space-between',
                         }}>
                           <Box sx={{
-                            display: 'flex', flexDirection: 'row', height: '100px', justifyContent: 'space-around',
+                            display: 'flex', flexDirection: 'column', width: '35%',
                             "@media (max-width: 500px)": {
-                              display: 'flex',
-                              justifyContent: 'space-evenly',
-                              flexFlow: 'row wrap',
-                              width: '200px',
-                              height: '260px',
+                              width: '50%',
                             }
                           }}>
+                            <Typography component="div" color="text.primary" variant="h5">
+                              {item.name}
+                            </Typography>
+                            <Typography variant="h6" color="text.secondary" component="div">
+                              {item.artists.map((artist, index) => (
+                                <span key={index}>
+                                  {artist.name}
+                                  {index < item.artists.length - 1 && (
+                                    <span style={{ color: '#B3C7ED', fontStyle: 'italic', marginLeft: '5px', marginRight: '5px' }}>|</span>
+                                  )}
+                                </span>
+                              ))}
+                            </Typography>
                             <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
-                              display: 'flex', flexDirection: 'column', alignItems: 'center',
                               "@media (max-width: 600px)": {
-                                // fontSize: '20px',
-                                width: '65px',
+                                fontSize: '13px',
                               }
                             }}>
-                              Key
-                              <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
-                                "@media (max-width: 600px)": {
-                                  fontSize: '20px',
-                                  display: 'flex',
-                                  justifyContent: 'center',
-                                  width: '70px',
-                                }
-                              }}>
-                                {item.key}
-                              </Typography>
+                              {item.albums}
                             </Typography>
 
-                            <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
-                              display: 'flex', flexDirection: 'column', alignItems: 'center',
-                              "@media (max-width: 600px)": {
-                                // fontSize: '20px',
-                                width: '65px',
-                              }
-                            }}>
-                              BPM
-                              <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
-                                "@media (max-width: 600px)": {
-                                  fontSize: '20px'
+                            <CardMedia
+                              component="img"
+                              sx={{
+                                width: 151,
+                                "@media (max-width: 500px)": {
+                                  width: '75%',
+                                  // height: '50%'
                                 }
-                              }}>
-                                {item.tempo}
-                              </Typography>
-                            </Typography>
-
-                            <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
-                              display: 'flex', flexDirection: 'column', alignItems: 'center',
-                              "@media (max-width: 600px)": {
-                                // fontSize: '20px',
-                                width: '95px',
+                              }}
+                              image={item.images}
+                              alt={item.name}
+                            />
+                            <Typography variant="subtitle2" color="text.secondary" component="div" sx={{
+                              "@media (max-width: 500px)": {
+                                fontSize: '10px'
                               }
-                            }}>
-                              Loudness
-                              <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
-                                "@media (max-width: 600px)": {
-                                  fontSize: '20px'
-                                }
-                              }}>
-                                {item.loudness}
-                              </Typography>
-                            </Typography>
-
-                            <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
-                              display: 'flex', flexDirection: 'column', alignItems: 'center',
-                              "@media (max-width: 600px)": {
-                                // fontSize: '20px',
-                                width: '95px',
-                              }
-                            }}>
-                              Energy
-                              <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
-                                "@media (max-width: 600px)": {
-                                  fontSize: '20px'
-                                }
-                              }}>
-                                {item.energy}
-                              </Typography>
+                            }} >
+                              Released: {item.release_date}
                             </Typography>
                           </Box>
-                          <Box className='card-buttons'
-                            sx={{
-                              display: 'flex',
-                              flexDirection: 'row',
-                              justifyContent: item.preview_url ? 'space-evenly' : 'center',
-                              "@media (max-width: 600px)": {
-                                alignItems: 'flex-end',
-                                justifyContent: 'space-between',
-                                height: '45px',
-                                width: '110px',
-                                // flexDirection: 'column',
-                                // alignItems: 'center',
+                          <Box sx={{
+                            display: 'flex', flexDirection: 'column', width: '70%', justifyContent: 'space-between',
+                            "@media (max-width: 500px)": {
+                              justifyContent: 'space-between',
+                              marginRight: '0',
+                              width: '50%'
+                            }
+                          }}>
+                            <Box sx={{
+                              display: 'flex', flexDirection: 'row', height: '100px', justifyContent: 'space-around',
+                              "@media (max-width: 500px)": {
+                                display: 'flex',
+                                justifyContent: 'space-evenly',
+                                flexFlow: 'row wrap',
+                                width: '200px',
+                                height: '260px',
                               }
-                            }}
-                          >
-                            
-                            <FavButton
-                              variant="elevated"
-                              className='fav-icon-button'
-                              onClick={() => handleFavorite(item, username)}
-                              // noWrap
-                              sx={{
-                                display: { xs: 'none', sm: 'flex', md: 'flex' },
-                                padding: '0',
-                                paddingRight: '5px',
-                                boxShadow: 3,
-                                justifyContent: "space-evenly",
-                                borderRadius: '50px',
-
+                            }}>
+                              <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
+                                display: 'flex', flexDirection: 'column', alignItems: 'center',
                                 "@media (max-width: 600px)": {
-                                  margin: '0 0 10px',
-                                  // width:'100px',
+                                  // fontSize: '20px',
+                                  width: '65px',
+                                }
+                              }}>
+                                Key
+                                <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
+                                  "@media (max-width: 600px)": {
+                                    fontSize: '20px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    width: '70px',
+                                  }
+                                }}>
+                                  {item.key}
+                                </Typography>
+                              </Typography>
+
+                              <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
+                                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                                "@media (max-width: 600px)": {
+                                  // fontSize: '20px',
+                                  width: '65px',
+                                }
+                              }}>
+                                BPM
+                                <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
+                                  "@media (max-width: 600px)": {
+                                    fontSize: '20px'
+                                  }
+                                }}>
+                                  {item.tempo}
+                                </Typography>
+                              </Typography>
+
+                              <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
+                                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                                "@media (max-width: 600px)": {
+                                  // fontSize: '20px',
+                                  width: '95px',
+                                }
+                              }}>
+                                Loudness
+                                <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
+                                  "@media (max-width: 600px)": {
+                                    fontSize: '20px'
+                                  }
+                                }}>
+                                  {item.loudness}
+                                </Typography>
+                              </Typography>
+
+                              <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
+                                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                                "@media (max-width: 600px)": {
+                                  // fontSize: '20px',
+                                  width: '95px',
+                                }
+                              }}>
+                                Energy
+                                <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
+                                  "@media (max-width: 600px)": {
+                                    fontSize: '20px'
+                                  }
+                                }}>
+                                  {item.energy}
+                                </Typography>
+                              </Typography>
+                            </Box>
+                            <Box className='card-buttons'
+                              sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: item.preview_url ? 'space-evenly' : 'center',
+                                "@media (max-width: 600px)": {
+                                  alignItems: 'flex-end',
+                                  justifyContent: 'space-between',
+                                  height: '45px',
+                                  width: '110px',
+                                  // flexDirection: 'column',
+                                  // alignItems: 'center',
                                 }
                               }}
                             >
-                              {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
-                              add to Favorites
-                            </FavButton>
-                            
-                            <SmallFavButton
-                              size='small'
-                              className='small-fav-icon-button'
-                              // noWrap
-                              onClick={() => handleFavorite(item, username)}
-                              sx={{
-                                display: { xs: 'flex', sm: 'none', md: 'none' },
-                                padding: '0',
-                                boxShadow: 3,
-                                justifyContent: "space-evenly",
-                                borderRadius: '50px',
-                              }}
-                            >
-                              {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
-                            </SmallFavButton>
 
-                            {item.preview_url && (
-                              <PlayButton className='preview-button' sx={{
-                                boxShadow: 3,
-                                borderRadius: '50px',
-                                display: { xs: 'none', sm: 'flex', md: 'flex' },
-                              }}
-                                onClick={() => playAudio(item.preview_url)}>
-                                {currentlyPlayingUrl === item.preview_url ? (
-                                  <>
-                                    <StopIcon aria-label="stop"
-                                      sx={{
-                                        height: 35,
-                                        width: 35,
-                                      }}
-                                    />
-                                    Stop track
-                                  </>
-                                ) : (
-                                  <>
-                                    <PlayArrowIcon aria-label="play/pause"
-                                      sx={{
-                                        height: 35,
-                                        width: 35,
-                                      }}
-                                    />
-                                    Preview track
-                                  </>
-                                )}
-                              </PlayButton>
-                            )}
+                              <FavButton
+                                variant="elevated"
+                                className='fav-icon-button'
+                                onClick={() => handleFavorite(item, username)}
+                                // noWrap
+                                sx={{
+                                  display: { xs: 'none', sm: 'flex', md: 'flex' },
+                                  padding: '0',
+                                  paddingRight: '5px',
+                                  boxShadow: 3,
+                                  justifyContent: "space-evenly",
+                                  borderRadius: '50px',
 
-                            {item.preview_url && (
-                              <SmallPlayButton className='preview-button' sx={{
-                                boxShadow: 3,
-                                borderRadius: '50px',
-                                display: { xs: 'flex', sm: 'none', md: 'none' },
-                              }}
-                                onClick={() => playAudio(item.preview_url)}>
-                                {currentlyPlayingUrl === item.preview_url ? (
-                                  <>
-                                    <StopIcon aria-label="stop"
-                                      sx={{
-                                        height: 35,
-                                        width: 35,
-                                      }}
-                                    />
-                                  </>
-                                ) : (
-                                  <>
-                                    <PlayArrowIcon aria-label="play/pause"
-                                      sx={{
-                                        height: 35,
-                                        width: 35,
-                                      }}
-                                    />
-                                  </>
-                                )}
-                              </SmallPlayButton>
-                            )}
-                            <audio ref={audioRef}></audio>
+                                  "@media (max-width: 600px)": {
+                                    margin: '0 0 10px',
+                                    // width:'100px',
+                                  }
+                                }}
+                              >
+                                {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
+                                add to Favorites
+                              </FavButton>
+
+                              <SmallFavButton
+                                size='small'
+                                className='small-fav-icon-button'
+                                // noWrap
+                                onClick={() => handleFavorite(item, username)}
+                                sx={{
+                                  display: { xs: 'flex', sm: 'none', md: 'none' },
+                                  padding: '0',
+                                  boxShadow: 3,
+                                  justifyContent: "space-evenly",
+                                  borderRadius: '50px',
+                                }}
+                              >
+                                {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
+                              </SmallFavButton>
+
+                              {item.preview_url && (
+                                <PlayButton className='preview-button' sx={{
+                                  boxShadow: 3,
+                                  borderRadius: '50px',
+                                  display: { xs: 'none', sm: 'flex', md: 'flex' },
+                                }}
+                                  onClick={() => playAudio(item.preview_url)}>
+                                  {currentlyPlayingUrl === item.preview_url ? (
+                                    <>
+                                      <StopIcon aria-label="stop"
+                                        sx={{
+                                          height: 35,
+                                          width: 35,
+                                        }}
+                                      />
+                                      Stop track
+                                    </>
+                                  ) : (
+                                    <>
+                                      <PlayArrowIcon aria-label="play/pause"
+                                        sx={{
+                                          height: 35,
+                                          width: 35,
+                                        }}
+                                      />
+                                      Preview track
+                                    </>
+                                  )}
+                                </PlayButton>
+                              )}
+
+                              {item.preview_url && (
+                                <SmallPlayButton className='preview-button' sx={{
+                                  boxShadow: 3,
+                                  borderRadius: '50px',
+                                  display: { xs: 'flex', sm: 'none', md: 'none' },
+                                }}
+                                  onClick={() => playAudio(item.preview_url)}>
+                                  {currentlyPlayingUrl === item.preview_url ? (
+                                    <>
+                                      <StopIcon aria-label="stop"
+                                        sx={{
+                                          height: 35,
+                                          width: 35,
+                                        }}
+                                      />
+                                    </>
+                                  ) : (
+                                    <>
+                                      <PlayArrowIcon aria-label="play/pause"
+                                        sx={{
+                                          height: 35,
+                                          width: 35,
+                                        }}
+                                      />
+                                    </>
+                                  )}
+                                </SmallPlayButton>
+                              )}
+                              <audio ref={audioRef}></audio>
+                            </Box>
+
                           </Box>
+                        </CardContent>
+                      </Box>
+                    </Card>
+                    <Card sx={{
+                      margin: '0 10px 0', borderTop: '1px solid grey', boxShadow: 3,
+                      "@media (max-width: 600px)": {
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'flex-start',
 
-                        </Box>
-                      </CardContent>
-                    </Box>
-                  </Card>
-                  <Card sx={{
-                    margin: '0 10px 0', borderTop: '1px solid grey', boxShadow: 3,
-                    "@media (max-width: 600px)": {
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'flex-start',
-
-                    }
-                  }}>
-                    <CardContent sx={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'space-evenly',
-
+                      }
                     }}>
-                      <SearchId id={item.id} name={item.name} artists={item.artists} album={item.albums} />
-                    </CardContent>
-                  </Card>
-                  <hr />
-                </div>
+                      <CardContent sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-evenly',
+
+                      }}>
+                        <SearchId id={item.id} name={item.name} artists={item.artists} album={item.albums} />
+                      </CardContent>
+                    </Card>
+                    <hr />
+                  </div>
+                </Link>
               ))}
             </ul>
             <div className='loadmore'>

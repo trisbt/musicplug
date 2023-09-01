@@ -94,23 +94,22 @@ const LoadButton = styled(Button)(({ theme }) => ({
 
 const keyConvert = (num) => {
   const chart = {
-    '0': 'C',
-    '1': 'C# | Db',
-    '2': 'D',
-    '3': 'D# | Eb',
-    '4': 'E',
-    '5': 'F',
-    '6': 'F# | Gb',
-    '7': 'G',
-    '8': 'G# | Ab',
-    '9': 'A',
-    '10': 'A# | Bb',
-    '11': 'B',
+    '0': 'C/Am',
+    '1': 'C# Db/A#m Bbm',
+    '2': 'D/Bm',
+    '3': 'D# Eb/Cm',
+    '4': 'E/C#m Dbm',
+    '5': 'F/Dm',
+    '6': 'F# Gb/D#m Ebm',
+    '7': 'G/Em',
+    '8': 'G# Ab/Fm',
+    '9': 'A/F#m Gbm',
+    '10': 'A# Bb/Gm',
+    '11': 'B/G#m Abm',
   }
-  if (String(num) in chart) {
-    return chart[String(num)];
-  }
+  return chart[num];
 }
+
 function tempoRound(num) {
   return Math.round(num * 2) / 2;
 }
@@ -130,29 +129,56 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
   }
 
   const basicData = data.map((item) => {
-    const { name, album, preview_url } = item;
+    const { name, album, preview_url, explicit, popularity } = item;
     const artists = item.artists
     const images = album.images[0].url;
     const id = item.id;
     const release_date = item.album.release_date;
     const albums = item.album.name;
-    return { name, images, id, preview_url, release_date, artists, albums };
+
+    return { name, images, id, preview_url, release_date, artists, albums, explicit, popularity };
   });
 
   const audioFeatures = audioData.map((item) => {
     if (item) {
       const key = keyConvert(item.key);
       const tempo = tempoRound(item.tempo);
-      const loudness = item.loudness;
-      const energy = item.energy;
-
-      return { key, tempo, loudness, energy };
+      const { loudness, energy, acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence } = item
+      // const loudness = item.loudness;
+      // const energy = item.energy;
+      // const acousticness = item.acousticness;
+      // const analysis_url = item.analysis_url;
+      // const danceability = item.danceability;
+      // const duration_ms = item.duration_ms;
+      // const instrumentalness = item.instrumentalness;
+      // const liveness = item.liveness;
+      // const time_signature = item.time_signature;
+      // const track_href = item.track_href;
+      // const uri = item.uri;
+      // const valence = item.valence;
+      return {
+        key,
+        tempo,
+        loudness,
+        energy,
+        acousticness,
+        analysis_url,
+        danceability,
+        duration_ms,
+        instrumentalness,
+        liveness,
+        time_signature,
+        track_href,
+        uri,
+        valence,
+      };
     } else {
       return {};
     }
   });
 
   const results = [];
+
   for (let i = 0; i < basicData.length; i++) {
     const combinedObject = {
       ...basicData[i],
@@ -238,6 +264,18 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                       tempo: item.tempo,
                       loudness: item.loudness,
                       energy: item.energy,
+                      acousticness: item.acousticness,
+                      analysis_url: item.analysis_url,
+                      danceability: item.danceability,
+                      duration_ms: item.duration_ms,
+                      instrumentalness: item.instrumentalness,
+                      liveness: item.liveness,
+                      time_signature: item.time_signature,
+                      track_href: item.track_href,
+                      uri: item.uri,
+                      valence: item.valence,
+                      explicit: item.explicit,
+                      popularity: item.popularity,
                     },
                     username: username
                   }}

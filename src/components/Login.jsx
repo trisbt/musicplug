@@ -53,7 +53,6 @@ export default function SignIn() {
     event.preventDefault();
     const username = event.target.username.value;
     const password = event.target.password.value;
-    console.log(rememberMe)
     try {
       await handleLogin(username, password, rememberMe);
     } catch (error) {

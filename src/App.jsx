@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect} from 'react';
 import SearchData from './components/SearchData';
 // import DisplayData from './components/DisplayData';
@@ -25,19 +25,16 @@ function MainContent() {
   const { isLoggedIn, loggedInUser, successfulLogin, setSuccessfulLogin, successfulLogout, setSuccessfulLogout } = useAuth();
   const [showSplash, setShowSplash] = useState(true);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (successfulLogin) {
-      setSuccessfulLogin(false);
-      return <Navigate to="/" replace={true} />;
-    }
-    if (successfulLogout) {
-      setSuccessfulLogout(false);
-      return <Navigate to="/" replace={true} />;
-    }
-  }, [successfulLogin, successfulLogout, setSuccessfulLogin, setSuccessfulLogout])
-
-
+      if (successfulLogin || successfulLogout) {
+          setSuccessfulLogin(false);
+          setSuccessfulLogout(false);
+          navigate('/');
+      }
+  }, [successfulLogin, successfulLogout]);
+  
 
   const getBackgroundStyle = (path) => {
     if (showSplash && location.pathname !== '/favs') {
@@ -73,8 +70,6 @@ function MainContent() {
               {isLoggedIn && <Route path="/favs" element={<Favorites username={loggedInUser} />} />}
             </Routes>
           </div>
-
-          {/* <DisplayData username={loggedInUser} /> */}
         </div>
       </div>
     </>

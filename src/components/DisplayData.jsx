@@ -152,18 +152,6 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
       const key = keyConvert(item.key, item.mode);
       const tempo = tempoRound(item.tempo);
       const { loudness, energy,acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence } = item
-      // const loudness = item.loudness;
-      // const energy = item.energy;
-      // const acousticness = item.acousticness;
-      // const analysis_url = item.analysis_url;
-      // const danceability = item.danceability;
-      // const duration_ms = item.duration_ms;
-      // const instrumentalness = item.instrumentalness;
-      // const liveness = item.liveness;
-      // const time_signature = item.time_signature;
-      // const track_href = item.track_href;
-      // const uri = item.uri;
-      // const valence = item.valence;
       return {
         key,
         tempo,

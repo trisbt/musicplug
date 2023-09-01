@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Box, Grid, Card, CardMedia, CardContent, Typography } from '@mui/material';
 import { Modal, Backdrop, Fade, styled, Paper } from '@mui/material';
-import { useParams, useLocation } from 'react-router-dom';
-import { BarChart } from '@mui/x-charts/BarChart';
-import { axisClasses } from '@mui/x-charts';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import DbScale from './DbScale';
 
 const msConvert = (num) => {
@@ -55,6 +53,7 @@ const SongPage = () => {
           }}>
             {/* First Row - Image and Song Details */}
             <Grid container item xs={12} md={12} lg={11} spacing={2} >
+
               {/* image and modal */}
               <Grid item xs={12} sm={6} md={4}>
                 <CardMedia
@@ -94,13 +93,25 @@ const SongPage = () => {
                   </Fade>
                 </Modal>
               </Grid>
+
               {/* song info */}
               <Grid item container xs={12} sm={10} md={8} lg={8} spacing={16} direction="column">
+
                 <Grid item >
                   <Typography variant="h5" color='text.primary'>{songDetails.name}</Typography>
                   <Typography variant="h4">{songDetails.artists[0]?.name}</Typography>
                   <Typography variant="subtitle1">{songDetails.albums}</Typography>
+                  <Link to={songDetails.track_href}>
+                    <svg 
+                    style={{ marginLeft:'-8px' }} 
+                    xmlns="http://www.w3.org/2000/svg" width="70" height="70" viewBox="0 0 24 24">
+                      <path fill="#00e676" d="M17.9 10.9C14.7 9 9.35 8.8 6.3 9.75c-.5.15-1-.15-1.15-.6c-.15-.5.15-1 .6-1.15c3.55-1.05 9.4-.85 13.1 1.35c.45.25.6.85.35 1.3c-.25.35-.85.5-1.3.25m-.1 2.8c-.25.35-.7.5-1.05.25c-2.7-1.65-6.8-2.15-9.95-1.15c-.4.1-.85-.1-.95-.5c-.1-.4.1-.85.5-.95c3.65-1.1 8.15-.55 11.25 1.35c.3.15.45.65.2 1m-1.2 2.75c-.2.3-.55.4-.85.2c-2.35-1.45-5.3-1.75-8.8-.95c-.35.1-.65-.15-.75-.45c-.1-.35.15-.65.45-.75c3.8-.85 7.1-.5 9.7 1.1c.35.15.4.55.25.85M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2Z" />
+                    </svg>
+                  </Link>
+
+
                 </Grid>
+
                 {/* Other Details, shows inline with song details on large screens */}
                 <Grid container item spacing={2} sx={{ display: { xs: 'none', sm: 'none', md: 'none', lg: 'flex' } }}>
                   <Grid item xs={3} >
@@ -129,6 +140,7 @@ const SongPage = () => {
                   </Grid>
 
                 </Grid>
+
               </Grid>
 
               {/* Other Details, shows flex with song details on smaller screens */}

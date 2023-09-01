@@ -95,17 +95,17 @@ const LoadButton = styled(Button)(({ theme }) => ({
 const keyConvert = (num, mode) => {
   const chart = {
     '0': ['C', 'Am'],
-    '1': ['C# | Db', 'A#m | Bbm'],
+    '1': ['Db', 'Bbm'],
     '2': ['D', 'Bm'],
-    '3': ['D# | Eb', 'Cm'],
-    '4': ['E', 'C#m | Dbm'],
+    '3': ['Eb', 'Cm'],
+    '4': ['E', 'C#m'],
     '5': ['F', 'Dm'],
-    '6': ['F# | Gb', 'D#m | Ebm'],
+    '6': ['Gb', 'Ebm'],
     '7': ['G', 'Em'],
-    '8': ['G# | Ab', 'Fm'],
-    '9': ['A', 'F#m | Gbm'],
-    '10': ['A# | Bb', 'Gm'],
-    '11': ['B', 'G#m | Abm'],
+    '8': ['Ab', 'Fm'],
+    '9': ['A', 'F#m'],
+    '10': ['Bb', 'Gm'],
+    '11': ['B', 'G#m'],
   }
   
   if (mode === 1) { 

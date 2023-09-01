@@ -44,14 +44,12 @@ const SearchId = ({ id }) => {
         const artists = data.artists.map(artist => {
           return artist.name + '/';
         })
-        const albums = data.album.name;
         ///fetch to discogs with the artist and album name to get masterid
-        fetch(`http://localhost:4000/getCredits/?artist=${artists}&album=${albums}&song=${song}`)
+        fetch(`http://localhost:4000/getCredits/?artist=${artists}&song=${song}`)
           .then(response => response.json())
           .then(data => {
-
-            if (data.message === 'Master Release not found.' || data.message === 'The requested resource was not found.' || data === 'No masters found with extra artists.') {
-              setCredits(['No credits/Master release not found'])
+            if (data === 'No credits available') {
+              setCredits([{name: 'No credits available'}])
               return;
             }
 
@@ -110,10 +108,10 @@ const SearchId = ({ id }) => {
           }}>
             {credits.map((el, index) => (
               <li
-                key={`${el}-${index}`}
-                className={index % 2 === 0 ? 'even-credit' : 'odd-credit'}
+                key={`${el.name}`}
+                // className={index % 2 === 0 ? 'even-credit' : 'odd-credit'}
               >
-                {el}
+               <span className="even-credit">{el.name}</span> - <span className="odd-credit">{el.artistRole}</span>
               </li>
             ))}
 

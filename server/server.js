@@ -7,6 +7,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const userController = require('./controllers/userController');
 const discogsController = require('./controllers/discogsController');
+const discogsSQLController = require('./controllers/discogsSQLController')
 const cookieController = require('./controllers/cookieController');
 const controller = require('./controllers/controller')
 const sessionController = require('./controllers/sessionController');
@@ -17,8 +18,10 @@ app.use(cors({
     credentials: true,
   }))
 
+//mongo
 const mongoURI = process.env.mongoURI;
 mongoose.connect(mongoURI);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -36,8 +39,13 @@ app.get('/getTracks', controller.getAccessToken, controller.getSpotifyTracks, (r
     return res.status(200).json(res.locals.data);
 });
 
-//discogs searches
-app.get('/getCredits', discogsController.discogsSearch, (req, res) => {
+//discogs searches old api
+// app.get('/getCredits', discogsController.discogsSearch, (req, res) => {
+//     return res.status(200).json(res.locals.data);
+// });
+
+//discogs searches thru db
+app.get('/getCredits', discogsSQLController.discogsSearch, (req, res) => {
     return res.status(200).json(res.locals.data);
 });
 

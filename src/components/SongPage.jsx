@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Container, Box, Grid, Card, CardMedia, CardContent, Typography } from '@mui/material';
-import { Modal, Backdrop, Fade } from '@mui/material';
+import { Modal, Backdrop, Fade, styled, Paper } from '@mui/material';
 import { useParams, useLocation } from 'react-router-dom';
+
 
 
 const SongPage = () => {
@@ -19,25 +20,40 @@ const SongPage = () => {
   const songDetails = location.state?.songDetails;
   // const username = location.state?.username;
 
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  }));
 
   return (
     <div>
-      <Box sx={{ width: '100%' }}>
-        {/* <Container maxWidth="xl"> */}
-        {songDetails && (
-          // <Card sx={{
-          //   width: '100vw',
-          //   height: '100vh',
-          //   borderRadius: '0',
-          // }}>
-          <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-            <Grid xs={4}>
+      {/* <Box sx={{ width: '100%' }}> */}
+      {/* <Container maxWidth="xl"> */}
+      {songDetails && (
+        <Card sx={{
+          width: '90vw',
+          height: '100vh',
+          borderRadius: '0',
+          padding: '5px'
+        }}>
+          <Grid container columnSpacing={{ xs: 1 }} sx={{
+            paddingTop: '1.5em',
+
+          }}>
+            <Grid xs={3} sx={{
+            }}>
               <CardMedia
                 component="img"
                 onClick={handleOpen}
                 sx={{
-                  width: 200,
+                  width: 300,
+                  height: 'auto',
+                  marginLeft: '1em',
                   cursor: 'pointer',
+                  boxShadow: 2,
                   "@media (max-width: 500px)": {
                     width: '75%',
                   }
@@ -51,7 +67,6 @@ const SongPage = () => {
                 open={open}
                 onClose={handleClose}
                 closeAfterTransition
-                // BackdropComponent={Backdrop}
                 BackdropProps={{
                   timeout: 500,
                 }}
@@ -71,15 +86,37 @@ const SongPage = () => {
               </Modal>
             </Grid>
 
-            <Grid xs={4}>
-              <Typography variant="h5">{songDetails.name}</Typography>
-              <Typography variant="h6">{songDetails.artists[0]?.name}</Typography>
+            <Grid xs={8}>
+              <Typography variant="h5" color='text.primary' >{songDetails.name}</Typography>
+              <Typography variant="h4">{songDetails.artists[0]?.name}</Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={3}>
+                  <Item>
+                    <Typography variant="h5" color='text.primary' >{songDetails.key}</Typography>
+                  </Item>
+                </Grid>
+                <Grid item xs={3}>
+                  <Item>
+                    <Typography variant="h5" color='text.primary' >{songDetails.tempo}</Typography>
+                  </Item>
+                </Grid>
+                <Grid item xs={3}>
+                  <Item>
+                    <Typography variant="h5" color='text.primary' >{songDetails.loudness}</Typography>
+                  </Item>
+                </Grid>
+                <Grid item xs={3}>
+                  <Item>
+                    <Typography variant="h5" color='text.primary' >{songDetails.energy}</Typography>
+                  </Item>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
-          // </Card>
-        )}
-        {/* </Container> */}
-      </Box>
+        </Card>
+      )}
+      {/* </Container> */}
+      {/* </Box> */}
     </div>
   )
 }

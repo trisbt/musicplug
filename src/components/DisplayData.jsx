@@ -223,24 +223,25 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
             <h4 style={{ textAlign: 'center', fontSize: '20px' }}>Search Results for {searchResult}:</h4>
             <ul style={{ width: '100%', margin: '0 auto', padding: '0' }}>
               {results.map((item, index) => (
-                <Link 
-                to={{
-                  pathname: `/${encodeURIComponent(item.name)}/${encodeURIComponent(item.artists[0].name)}/${item.id}`,
-                }}
-                state ={{
-                  songDetails: {
-                    id: item.id,
-                    name: item.name,
-                    artists: item.artists,
-                    albums: item.albums,
-                    images: item.images,
-                    key: item.key,
-                    tempo: item.tempo,
-                    loudness: item.loudness
-                  },
-                  username: username
-                }}
-                key={index}
+                <Link
+                  to={{
+                    pathname: `/${encodeURIComponent(item.name)}/${encodeURIComponent(item.artists[0].name)}/${item.id}`,
+                  }}
+                  state={{
+                    songDetails: {
+                      id: item.id,
+                      name: item.name,
+                      artists: item.artists,
+                      albums: item.albums,
+                      images: item.images,
+                      key: item.key,
+                      tempo: item.tempo,
+                      loudness: item.loudness,
+                      energy: item.energy,
+                    },
+                    username: username
+                  }}
+                  key={index}
                 >
                   <div key={index} >
                     <Card sx={{

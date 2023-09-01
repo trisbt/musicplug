@@ -195,7 +195,10 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
     results.push(combinedObject);
   }
 
-  const playAudio = (previewUrl) => {
+  const playAudio = (event, previewUrl) => {
+    event.stopPropagation();
+    event.preventDefault();
+
     audioRef.current.volume = .3;
     if (previewUrl) {
       if (audioRef.current.src === previewUrl && !audioRef.current.paused) {
@@ -213,7 +216,9 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
     }
   };
 
-  const handleFavorite = async (item, username) => {
+  const handleFavorite = async (event, item, username) => {
+    event.stopPropagation();
+    event.preventDefault();
     const { id, name, artists, albums, images, key, tempo, loudness } = item;
     try {
       const response = await fetch('http://localhost:4000/addFavs', {
@@ -448,8 +453,6 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                                   justifyContent: 'space-between',
                                   height: '45px',
                                   width: '110px',
-                                  // flexDirection: 'column',
-                                  // alignItems: 'center',
                                 }
                               }}
                             >
@@ -457,8 +460,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                               <FavButton
                                 variant="elevated"
                                 className='fav-icon-button'
-                                onClick={() => handleFavorite(item, username)}
-                                // noWrap
+                                onClick={(event) => handleFavorite(event, item, username)}
                                 sx={{
                                   display: { xs: 'none', sm: 'flex', md: 'flex' },
                                   padding: '0',
@@ -469,7 +471,6 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
 
                                   "@media (max-width: 600px)": {
                                     margin: '0 0 10px',
-                                    // width:'100px',
                                   }
                                 }}
                               >
@@ -480,8 +481,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                               <SmallFavButton
                                 size='small'
                                 className='small-fav-icon-button'
-                                // noWrap
-                                onClick={() => handleFavorite(item, username)}
+                                onClick={(event) => handleFavorite(event, item, username)}
                                 sx={{
                                   display: { xs: 'flex', sm: 'none', md: 'none' },
                                   padding: '0',
@@ -499,7 +499,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                                   borderRadius: '50px',
                                   display: { xs: 'none', sm: 'flex', md: 'flex' },
                                 }}
-                                  onClick={() => playAudio(item.preview_url)}>
+                                  onClick={(event) => playAudio(event, item.preview_url)}>
                                   {currentlyPlayingUrl === item.preview_url ? (
                                     <>
                                       <StopIcon aria-label="stop"
@@ -530,7 +530,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                                   borderRadius: '50px',
                                   display: { xs: 'flex', sm: 'none', md: 'none' },
                                 }}
-                                  onClick={() => playAudio(item.preview_url)}>
+                                  onClick={(event) => playAudio(event, item.preview_url)}>
                                   {currentlyPlayingUrl === item.preview_url ? (
                                     <>
                                       <StopIcon aria-label="stop"
@@ -559,7 +559,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                         </CardContent>
                       </Box>
                     </Card>
-                    <Card sx={{
+                    {/* <Card sx={{
                       margin: '0 10px 0', borderTop: '1px solid grey', boxShadow: 3,
                       "@media (max-width: 600px)": {
                         display: 'flex',
@@ -576,7 +576,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                       }}>
                         <SearchId id={item.id} name={item.name} artists={item.artists} album={item.albums} />
                       </CardContent>
-                    </Card>
+                    </Card> */}
                     <hr />
                   </div>
                 </Link>

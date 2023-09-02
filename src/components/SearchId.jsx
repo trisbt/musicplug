@@ -1,91 +1,29 @@
-import React, { useState } from 'react';
-import { Button } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
-import { blueGrey } from '@mui/material/colors';
-import { lightBlue } from '@mui/material/colors';
-
-
-const MoreButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
-  backgroundColor: lightBlue[700],
-  '&:hover': {
-    color: theme.palette.secondary.contrastText,
-    backgroundColor: theme.palette.secondary.main,
-  },
-  fontSize: '15px',
-  width: '200px',
-  height: '50px',
-  lineHeight: '0',
-}));
-const SmallMoreButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
-  backgroundColor: lightBlue[700],
-  '&:hover': {
-    color: theme.palette.secondary.contrastText,
-    backgroundColor: theme.palette.secondary.main,
-  },
-  fontSize: '12px',
-  width: '100px',
-  height: '20px',
-  lineHeight: '0',
-}));
 
 //secondary search for discogs
-const SearchId = ({ id }) => {
+const SearchId = ({ artists, song }) => {
   const [credits, setCredits] = useState([]);
-  const [showCredits, setShowCredits] = useState(false);
-  const fetchData = () => {
-    //get the track name by fetching to spotify again
-    fetch(`http://localhost:4000/getTracks?query=${id}`)
-      .then(res => res.json())
-      .then(data => {
-        const song = data.name;
-        const artists = data.artists.map(artist => {
-          return artist.name + '/';
-        })
-        ///fetch to discogs with the artist and album name to get masterid
-        fetch(`http://localhost:4000/getCredits/?artist=${artists}&song=${song}`)
+  useEffect(() => {
+        ///fetch to postgres
+        fetch(`http://localhost:4000/getCredits/?artist=${artists[0].name}&song=${song}`)
           .then(response => response.json())
           .then(data => {
             if (data === 'No credits available') {
               setCredits([{name: 'No credits available'}])
               return;
             }
-
             setCredits(data);
-            setShowCredits(true);
           })
           .catch(err => {
             console.log(err);
             return;
           })
-      })
-      .catch(err => {
-        console.log(err);
-        return;
-      })
-
-  };
-  const handleMoreButtonClick = () => {
-    setShowCredits(!showCredits);
-    if (!showCredits) {
-      fetchData();
-    }
-  };
+  },[]);
 
   return (
 
     <div className='credits-container'>
-      <MoreButton className='credits-button' size="small" variant='filledTonal' onClick={handleMoreButtonClick} sx={{
-        display: { xs: 'none', sm: 'flex', md: 'flex' },
-        boxShadow: 3,
-      }}>Credits</MoreButton>
-      <SmallMoreButton className='credits-button' size="small" variant='filledTonal' onClick={handleMoreButtonClick} sx={{
-        display: { xs: 'flex', sm: 'none', md: 'none' },
-        boxShadow: 3,
-      }}>Credits</SmallMoreButton>
-      {showCredits && (
         <Box
           sx={{
             border: 1,
@@ -114,10 +52,9 @@ const SearchId = ({ id }) => {
                <span className="even-credit">{el.name}</span> - <span className="odd-credit">{el.artistRole}</span>
               </li>
             ))}
-
           </ul>
         </Box>
-      )}
+      {/* )} */}
     </div>
   );
 };

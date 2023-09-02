@@ -126,6 +126,7 @@ const discogsSearch = async (req, res, next) => {
         res.locals.data = 'No credits available';
         return next();
       }
+      // console.log(processedData);
       res.locals.data = processedData;
       return next();
     });

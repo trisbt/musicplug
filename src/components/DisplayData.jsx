@@ -261,6 +261,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                       artists: item.artists,
                       albums: item.albums,
                       images: item.images,
+                      release_date:item.release_date,
                       key: item.key,
                       tempo: item.tempo,
                       loudness: item.loudness,

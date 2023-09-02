@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Grid, Card, CardMedia, CardContent, Typography, Modal, Fade, styled, Paper, LinearProgress } from '@mui/material';
 import { useParams, useLocation, Link } from 'react-router-dom';
 import DbScale from './DbScale';
+import SearchId from './SearchId';
 
 const msConvert = (num) => {
   let totalSeconds = Math.floor(num / 1000);
@@ -23,7 +24,7 @@ const SongPage = () => {
   const { id } = useParams();
   const location = useLocation();
   const songDetails = location.state?.songDetails;
-  console.log(songDetails)
+  // console.log(songDetails)
   // const username = location.state?.username;
 
   const Item = styled(Paper)(({ theme }) => ({
@@ -41,7 +42,7 @@ const SongPage = () => {
       {/* <Container maxWidth="xl"> */}
       {songDetails && (
         <Card sx={{
-          width: '90vw',
+          width: '100vw',
           height: '100vh',
           overflowY: 'auto',
           borderRadius: '0',
@@ -49,7 +50,7 @@ const SongPage = () => {
         }}>
           {/* top row */}
           <Grid container spacing={2} justifyContent="center" sx={{
-            paddingTop: '1.5em',
+            padding: '1em',
           }}>
             {/* First Row - Image and Song Details */}
             <Grid container item xs={12} md={12} lg={11} spacing={2} >
@@ -179,8 +180,8 @@ const SongPage = () => {
           {/* analysis row */}
           <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="space-evenly" alignItems='center' sx={{
             paddingTop: '1.5em',
-            // margin:0,
-            width: '90%'
+            paddingLeft: '1em',
+            // width: '80%'
           }}>
             <Grid xs={1} container alignItems='center' justifyContent="center" sx={{
               textAlign: 'center',
@@ -202,7 +203,7 @@ const SongPage = () => {
             <Grid xs={2}>
               <Item>
                 Energy
-                <LinearProgress color = 'primary' variant="determinate" value = {songDetails.energy * 100}></LinearProgress>
+                <LinearProgress color='primary' variant="determinate" value={songDetails.energy * 100}></LinearProgress>
                 <Typography variant="h5" color='text.primary' >{songDetails.energy}</Typography>
               </Item>
             </Grid>
@@ -210,7 +211,7 @@ const SongPage = () => {
             <Grid xs={2}>
               <Item>
                 Valence
-                <LinearProgress color = 'warning' variant="determinate" value = {songDetails.valence * 100}></LinearProgress>
+                <LinearProgress color='warning' variant="determinate" value={songDetails.valence * 100}></LinearProgress>
                 <Typography variant="h5" color='text.primary' >{songDetails.valence}</Typography>
               </Item>
             </Grid>
@@ -218,7 +219,7 @@ const SongPage = () => {
             <Grid xs={2}>
               <Item>
                 Acousticness
-                <LinearProgress color = 'success'variant="determinate" value = {songDetails.acousticness * 100}></LinearProgress>
+                <LinearProgress color='success' variant="determinate" value={songDetails.acousticness * 100}></LinearProgress>
                 <Typography variant="h5" color='text.primary' >{songDetails.acousticness}</Typography>
               </Item>
             </Grid>
@@ -226,7 +227,7 @@ const SongPage = () => {
             <Grid xs={2}>
               <Item>
                 Danceability
-                <LinearProgress color = 'error'variant="determinate" value = {songDetails.danceability * 100}></LinearProgress>
+                <LinearProgress color='error' variant="determinate" value={songDetails.danceability * 100}></LinearProgress>
                 <Typography variant="h5" color='text.primary' >{songDetails.danceability}</Typography>
               </Item>
             </Grid>
@@ -234,12 +235,32 @@ const SongPage = () => {
             <Grid xs={2}>
               <Item>
                 Liveness
-                <LinearProgress color = 'secondary' variant="determinate" value = {songDetails.liveness * 100}></LinearProgress>
+                <LinearProgress color='secondary' variant="determinate" value={songDetails.liveness * 100}></LinearProgress>
                 <Typography variant="h5" color='text.primary' >{songDetails.liveness}</Typography>
               </Item>
             </Grid>
 
+            <Grid xs={2}>
+              <Item>
+                Popularity
+                <LinearProgress color='secondary' variant="determinate" value={songDetails.popularity}></LinearProgress>
+                <Typography variant="h5" color='text.primary' >{songDetails.popularity}</Typography>
+              </Item>
+            </Grid>
+
           </Grid>
+
+          {/* credits row */}
+          <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="space-evenly" alignItems='center' sx={{
+            paddingTop: '1.5em',
+            paddingLeft: '1em',
+          }}>
+            <Grid xs={1} container alignItems='center' justifyContent="center" >
+            <SearchId artists = {songDetails.artists} song = {songDetails.name}/>
+            </Grid>
+          </Grid>
+
+
         </Card>
       )}
       {/* </Container> */}

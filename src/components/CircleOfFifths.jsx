@@ -103,6 +103,9 @@ export default function CircleOfFifths({ activeSlice, setActiveSlice }) {
 
       }
     },
+    animation: {
+      duration: 0 // Set duration to 0 to disable animations
+    },
     rotation: '-15',
     responsive: true,
     maintainAspectRatio: false,

@@ -100,15 +100,15 @@ hr {
   justify-content: center;
 }
 
-.song-info {
+/* .song-info {
   display: flex;
   justify-content: space-evenly;
   align-items: flex-start;
   flex-direction: column;
   margin-left: 10px;
-}
+} */
 
-.result-name {
+/* .result-name {
   font-weight: bold;
   color: rgb(179, 199, 218);
 }
@@ -123,21 +123,20 @@ hr {
   width: 100px;
   height: 100px;
   object-fit: cover;
-  /* border-radius: 50%; */
-}
+} */
 
-.release-date {
+/* .release-date {
   font-size: calc(2px + 1.5vmin);
   font-weight: 400;
   color: rgb(210, 210, 210);
-}
+} */
 
 
-div h2 {
+/* div h2 {
   display: flex;
   justify-content: center;
   align-items: center;
-}
+} */
 
 #tableTitle {
   display: flex;

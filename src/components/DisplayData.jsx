@@ -1,33 +1,24 @@
-import SearchId from './SearchId';
 import { Link } from 'react-router-dom';
 import React, { useState, useRef, useEffect, } from 'react';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import { Container } from '@mui/material';
-import Typography from '@mui/material/Typography';
+import { Box, Button, Card, CardContent, CardMedia, Container, Grid, IconButton, styled, Typography } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
-import { Button } from '@mui/material';
-import { IconButton } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
-const PlayButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
-  backgroundColor: grey[900],
-  '&:hover': {
-    color: 'white',
-    backgroundColor: '#00e676'
-  },
-  fontSize: '15px',
-  width: '200px',
-  height: '50px',
-  lineHeight: '0',
-}));
+// const PlayButton = styled(Button)(({ theme }) => ({
+//   color: theme.palette.primary.contrastText,
+//   backgroundColor: grey[900],
+//   '&:hover': {
+//     color: 'white',
+//     backgroundColor: '#00e676'
+//   },
+//   fontSize: '15px',
+//   width: '200px',
+//   height: '50px',
+//   lineHeight: '0',
+// }));
 
 const SmallPlayButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
@@ -42,19 +33,19 @@ const SmallPlayButton = styled(IconButton)(({ theme }) => ({
 }));
 
 
-const FavButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
-  backgroundColor: grey[900],
-  '&:hover': {
-    color: 'white',
-    backgroundColor: '#00e676'
-  },
-  fontSize: '15px',
-  width: '200px',
-  height: '50px',
-  lineHeight: '0',
+// const FavButton = styled(Button)(({ theme }) => ({
+//   color: theme.palette.primary.contrastText,
+//   backgroundColor: grey[900],
+//   '&:hover': {
+//     color: 'white',
+//     backgroundColor: '#00e676'
+//   },
+//   fontSize: '15px',
+//   width: '200px',
+//   height: '50px',
+//   lineHeight: '0',
 
-}));
+// }));
 
 const SmallFavButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
@@ -107,8 +98,8 @@ const keyConvert = (num, mode) => {
     '10': ['Bb', 'Gm'],
     '11': ['B', 'G#m'],
   }
-  
-  if (mode === 1) { 
+
+  if (mode === 1) {
     return chart[num][0];
   } else if (mode === 0) {
     return chart[num][1];
@@ -151,7 +142,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
     if (item) {
       const key = keyConvert(item.key, item.mode);
       const tempo = tempoRound(item.tempo);
-      const { loudness, energy,acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence } = item
+      const { loudness, energy, acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence } = item
       return {
         key,
         tempo,
@@ -238,18 +229,27 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
 
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'hidden' }}>
-
-      <Container maxWidth="xl" sx={{
-        "@media (max-width: 900px)": {
-          width: '110vw',
-        }
-      }}>
+    <div
+    // style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'hidden' }}
+    >
+      <Grid container justifyContent='center' >
         {results.length > 0 && (
           <>
-            <h4 style={{ textAlign: 'center', fontSize: '20px' }}>Search Results for {searchResult}:</h4>
-            <ul style={{ width: '100%', margin: '0 auto', padding: '0' }}>
-              {results.map((item, index) => (
+            {/* search result text row */}
+            <Grid item xs={12}>
+              <h4
+                style={{ textAlign: 'center', fontSize: '20px' }}>
+                Search Results for {searchResult}:</h4>
+            </Grid>
+
+            {/* main search */}
+            {/* <ul
+                style={{ width: '100%', margin: '0 auto', padding: '0' }}
+              > */}
+            {results.map((item, index) => (
+
+              <Grid item xs={11} md={8} direction="row" key={index}>
+                {/* each card */}
                 <Link
                   to={{
                     pathname: `/${encodeURIComponent(item.name)}/${encodeURIComponent(item.artists[0].name)}/${item.id}`,
@@ -261,7 +261,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                       artists: item.artists,
                       albums: item.albums,
                       images: item.images,
-                      release_date:item.release_date,
+                      release_date: item.release_date,
                       key: item.key,
                       tempo: item.tempo,
                       loudness: item.loudness,
@@ -283,249 +283,163 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                   }}
                   key={index}
                 >
-                  <div key={index} >
-                    <Card sx={{
+
+                  {/* <div key={index} > */}
+                  <Card
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
                       margin: '10px 10px 0',
                       boxShadow: 3,
                       "&:hover": {
-                        backgroundColor: "#eee",
+                        backgroundColor: "#f5f5f5",
                       }
                     }}
-                    >
-                      <Box>
-                        <CardContent sx={{
-                          display: 'flex', flex: '1 0 auto', flexDirection: 'row', justifyContent: 'space-between',
-                        }}>
-                          <Box sx={{
-                            display: 'flex', flexDirection: 'column', width: '35%',
-                            "@media (max-width: 500px)": {
-                              width: '50%',
-                            }
-                          }}>
-                            <Typography component="div" color="text.primary" variant="h5">
-                              {item.name}
-                            </Typography>
-                            <Typography variant="h6" color="text.secondary" component="div">
-                              {item.artists.map((artist, index) => (
-                                <span key={index}>
-                                  {artist.name}
-                                  {index < item.artists.length - 1 && (
-                                    <span style={{ color: '#B3C7ED', fontStyle: 'italic', marginLeft: '5px', marginRight: '5px' }}>|</span>
-                                  )}
-                                </span>
-                              ))}
-                            </Typography>
-                            <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
+                  >
+                    <CardContent sx ={{
+                     paddingBottom: '10px',
+                     '&:last-child': {
+                       paddingBottom: '10px',
+                     }
+                    }}>
+                      <Grid container >
+                        {/* image */}
+                        <Grid item xs={3} sm={2} >
+                          <CardMedia
+                            component="img"
+                            sx={{
+                              // width: '80%',
                               "@media (max-width: 600px)": {
-                                fontSize: '13px',
+                                // width: '100%',
+                                // height:'60%'
                               }
-                            }}>
-                              {item.albums}
-                            </Typography>
-
-                            <CardMedia
-                              component="img"
-                              sx={{
-                                width: 151,
-                                "@media (max-width: 500px)": {
-                                  width: '75%',
-                                  // height: '50%'
-                                }
-                              }}
-                              image={item.images}
-                              alt={item.name}
-                            />
-                            <Typography variant="subtitle2" color="text.secondary" component="div" sx={{
-                              "@media (max-width: 500px)": {
-                                fontSize: '10px'
-                              }
-                            }} >
-                              Released: {item.release_date}
-                            </Typography>
-                          </Box>
-                          <Box sx={{
-                            display: 'flex', flexDirection: 'column', width: '70%', justifyContent: 'space-between',
-                            "@media (max-width: 500px)": {
-                              justifyContent: 'space-between',
-                              marginRight: '0',
-                              width: '50%'
+                            }}
+                            image={item.images}
+                            alt={item.name}
+                          />
+                        </Grid>
+                        {/* song info */}
+                        {/* <Grid container backgroundColor='lightblue'> */}
+                        <Grid item xs={9} sm ={5} sx ={{
+                          paddingLeft:'.5em',
+                        }}>
+                          <Typography component="div" color="text.primary" variant="h5" sx={{
+                            "@media (max-width: 600px)": {
+                              fontSize: '1rem'
+                            },
+                          }}>
+                            {item.name}
+                          </Typography>
+                          <Typography variant="h6" color="text.secondary" component="div" sx={{
+                            "@media (max-width: 600px)": {
+                              fontSize: '1rem'
+                            },
+                          }}>
+                            {item.artists.map((artist, index) => (
+                              <span key={index}>
+                                {artist.name}
+                                {index < item.artists.length - 1 && (
+                                  <span style={{ color: '#B3C7ED', fontStyle: 'italic', marginLeft: '5px', marginRight: '5px' }}>|</span>
+                                )}
+                              </span>
+                            ))}
+                          </Typography>
+                          <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
+                            "@media (max-width: 600px)": {
+                              fontSize: '.7em',
                             }
                           }}>
-                            <Box sx={{
-                              display: 'flex', flexDirection: 'row', height: '100px', justifyContent: 'space-around',
-                              "@media (max-width: 500px)": {
-                                display: 'flex',
-                                justifyContent: 'space-evenly',
-                                flexFlow: 'row wrap',
-                                width: '200px',
-                                height: '260px',
-                              }
-                            }}>
-                              <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
-                                display: 'flex', flexDirection: 'column', alignItems: 'center',
-                                "@media (max-width: 600px)": {
-                                  // fontSize: '20px',
-                                  width: '65px',
-                                }
-                              }}>
-                                Key
-                                <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
+                            {item.albums}
+                          </Typography>
+                        </Grid>
+
+                        <Grid container item xs={12} sm ={5}alignItems='center' rowSpacing={1} sx ={{
+                          "@media (max-width: 600px)": {
+                            paddingTop:'.8rem',
+                          }
+                        }}>
+                            <Grid item xs={3} sm ={6}  >
+                              {/* <Card sx={{ width: '90%' }}> */}
+                              <Typography variant="subtitle1" color="text.secondary" component="div"
+                                sx={{
+                                  display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight:'0.5rem',
                                   "@media (max-width: 600px)": {
-                                    fontSize: '20px',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    width: '70px',
+                                    fontSize: '.8em',
+                                  }
+                                }}
+                              >
+                                Key
+                                <Typography className='song-sub-info' variant="h4" color="text.primary" component="div" sx={{
+                                   "@media (max-width: 600px)": {
+                                    fontSize: '1.5rem',
                                   }
                                 }}>
                                   {item.key}
                                 </Typography>
                               </Typography>
+                              {/* </Card> */}
+                            </Grid>
 
-                              <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
-                                display: 'flex', flexDirection: 'column', alignItems: 'center',
-                                "@media (max-width: 600px)": {
-                                  // fontSize: '20px',
-                                  width: '65px',
-                                }
-                              }}>
-                                BPM
-                                <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
+                            <Grid item xs={3.5} sm ={6}sx ={{
+                               "@media (max-width: 600px)": {
+                                marginRight: '.5em',
+                              }
+                            }}>
+                              {/* <Card sx={{ width: '90%' }}> */}
+                              <Typography variant="subtitle1" color="text.secondary" component="div"
+                                sx={{
+                                  display: 'flex', flexDirection: 'column', alignItems: 'center',lineHeight:'0.5rem',
                                   "@media (max-width: 600px)": {
-                                    fontSize: '20px'
+                                    fontSize: '.8em',
                                   }
+                                }}
+                              >
+                                BPM
+                                <Typography className='song-sub-info' variant="h4" color="text.primary" component="div" sx={{
+                                 "@media (max-width: 600px)": {
+                                  fontSize: '1.5rem',
+                                }
                                 }}>
                                   {item.tempo}
                                 </Typography>
                               </Typography>
+                              {/* </Card> */}
+                            </Grid>
 
-                              <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
-                                display: 'flex', flexDirection: 'column', alignItems: 'center',
-                                "@media (max-width: 600px)": {
-                                  // fontSize: '20px',
-                                  width: '95px',
-                                }
-                              }}>
-                                Loudness
-                                <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
-                                  "@media (max-width: 600px)": {
-                                    fontSize: '20px'
-                                  }
-                                }}>
-                                  {item.loudness}
-                                </Typography>
-                              </Typography>
-
-                              <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
-                                display: 'flex', flexDirection: 'column', alignItems: 'center',
-                                "@media (max-width: 600px)": {
-                                  // fontSize: '20px',
-                                  width: '95px',
-                                }
-                              }}>
-                                Energy
-                                <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
-                                  "@media (max-width: 600px)": {
-                                    fontSize: '20px'
-                                  }
-                                }}>
-                                  {item.energy}
-                                </Typography>
-                              </Typography>
-                            </Box>
-                            <Box className='card-buttons'
-                              sx={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: item.preview_url ? 'space-evenly' : 'center',
-                                "@media (max-width: 600px)": {
-                                  alignItems: 'flex-end',
-                                  justifyContent: 'space-between',
-                                  height: '45px',
-                                  width: '110px',
-                                }
-                              }}
-                            >
-
-                              <FavButton
-                                variant="elevated"
-                                className='fav-icon-button'
-                                onClick={(event) => handleFavorite(event, item, username)}
-                                sx={{
-                                  display: { xs: 'none', sm: 'flex', md: 'flex' },
-                                  padding: '0',
-                                  paddingRight: '5px',
-                                  boxShadow: 3,
-                                  justifyContent: "space-evenly",
-                                  borderRadius: '50px',
-
-                                  "@media (max-width: 600px)": {
-                                    margin: '0 0 10px',
-                                  }
-                                }}
-                              >
-                                {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
-                                add to Favorites
-                              </FavButton>
-
+                            {/* fav button */}
+                            <Grid item xs={2.5} sm ={6} sx ={{
+                              display:'flex',
+                              justifyContent:'center'
+                            }} >
                               <SmallFavButton
                                 size='small'
                                 className='small-fav-icon-button'
                                 onClick={(event) => handleFavorite(event, item, username)}
                                 sx={{
-                                  display: { xs: 'flex', sm: 'none', md: 'none' },
-                                  padding: '0',
                                   boxShadow: 3,
-                                  justifyContent: "space-evenly",
-                                  borderRadius: '50px',
                                 }}
                               >
                                 {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
                               </SmallFavButton>
-
-                              {item.preview_url && (
-                                <PlayButton className='preview-button' sx={{
-                                  boxShadow: 3,
-                                  borderRadius: '50px',
-                                  display: { xs: 'none', sm: 'flex', md: 'flex' },
-                                }}
-                                  onClick={(event) => playAudio(event, item.preview_url)}>
-                                  {currentlyPlayingUrl === item.preview_url ? (
-                                    <>
-                                      <StopIcon aria-label="stop"
-                                        sx={{
-                                          height: 35,
-                                          width: 35,
-                                        }}
-                                      />
-                                      Stop track
-                                    </>
-                                  ) : (
-                                    <>
-                                      <PlayArrowIcon aria-label="play/pause"
-                                        sx={{
-                                          height: 35,
-                                          width: 35,
-                                        }}
-                                      />
-                                      Preview track
-                                    </>
-                                  )}
-                                </PlayButton>
-                              )}
-
+                            </Grid>
+                            {/* preview button */}
+                            <Grid item xs={2.5} sm ={6} sx ={{
+                              display:'flex',
+                              justifyContent:'center'
+                            }} >
                               {item.preview_url && (
                                 <SmallPlayButton className='preview-button' sx={{
                                   boxShadow: 3,
                                   borderRadius: '50px',
-                                  display: { xs: 'flex', sm: 'none', md: 'none' },
+                                  // display: { xs: 'flex', sm: 'none', md: 'none' },
                                 }}
                                   onClick={(event) => playAudio(event, item.preview_url)}>
                                   {currentlyPlayingUrl === item.preview_url ? (
                                     <>
                                       <StopIcon aria-label="stop"
                                         sx={{
-                                          height: 35,
-                                          width: 35,
+                                          height: 36,
+                                          width: 36,
                                         }}
                                       />
                                     </>
@@ -542,42 +456,156 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                                 </SmallPlayButton>
                               )}
                               <audio ref={audioRef}></audio>
-                            </Box>
+                            </Grid>
 
-                          </Box>
-                        </CardContent>
-                      </Box>
-                    </Card>
-                    {/* <Card sx={{
-                      margin: '0 10px 0', borderTop: '1px solid grey', boxShadow: 3,
-                      "@media (max-width: 600px)": {
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-start',
 
-                      }
-                    }}>
-                      <CardContent sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-evenly',
+                            {/* </Grid> */}
+                          </Grid>
 
-                      }}>
-                        <SearchId id={item.id} name={item.name} artists={item.artists} album={item.albums} />
-                      </CardContent>
-                    </Card> */}
-                    <hr />
-                  </div>
+
+
+
+
+
+
+
+
+
+
+
+                        {/* </Box>
+                                <Box className='card-buttons'
+                                  sx={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: item.preview_url ? 'space-evenly' : 'center',
+                                    "@media (max-width: 600px)": {
+                                      alignItems: 'flex-end',
+                                      justifyContent: 'space-between',
+                                      height: '45px',
+                                      width: '110px',
+                                    }
+                                  }}
+                                > */}
+
+                        {/* <FavButton
+                                    variant="elevated"
+                                    className='fav-icon-button'
+                                    onClick={(event) => handleFavorite(event, item, username)}
+                                    sx={{
+                                      display: { xs: 'none', sm: 'flex', md: 'flex' },
+                                      padding: '0',
+                                      paddingRight: '5px',
+                                      boxShadow: 3,
+                                      justifyContent: "space-evenly",
+                                      borderRadius: '50px',
+
+                                      "@media (max-width: 600px)": {
+                                        margin: '0 0 10px',
+                                      }
+                                    }}
+                                  >
+                                    {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
+                                    add to Favorites
+                                  </FavButton>
+
+                                  <SmallFavButton
+                                    size='small'
+                                    className='small-fav-icon-button'
+                                    onClick={(event) => handleFavorite(event, item, username)}
+                                    sx={{
+                                      display: { xs: 'flex', sm: 'none', md: 'none' },
+                                      padding: '0',
+                                      boxShadow: 3,
+                                      justifyContent: "space-evenly",
+                                      borderRadius: '50px',
+                                    }}
+                                  >
+                                    {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
+                                  </SmallFavButton>
+
+                                  {item.preview_url && (
+                                    <PlayButton className='preview-button' sx={{
+                                      boxShadow: 3,
+                                      borderRadius: '50px',
+                                      display: { xs: 'none', sm: 'flex', md: 'flex' },
+                                    }}
+                                      onClick={(event) => playAudio(event, item.preview_url)}>
+                                      {currentlyPlayingUrl === item.preview_url ? (
+                                        <>
+                                          <StopIcon aria-label="stop"
+                                            sx={{
+                                              height: 35,
+                                              width: 35,
+                                            }}
+                                          />
+                                          Stop track
+                                        </>
+                                      ) : (
+                                        <>
+                                          <PlayArrowIcon aria-label="play/pause"
+                                            sx={{
+                                              height: 35,
+                                              width: 35,
+                                            }}
+                                          />
+                                          Preview track
+                                        </>
+                                      )}
+                                    </PlayButton>
+                                  )}
+
+                                  {item.preview_url && (
+                                    <SmallPlayButton className='preview-button' sx={{
+                                      boxShadow: 3,
+                                      borderRadius: '50px',
+                                      display: { xs: 'flex', sm: 'none', md: 'none' },
+                                    }}
+                                      onClick={(event) => playAudio(event, item.preview_url)}>
+                                      {currentlyPlayingUrl === item.preview_url ? (
+                                        <>
+                                          <StopIcon aria-label="stop"
+                                            sx={{
+                                              height: 35,
+                                              width: 35,
+                                            }}
+                                          />
+                                        </>
+                                      ) : (
+                                        <>
+                                          <PlayArrowIcon aria-label="play/pause"
+                                            sx={{
+                                              height: 35,
+                                              width: 35,
+                                            }}
+                                          />
+                                        </>
+                                      )}
+                                    </SmallPlayButton>
+                                  )}
+                                  <audio ref={audioRef}></audio>
+                                </Box>
+
+                              </Box> */}
+                      </Grid>
+                    </CardContent>
+
+                  </Card>
+                  {/* <hr /> */}
+                  {/* </div> */}
+
                 </Link>
-              ))}
-            </ul>
+              </Grid>
+            ))}
+            {/* </ul> */}
+
+
             <div className='loadmore'>
               <LoadButton
                 onClick={onLoadMore}
                 variant='outlined'
                 size='large'
                 sx={{
-                  // display: 'flex',
                   marginBottom: '30px',
                 }}
               >Load More...
@@ -586,9 +614,363 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
           </>
         )
         }
-      </Container >
-
+      </Grid >
     </div >
+
+
+
+
+    // <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'hidden' }}>
+
+    //   <Container maxWidth="xl" sx={{
+    //     "@media (max-width: 900px)": {
+    //       width: '110vw',
+    //     }
+    //   }}>
+    //     {results.length > 0 && (
+    //       <>
+    //         <h4 style={{ textAlign: 'center', fontSize: '20px' }}>Search Results for {searchResult}:</h4>
+    //         <ul style={{ width: '100%', margin: '0 auto', padding: '0' }}>
+    //           {results.map((item, index) => (
+    //             <Link
+    //               to={{
+    //                 pathname: `/${encodeURIComponent(item.name)}/${encodeURIComponent(item.artists[0].name)}/${item.id}`,
+    //               }}
+    //               state={{
+    //                 songDetails: {
+    //                   id: item.id,
+    //                   name: item.name,
+    //                   artists: item.artists,
+    //                   albums: item.albums,
+    //                   images: item.images,
+    //                   release_date: item.release_date,
+    //                   key: item.key,
+    //                   tempo: item.tempo,
+    //                   loudness: item.loudness,
+    //                   energy: item.energy,
+    //                   acousticness: item.acousticness,
+    //                   analysis_url: item.analysis_url,
+    //                   danceability: item.danceability,
+    //                   duration_ms: item.duration_ms,
+    //                   instrumentalness: item.instrumentalness,
+    //                   liveness: item.liveness,
+    //                   time_signature: item.time_signature,
+    //                   track_href: item.track_href,
+    //                   uri: item.uri,
+    //                   valence: item.valence,
+    //                   explicit: item.explicit,
+    //                   popularity: item.popularity,
+    //                 },
+    //                 username: username
+    //               }}
+    //               key={index}
+    //             >
+    //               <div key={index} >
+    //                 <Card sx={{
+    //                   margin: '10px 10px 0',
+    //                   boxShadow: 3,
+    //                   "&:hover": {
+    //                     backgroundColor: "#eee",
+    //                   }
+    //                 }}
+    //                 >
+    //                   <Box>
+    //                     <CardContent sx={{
+    //                       display: 'flex', flex: '1 0 auto', flexDirection: 'row', justifyContent: 'space-between',
+    //                     }}>
+    //                       <Box sx={{
+    //                         display: 'flex', flexDirection: 'column', width: '35%',
+    //                         "@media (max-width: 500px)": {
+    //                           width: '50%',
+    //                         }
+    //                       }}>
+    //                         <Typography component="div" color="text.primary" variant="h5">
+    //                           {item.name}
+    //                         </Typography>
+    //                         <Typography variant="h6" color="text.secondary" component="div">
+    //                           {item.artists.map((artist, index) => (
+    //                             <span key={index}>
+    //                               {artist.name}
+    //                               {index < item.artists.length - 1 && (
+    //                                 <span style={{ color: '#B3C7ED', fontStyle: 'italic', marginLeft: '5px', marginRight: '5px' }}>|</span>
+    //                               )}
+    //                             </span>
+    //                           ))}
+    //                         </Typography>
+    //                         <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
+    //                           "@media (max-width: 600px)": {
+    //                             fontSize: '13px',
+    //                           }
+    //                         }}>
+    //                           {item.albums}
+    //                         </Typography>
+
+    //                         <CardMedia
+    //                           component="img"
+    //                           sx={{
+    //                             width: 151,
+    //                             "@media (max-width: 500px)": {
+    //                               width: '75%',
+    //                               // height: '50%'
+    //                             }
+    //                           }}
+    //                           image={item.images}
+    //                           alt={item.name}
+    //                         />
+    //                         {/* <Typography variant="subtitle2" color="text.secondary" component="div" sx={{
+    //                           "@media (max-width: 500px)": {
+    //                             fontSize: '10px'
+    //                           }
+    //                         }} >
+    //                           Released: {item.release_date}
+    //                         </Typography> */}
+    //                       </Box>
+    //                       <Box sx={{
+    //                         display: 'flex', flexDirection: 'column', width: '70%', justifyContent: 'space-between',
+    //                         "@media (max-width: 500px)": {
+    //                           justifyContent: 'space-between',
+    //                           marginRight: '0',
+    //                           width: '50%'
+    //                         }
+    //                       }}>
+    //                         <Box sx={{
+    //                           display: 'flex', flexDirection: 'row', height: '100px', justifyContent: 'space-around',
+    //                           "@media (max-width: 500px)": {
+    //                             display: 'flex',
+    //                             justifyContent: 'space-evenly',
+    //                             flexFlow: 'row wrap',
+    //                             width: '200px',
+    //                             height: '260px',
+    //                           }
+    //                         }}>
+    //                           <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
+    //                             display: 'flex', flexDirection: 'column', alignItems: 'center',
+    //                             "@media (max-width: 600px)": {
+    //                               // fontSize: '20px',
+    //                               width: '65px',
+    //                             }
+    //                           }}>
+    //                             Key
+    //                             <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
+    //                               "@media (max-width: 600px)": {
+    //                                 fontSize: '20px',
+    //                                 display: 'flex',
+    //                                 justifyContent: 'center',
+    //                                 width: '70px',
+    //                               }
+    //                             }}>
+    //                               {item.key}
+    //                             </Typography>
+    //                           </Typography>
+
+    //                           <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
+    //                             display: 'flex', flexDirection: 'column', alignItems: 'center',
+    //                             "@media (max-width: 600px)": {
+    //                               // fontSize: '20px',
+    //                               width: '65px',
+    //                             }
+    //                           }}>
+    //                             BPM
+    //                             <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
+    //                               "@media (max-width: 600px)": {
+    //                                 fontSize: '20px'
+    //                               }
+    //                             }}>
+    //                               {item.tempo}
+    //                             </Typography>
+    //                           </Typography>
+
+    //                           {/* <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
+    //                             display: 'flex', flexDirection: 'column', alignItems: 'center',
+    //                             "@media (max-width: 600px)": {
+    //                               // fontSize: '20px',
+    //                               width: '95px',
+    //                             }
+    //                           }}>
+    //                             Loudness
+    //                             <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
+    //                               "@media (max-width: 600px)": {
+    //                                 fontSize: '20px'
+    //                               }
+    //                             }}>
+    //                               {item.loudness}
+    //                             </Typography>
+    //                           </Typography>
+
+    //                           <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
+    //                             display: 'flex', flexDirection: 'column', alignItems: 'center',
+    //                             "@media (max-width: 600px)": {
+    //                               // fontSize: '20px',
+    //                               width: '95px',
+    //                             }
+    //                           }}>
+    //                             Energy
+    //                             <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
+    //                               "@media (max-width: 600px)": {
+    //                                 fontSize: '20px'
+    //                               }
+    //                             }}>
+    //                               {item.energy}
+    //                             </Typography>
+    //                           </Typography> */}
+    //                         </Box>
+    //                         <Box className='card-buttons'
+    //                           sx={{
+    //                             display: 'flex',
+    //                             flexDirection: 'row',
+    //                             justifyContent: item.preview_url ? 'space-evenly' : 'center',
+    //                             "@media (max-width: 600px)": {
+    //                               alignItems: 'flex-end',
+    //                               justifyContent: 'space-between',
+    //                               height: '45px',
+    //                               width: '110px',
+    //                             }
+    //                           }}
+    //                         >
+
+    //                           <FavButton
+    //                             variant="elevated"
+    //                             className='fav-icon-button'
+    //                             onClick={(event) => handleFavorite(event, item, username)}
+    //                             sx={{
+    //                               display: { xs: 'none', sm: 'flex', md: 'flex' },
+    //                               padding: '0',
+    //                               paddingRight: '5px',
+    //                               boxShadow: 3,
+    //                               justifyContent: "space-evenly",
+    //                               borderRadius: '50px',
+
+    //                               "@media (max-width: 600px)": {
+    //                                 margin: '0 0 10px',
+    //                               }
+    //                             }}
+    //                           >
+    //                             {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
+    //                             add to Favorites
+    //                           </FavButton>
+
+    //                           <SmallFavButton
+    //                             size='small'
+    //                             className='small-fav-icon-button'
+    //                             onClick={(event) => handleFavorite(event, item, username)}
+    //                             sx={{
+    //                               display: { xs: 'flex', sm: 'none', md: 'none' },
+    //                               padding: '0',
+    //                               boxShadow: 3,
+    //                               justifyContent: "space-evenly",
+    //                               borderRadius: '50px',
+    //                             }}
+    //                           >
+    //                             {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
+    //                           </SmallFavButton>
+
+    //                           {item.preview_url && (
+    //                             <PlayButton className='preview-button' sx={{
+    //                               boxShadow: 3,
+    //                               borderRadius: '50px',
+    //                               display: { xs: 'none', sm: 'flex', md: 'flex' },
+    //                             }}
+    //                               onClick={(event) => playAudio(event, item.preview_url)}>
+    //                               {currentlyPlayingUrl === item.preview_url ? (
+    //                                 <>
+    //                                   <StopIcon aria-label="stop"
+    //                                     sx={{
+    //                                       height: 35,
+    //                                       width: 35,
+    //                                     }}
+    //                                   />
+    //                                   Stop track
+    //                                 </>
+    //                               ) : (
+    //                                 <>
+    //                                   <PlayArrowIcon aria-label="play/pause"
+    //                                     sx={{
+    //                                       height: 35,
+    //                                       width: 35,
+    //                                     }}
+    //                                   />
+    //                                   Preview track
+    //                                 </>
+    //                               )}
+    //                             </PlayButton>
+    //                           )}
+
+    //                           {item.preview_url && (
+    //                             <SmallPlayButton className='preview-button' sx={{
+    //                               boxShadow: 3,
+    //                               borderRadius: '50px',
+    //                               display: { xs: 'flex', sm: 'none', md: 'none' },
+    //                             }}
+    //                               onClick={(event) => playAudio(event, item.preview_url)}>
+    //                               {currentlyPlayingUrl === item.preview_url ? (
+    //                                 <>
+    //                                   <StopIcon aria-label="stop"
+    //                                     sx={{
+    //                                       height: 35,
+    //                                       width: 35,
+    //                                     }}
+    //                                   />
+    //                                 </>
+    //                               ) : (
+    //                                 <>
+    //                                   <PlayArrowIcon aria-label="play/pause"
+    //                                     sx={{
+    //                                       height: 35,
+    //                                       width: 35,
+    //                                     }}
+    //                                   />
+    //                                 </>
+    //                               )}
+    //                             </SmallPlayButton>
+    //                           )}
+    //                           <audio ref={audioRef}></audio>
+    //                         </Box>
+
+    //                       </Box>
+    //                     </CardContent>
+    //                   </Box>
+    //                 </Card>
+    //                 {/* <Card sx={{
+    //                   margin: '0 10px 0', borderTop: '1px solid grey', boxShadow: 3,
+    //                   "@media (max-width: 600px)": {
+    //                     display: 'flex',
+    //                     flexDirection: 'column',
+    //                     justifyContent: 'flex-start',
+
+    //                   }
+    //                 }}>
+    //                   <CardContent sx={{
+    //                     display: 'flex',
+    //                     flexDirection: 'row',
+    //                     justifyContent: 'space-evenly',
+
+    //                   }}>
+    //                     <SearchId id={item.id} name={item.name} artists={item.artists} album={item.albums} />
+    //                   </CardContent>
+    //                 </Card> */}
+    //                 <hr />
+    //               </div>
+    //             </Link>
+    //           ))}
+    //         </ul>
+    //         <div className='loadmore'>
+    //           <LoadButton
+    //             onClick={onLoadMore}
+    //             variant='outlined'
+    //             size='large'
+    //             sx={{
+    //               // display: 'flex',
+    //               marginBottom: '30px',
+    //             }}
+    //           >Load More...
+    //           </LoadButton>
+    //         </div>
+    //       </>
+    //     )
+    //     }
+    //   </Container >
+
+    // </div >
   );
 };
 

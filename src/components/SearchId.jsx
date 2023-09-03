@@ -26,15 +26,15 @@ const SearchId = ({ artists, song }) => {
     <div className='credits-container'>
         <Box
           sx={{
-            border: 1,
-            borderColor: "grey.300",
-            borderRadius: 2,
+            // border: 1,
+            // borderColor: "grey.300",
+            // borderRadius: 2,
             padding: 2,
-            overflow: "auto",
-            maxHeight: 300,
-            width: 700,
+            // overflow: "auto",
+            // maxHeight: 300,
+            width: '90vw',
             "@media (max-width: 600px)": {
-              width: '90%'
+              width: '90vw'
             }
           }}
         >

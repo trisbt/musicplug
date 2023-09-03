@@ -28,12 +28,12 @@ const SongPage = () => {
   // const username = location.state?.username;
 
   const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#eceff1',
-    ...theme.typography.body2,
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#f5f5f5',
+    ...theme.typography.body1,
+
     padding: theme.spacing(1),
     textAlign: 'center',
     color: theme.palette.text.secondary,
-    // width: '150px', height: '80px' 
   }));
 
   return (
@@ -53,10 +53,10 @@ const SongPage = () => {
             padding: '1em',
           }}>
             {/* First Row - Image and Song Details */}
-            <Grid container item xs={12} md={12} lg={11} spacing={2} >
+            <Grid container item xs={12} spacing={2} >
 
               {/* image and modal */}
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid item xs={12} sm={6} md={4} lg = {3}>
                 <CardMedia
                   component="img"
                   onClick={handleOpen}
@@ -96,7 +96,7 @@ const SongPage = () => {
               </Grid>
 
               {/* song info */}
-              <Grid item container xs={12} sm={10} md={8} lg={8} spacing={7} direction="column">
+              <Grid item container xs={12} sm={6} md={8} lg={8} spacing={7} direction="column">
 
                 <Grid item >
                   <Typography variant="h5" color='text.primary'>{songDetails.name}</Typography>
@@ -166,8 +166,8 @@ const SongPage = () => {
                 </Grid>
                 <Grid item xs={6} md={3}>
                   <Item>
-                    Energy
-                    <Typography variant="h5" color='text.primary' >{songDetails.loudness}</Typography>
+                  Time Signature
+                      <Typography variant="h5" color='text.primary' >{`${songDetails.time_signature} / 4`}</Typography>
                   </Item>
                 </Grid>
 

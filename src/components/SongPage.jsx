@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Card, CardMedia, CardContent, createTheme, Fade, Grid, LinearProgress, Modal, Paper, styled, Typography, } from '@mui/material';
+import { Button, Card, CardMedia, CardContent, createTheme, Fade, Grid, IconButton, LinearProgress, Modal, Paper, styled, Typography, } from '@mui/material';
 import { useParams, useLocation, Link } from 'react-router-dom';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
@@ -9,18 +9,18 @@ import SearchId from './SearchId';
 
 const theme = createTheme({
   palette: {
-      primary: {
-          light: '#99cbfd',
-          main: '#4d97f8',
-          dark: '#3746a2',
-          contrastText: '#fff',
-      },
-      secondary: {
-          light: '#fffbe8',
-          main: '#eec94b',
-          dark: '#9e7937',
-          contrastText: '#000',
-      },
+    primary: {
+      light: '#99cbfd',
+      main: '#4d97f8',
+      dark: '#3746a2',
+      contrastText: '#fff',
+    },
+    secondary: {
+      light: '#fffbe8',
+      main: '#eec94b',
+      dark: '#9e7937',
+      contrastText: '#000',
+    },
   },
 });
 
@@ -50,7 +50,17 @@ const FavButton = styled(Button)(({ theme }) => ({
   lineHeight: '0',
 
 }));
-
+const SmallFavButton = styled(IconButton)(({ theme }) => ({
+  color: theme.palette.primary.contrastText,
+  backgroundColor: grey[900],
+  '&:hover': {
+    color: 'white',
+    backgroundColor: '#00e676'
+  },
+  fontSize: '15px',
+  width: '40px',
+  height: '40px',
+}));
 const FavSolid = styled(GradeIcon)(({ theme }) => ({
   color: theme.palette.secondary.main,
   '&:hover': {
@@ -208,17 +218,42 @@ const SongPage = () => {
                   <Typography variant="h5" color='text.primary'>{songDetails.name}</Typography>
                   <Typography variant="h4">{songDetails.artists[0]?.name}</Typography>
                   <Typography variant="subtitle1">{songDetails.albums}</Typography>
-                  <Link to={songDetails.track_href}>
-                    <svg
-                      style={{ marginLeft: '-8px' }}
-                      xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24">
-                      <path fill="#00e676" d="M17.9 10.9C14.7 9 9.35 8.8 6.3 9.75c-.5.15-1-.15-1.15-.6c-.15-.5.15-1 .6-1.15c3.55-1.05 9.4-.85 13.1 1.35c.45.25.6.85.35 1.3c-.25.35-.85.5-1.3.25m-.1 2.8c-.25.35-.7.5-1.05.25c-2.7-1.65-6.8-2.15-9.95-1.15c-.4.1-.85-.1-.95-.5c-.1-.4.1-.85.5-.95c3.65-1.1 8.15-.55 11.25 1.35c.3.15.45.65.2 1m-1.2 2.75c-.2.3-.55.4-.85.2c-2.35-1.45-5.3-1.75-8.8-.95c-.35.1-.65-.15-.75-.45c-.1-.35.15-.65.45-.75c3.8-.85 7.1-.5 9.7 1.1c.35.15.4.55.25.85M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2Z" />
-                    </svg>
-                  </Link>
+
+                  <Grid container xs={12} alignItems='center'>
+
+                    <Grid item xs={3}>
+                      <Link to={songDetails.track_href}>
+                        <svg
+                          style={{ marginLeft: '-8px', paddingTop:'5px' }}
+                          xmlns="http://www.w3.org/2000/svg" width="62" height="62" viewBox="0 0 24 24">
+                          <path fill="#00e676" d="M17.9 10.9C14.7 9 9.35 8.8 6.3 9.75c-.5.15-1-.15-1.15-.6c-.15-.5.15-1 .6-1.15c3.55-1.05 9.4-.85 13.1 1.35c.45.25.6.85.35 1.3c-.25.35-.85.5-1.3.25m-.1 2.8c-.25.35-.7.5-1.05.25c-2.7-1.65-6.8-2.15-9.95-1.15c-.4.1-.85-.1-.95-.5c-.1-.4.1-.85.5-.95c3.65-1.1 8.15-.55 11.25 1.35c.3.15.45.65.2 1m-1.2 2.75c-.2.3-.55.4-.85.2c-2.35-1.45-5.3-1.75-8.8-.95c-.35.1-.65-.15-.75-.45c-.1-.35.15-.65.45-.75c3.8-.85 7.1-.5 9.7 1.1c.35.15.4.55.25.85M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2Z" />
+                        </svg>
+                      </Link>
+                    </Grid>
+
+                    <Grid item xs ={2}>
+                      <SmallFavButton
+                        backgroundColor='red'
+                        onClick={(event) => handleFavorite(event, username)}
+                        sx={{
+                          display: { xs: 'flex', sm: 'none' },
+                          boxShadow: 3,
+                          width: '3.5em',
+                          height: '3.5em',
+                        }}
+                      >
+                        {pageFav ? (
+                          <FavSolid onClick={(event) => handleFavorite(event, username)} />
+                        ) : (
+                          <FavOutlined onClick={(event) => handleFavorite(event, username)} />
+                        )}
+                        {/* add to Favorites */}
+                      </SmallFavButton>
+                    </Grid>
+                  </Grid>
                   <FavButton
                     variant="elevated"
                     className='fav-icon-button'
-                    //try to do useContext to pass handlefavorite
                     onClick={(event) => handleFavorite(event, username)}
                     sx={{
                       display: { xs: 'none', sm: 'flex', md: 'flex' },
@@ -228,7 +263,7 @@ const SongPage = () => {
                       justifyContent: "space-evenly",
                       borderRadius: '50px',
                       "@media (max-width: 600px)": {
-                        margin: '0 0 10px',
+                        // margin: '0 0 10px',
                       }
                     }}
                   >
@@ -239,6 +274,7 @@ const SongPage = () => {
                     )}
                     add to Favorites
                   </FavButton>
+
 
                 </Grid>
 
@@ -454,8 +490,8 @@ const SongPage = () => {
 
             <Grid container xs={10} md={6}
               // backgroundColor ='red'
-              flexDirection='center'
-              alignContent="flex-start"
+              flexDirection='column'
+              alignContent="center"
               alignItems='center'
               justifyContent='center'
             >

@@ -1,61 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import { Box } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 
-//secondary search for discogs
 const SearchId = ({ artists, song }) => {
   const [credits, setCredits] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-        ///fetch to postgres
-        fetch(`http://localhost:4000/getCredits/?artist=${artists[0].name}&song=${song}`)
-          .then(response => response.json())
-          .then(data => {
-            if (data === 'No credits available') {
-              setCredits([{name: 'No credits available'}])
-              return;
-            }
-            setCredits(data);
-          })
-          .catch(err => {
-            console.log(err);
-            return;
-          })
-  },[]);
+    fetch(`http://localhost:4000/getCredits/?artist=${artists[0].name}&song=${song}`)
+      .then(response => response.json())
+      .then(data => {
+        setIsLoading(false);  // Setting loading state to false here
+        if (data === 'No credits available') {
+          setCredits([{ name: 'No credits available' }]);
+          return;
+        }
+        setCredits(data);
+      })
+      .catch(err => {
+        console.log(err);
+        setIsLoading(false);  // Also setting loading state to false in case of an error
+        return;
+      })
+  }, []);
+
+  if (isLoading) {
+    return (
+      <Box
+      //  display="flex" justifyContent="center" alignItems="center" height="100vh"
+       >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
-
     <div className='credits-container'>
-        <Box
-          sx={{
-            // border: 1,
-            // borderColor: "grey.300",
-            // borderRadius: 2,
-            // padding: 2,
-            // overflow: "auto",
-            // maxHeight: 300,
-            // width: '90vw',
-            // "@media (max-width: 600px)": {
-            //   width: '90vw'
-            // }
-          }}
-        >
-          <ul style={{
-            columns: '2',
-            paddingInlineStart: '0',
-            // columnGap: '16px',
-            // margin: 0,
-            // padding: 0
-          }}>
-            {credits.map((el, index) => (
-              <li
-                key={`${el.name}`}
-                // className={index % 2 === 0 ? 'even-credit' : 'odd-credit'}
-              >
-               <span className="even-credit">{el.name}</span><span className="odd-credit"> - {el.artistRole}</span>
-              </li>
-            ))}
-          </ul>
-        </Box>
-      {/* )} */}
+      <Box>
+        <ul style={{
+          columns: '2',
+          paddingInlineStart: '0',
+        }}>
+          {credits.map((el, index) => (
+            <li key={`${el.name}`}>
+              <span className="even-credit">{el.name}</span><span className="odd-credit"> - {el.artistRole}</span>
+            </li>
+          ))}
+        </ul>
+      </Box>
     </div>
   );
 };

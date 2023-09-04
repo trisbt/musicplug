@@ -1,12 +1,28 @@
 import React, { useState } from 'react';
-import { Button, Card, CardMedia, CardContent, Fade, Grid, LinearProgress, Modal, Paper, styled, Typography, } from '@mui/material';
+import { Button, Card, CardMedia, CardContent, createTheme, Fade, Grid, LinearProgress, Modal, Paper, styled, Typography, } from '@mui/material';
 import { useParams, useLocation, Link } from 'react-router-dom';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
 import { grey } from '@mui/material/colors';
-
-import DbScale from './DbScale';
 import SearchId from './SearchId';
+
+
+const theme = createTheme({
+  palette: {
+      primary: {
+          light: '#99cbfd',
+          main: '#4d97f8',
+          dark: '#3746a2',
+          contrastText: '#fff',
+      },
+      secondary: {
+          light: '#fffbe8',
+          main: '#eec94b',
+          dark: '#9e7937',
+          contrastText: '#000',
+      },
+  },
+});
 
 const PlayButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
@@ -50,6 +66,7 @@ const FavOutlined = styled(GradeOutlinedIcon)(({ theme }) => ({
   },
 }));
 
+//progress value color function
 function determineColor(value) {
   if (value > 80) {
     return 'linear-gradient(to right, rgba(66,187,7,0.7595413165266106) 0%, rgba(149,255,2,0.7595413165266106) 100%)';
@@ -61,8 +78,7 @@ function determineColor(value) {
     return 'linear-gradient(to right, rgba(184,4,4,0.7595413165266106) 0%, rgba(255,2,2,0.7595413165266106) 100%)';
   }
 }
-
-
+//convert song duration format
 const msConvert = (num) => {
   let totalSeconds = Math.floor(num / 1000);
   let minutes = Math.floor(totalSeconds / 60);
@@ -70,9 +86,19 @@ const msConvert = (num) => {
   let formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
   return minutes + ':' + formattedSeconds;
 }
-const SongPage = () => {
-  const [open, setOpen] = useState(false);
 
+
+//main page func
+const SongPage = () => {
+  // const { id } = useParams();
+  const location = useLocation();
+  const songDetails = location.state?.songDetails;
+  const username = location.state?.username;
+  const isFavorite = location.state?.isFavorite;
+  const [open, setOpen] = useState(false);
+  const [pageFav, setPageFav] = useState(isFavorite)
+
+  //handles for img modal
   const handleOpen = () => {
     setOpen(true);
   };
@@ -80,11 +106,6 @@ const SongPage = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  const { id } = useParams();
-  const location = useLocation();
-  const songDetails = location.state?.songDetails;
-  // console.log(songDetails)
-  // const username = location.state?.username;
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#f5f5f5',
@@ -94,6 +115,32 @@ const SongPage = () => {
     textAlign: 'center',
     color: theme.palette.text.secondary,
   }));
+
+  const handleFavorite = async (event, username) => {
+
+    const { id, name, artists, albums, images, key, tempo, loudness } = songDetails;
+    try {
+      const response = await fetch('http://localhost:4000/addFavs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, id, name, artists, albums, images, key, tempo, loudness, }),
+        credentials: 'include',
+      });
+      const data = await response.json();
+      //add like
+      if (data.isFavorite === 'added') {
+        setPageFav(true);
+        // remove like
+      } else {
+        setPageFav(false);
+      }
+    } catch (error) {
+      console.error('Error adding track to favorites:', error);
+    }
+  };
+
 
   return (
     <div>
@@ -108,12 +155,10 @@ const SongPage = () => {
         }}>
           {/* top row */}
           <Grid container xs={12} direction='row' justifyContent="center" sx={{
-
             padding: '1em',
           }}>
             {/* First Row - Image and Song Details */}
             <Grid container item xs={12} spacing={2} >
-
               {/* image and modal */}
               <Grid
                 item xs={12} sm={5} md={4} lg={3}
@@ -170,6 +215,31 @@ const SongPage = () => {
                       <path fill="#00e676" d="M17.9 10.9C14.7 9 9.35 8.8 6.3 9.75c-.5.15-1-.15-1.15-.6c-.15-.5.15-1 .6-1.15c3.55-1.05 9.4-.85 13.1 1.35c.45.25.6.85.35 1.3c-.25.35-.85.5-1.3.25m-.1 2.8c-.25.35-.7.5-1.05.25c-2.7-1.65-6.8-2.15-9.95-1.15c-.4.1-.85-.1-.95-.5c-.1-.4.1-.85.5-.95c3.65-1.1 8.15-.55 11.25 1.35c.3.15.45.65.2 1m-1.2 2.75c-.2.3-.55.4-.85.2c-2.35-1.45-5.3-1.75-8.8-.95c-.35.1-.65-.15-.75-.45c-.1-.35.15-.65.45-.75c3.8-.85 7.1-.5 9.7 1.1c.35.15.4.55.25.85M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2Z" />
                     </svg>
                   </Link>
+                  <FavButton
+                    variant="elevated"
+                    className='fav-icon-button'
+                    //try to do useContext to pass handlefavorite
+                    onClick={(event) => handleFavorite(event, username)}
+                    sx={{
+                      display: { xs: 'none', sm: 'flex', md: 'flex' },
+                      padding: '0',
+                      paddingRight: '5px',
+                      boxShadow: 3,
+                      justifyContent: "space-evenly",
+                      borderRadius: '50px',
+                      "@media (max-width: 600px)": {
+                        margin: '0 0 10px',
+                      }
+                    }}
+                  >
+                    {pageFav ? (
+                      <FavSolid onClick={(event) => handleFavorite(event, username)} />
+                    ) : (
+                      <FavOutlined onClick={(event) => handleFavorite(event, username)} />
+                    )}
+                    add to Favorites
+                  </FavButton>
+
                 </Grid>
 
                 {/* Other Details, shows inline with song details on large screens */}
@@ -242,12 +312,11 @@ const SongPage = () => {
               <CardContent sx={{
                 // backgroundColor: 'green',
                 width: '100vw',
-                // boxShadow: 2,
               }}>
 
                 {/* loudness */}
                 <Grid container direction="row" xs={12} alignItems='center'>
-                  <Grid item xs={3} sm={2}>
+                  <Grid item xs={3} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Loudness</Typography>
                   </Grid>
                   <Grid item>
@@ -266,7 +335,7 @@ const SongPage = () => {
 
                 {/* energy */}
                 <Grid container direction="row" xs={12} alignItems='center'>
-                  <Grid item xs={3} sm={2}>
+                  <Grid item xs={3} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Energy</Typography>
                   </Grid>
                   <Grid item>
@@ -285,7 +354,7 @@ const SongPage = () => {
 
                 {/* valence */}
                 <Grid container direction="row" xs={12} alignItems='center'>
-                  <Grid item xs={3} sm={2}>
+                  <Grid item xs={3} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Valence</Typography>
                   </Grid>
                   <Grid item>
@@ -304,7 +373,7 @@ const SongPage = () => {
 
                 {/* acousticness */}
                 <Grid container direction="row" xs={12} alignItems='center'>
-                  <Grid item xs={4} sm={2.5}>
+                  <Grid item xs={4} sm={2.5} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Acousticness</Typography>
                   </Grid>
                   <Grid item>
@@ -323,7 +392,7 @@ const SongPage = () => {
 
                 {/* danceability */}
                 <Grid container direction="row" xs={12} alignItems='center'>
-                  <Grid item xs={4} sm={2.5}>
+                  <Grid item xs={4} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Danceability</Typography>
                   </Grid>
                   <Grid item>
@@ -343,7 +412,7 @@ const SongPage = () => {
 
                 {/* liveness */}
                 <Grid container direction="row" xs={12} alignItems='center'>
-                  <Grid item xs={3} sm={2}>
+                  <Grid item xs={3} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Liveness</Typography>
                   </Grid>
                   <Grid item>
@@ -363,7 +432,7 @@ const SongPage = () => {
 
                 {/* popularity */}
                 <Grid container direction="row" xs={12} alignItems='center'>
-                  <Grid item xs={3} sm={2}>
+                  <Grid item xs={3} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Popularity</Typography>
                   </Grid>
                   <Grid item>
@@ -383,19 +452,19 @@ const SongPage = () => {
               </CardContent>
             </Grid>
 
-            <Grid container xs={12} md={6}
+            <Grid container xs={10} md={6}
               // backgroundColor ='red'
-              // columnSpacing={{ xs: 2, sm: 1, md: 0 }} 
+              flexDirection='center'
               alignContent="flex-start"
               alignItems='center'
               justifyContent='center'
             >
-              {/* <Grid xs={12} container alignItems='center' justifyContent="flex-start" backgroundColor='green' > */}
               <Typography variant="h4" color='text.primary' sx={{
 
               }}>Credits</Typography>
+
               <SearchId artists={songDetails.artists} song={songDetails.name} />
-              {/* </Grid> */}
+
             </Grid>
 
 
@@ -414,31 +483,11 @@ const SongPage = () => {
 
 
 
-      {/* <FavButton
-                                    variant="elevated"
-                                    className='fav-icon-button'
-                                    onClick={(event) => handleFavorite(event, item, username)}
-                                    sx={{
-                                      display: { xs: 'none', sm: 'flex', md: 'flex' },
-                                      padding: '0',
-                                      paddingRight: '5px',
-                                      boxShadow: 3,
-                                      justifyContent: "space-evenly",
-                                      borderRadius: '50px',
-
-                                      "@media (max-width: 600px)": {
-                                        margin: '0 0 10px',
-                                      }
-                                    }}
-                                  >
-                                    {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
-                                    add to Favorites
-                                  </FavButton>
 
 
 
 
-                                  {item.preview_url && (
+      {/* {item.preview_url && (
                                     <PlayButton className='preview-button' sx={{
                                       boxShadow: 3,
                                       borderRadius: '50px',
@@ -471,14 +520,13 @@ const SongPage = () => {
 
 
 
-                                   <audio ref={audioRef}></audio>
+                                   <audio ref={audioRef}></audio> */}
 
 
 
 
 
-      {/* </Container> */}
-      {/* </Box> */}
+
     </div>
   )
 }

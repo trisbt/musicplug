@@ -40,6 +40,7 @@ const SearchId = ({ artists, song }) => {
         >
           <ul style={{
             columns: '2',
+            paddingInlineStart: '0',
             // columnGap: '16px',
             // margin: 0,
             // padding: 0

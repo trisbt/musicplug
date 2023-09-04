@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import React, { useState, useRef, useEffect, } from 'react';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
-import { Box, Button, Card, CardContent, CardMedia, Container, Grid, IconButton, styled, Typography } from '@mui/material';
+import { Button, Card, CardContent, CardMedia, Grid, IconButton, styled, Typography } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import { grey } from '@mui/material/colors';
@@ -88,12 +88,14 @@ function tempoRound(num) {
 
 const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchResult }) => {
   const [favoriteMap, setFavoriteMap] = useState({});
+  const [pageFav, setPageFav] = useState('');
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState(null);
   const audioRef = useRef(null);
 
   //needed to show user favorites in search results
   useEffect(() => {
-    setFavoriteMap(userFav)
+    setFavoriteMap(userFav);
+    // console.log(userFav.id)
   }, [userFav])
 
   if (!data && !audioData) {
@@ -107,7 +109,6 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
     const id = item.id;
     const release_date = item.album.release_date;
     const albums = item.album.name;
-
     return { name, images, id, preview_url, release_date, artists, albums, explicit, popularity };
   });
 
@@ -247,7 +248,9 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                       explicit: item.explicit,
                       popularity: item.popularity,
                     },
-                    username: username
+                    username: username,
+                    isFavorite:favoriteMap[item.id] || false,
+                    // onFavoriteToggle:(e) => handleFavorite(e, item, username)
                   }}
                   key={index}
                 >
@@ -265,9 +268,9 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                     }}
                   >
                     <CardContent sx={{
-                      paddingBottom: '10px',
+                      paddingBottom: '15px',
                       '&:last-child': {
-                        paddingBottom: '10px',
+                        paddingBottom: '15px',
                       }
                     }}>
                       <Grid container >

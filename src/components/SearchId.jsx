@@ -29,27 +29,27 @@ const SearchId = ({ artists, song }) => {
             // border: 1,
             // borderColor: "grey.300",
             // borderRadius: 2,
-            padding: 2,
+            // padding: 2,
             // overflow: "auto",
             // maxHeight: 300,
-            width: '90vw',
-            "@media (max-width: 600px)": {
-              width: '90vw'
-            }
+            // width: '90vw',
+            // "@media (max-width: 600px)": {
+            //   width: '90vw'
+            // }
           }}
         >
           <ul style={{
             columns: '2',
-            columnGap: '16px',
-            margin: 0,
-            padding: 0
+            // columnGap: '16px',
+            // margin: 0,
+            // padding: 0
           }}>
             {credits.map((el, index) => (
               <li
                 key={`${el.name}`}
                 // className={index % 2 === 0 ? 'even-credit' : 'odd-credit'}
               >
-               <span className="even-credit">{el.name}</span> - <span className="odd-credit">{el.artistRole}</span>
+               <span className="even-credit">{el.name}</span><span className="odd-credit"> - {el.artistRole}</span>
               </li>
             ))}
           </ul>

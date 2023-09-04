@@ -70,12 +70,12 @@ li {
 .even-credit {
   font-size: small;
   font-weight: bold;
-  color: rgb(158, 140, 140);
+  
 }
 
 .odd-credit {
   font-size: small;
-
+  color: rgb(120, 107, 107);
 }
 
 .credits-container {

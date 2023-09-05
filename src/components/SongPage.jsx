@@ -165,8 +165,9 @@ const SongPage = () => {
       {songDetails && (
         <Card sx={{
           width: '90vw',
-          height: '100vh',
-          overflowY: 'auto',
+          // height: '100vh',
+          overflowY: 'visible', // Display content even if it overflows vertically.
+          maxHeight: 'inherit', // Ensures the card doesn't have an arbitrary height constraint
           borderRadius: '0',
           padding: '5px'
         }}>
@@ -227,19 +228,48 @@ const SongPage = () => {
                   <Typography variant="subtitle1">{songDetails.albums}</Typography>
                   <Typography variant="subtitle2">Released: {songDetails.release_date}</Typography>
                   <Typography>{aliasFromChild}</Typography>
+
                   <Grid container xs={12} alignItems='center'>
 
-                    <Grid item xs={3}>
+                    <Grid item xs={1} sx ={{
+                      paddingRight:'2.2em'
+                    }}>
                       <Link to={songDetails.track_href}>
                         <svg
-                          style={{ marginLeft: '-8px', paddingTop:'5px' }}
+                          style={{ marginLeft: '-8px', paddingTop: '5px' }}
                           xmlns="http://www.w3.org/2000/svg" width="62" height="62" viewBox="0 0 24 24">
                           <path fill="#00e676" d="M17.9 10.9C14.7 9 9.35 8.8 6.3 9.75c-.5.15-1-.15-1.15-.6c-.15-.5.15-1 .6-1.15c3.55-1.05 9.4-.85 13.1 1.35c.45.25.6.85.35 1.3c-.25.35-.85.5-1.3.25m-.1 2.8c-.25.35-.7.5-1.05.25c-2.7-1.65-6.8-2.15-9.95-1.15c-.4.1-.85-.1-.95-.5c-.1-.4.1-.85.5-.95c3.65-1.1 8.15-.55 11.25 1.35c.3.15.45.65.2 1m-1.2 2.75c-.2.3-.55.4-.85.2c-2.35-1.45-5.3-1.75-8.8-.95c-.35.1-.65-.15-.75-.45c-.1-.35.15-.65.45-.75c3.8-.85 7.1-.5 9.7 1.1c.35.15.4.55.25.85M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2Z" />
                         </svg>
                       </Link>
                     </Grid>
 
-                    <Grid item xs ={2}>
+                    <Grid item xs={1} >
+                      <FavButton
+                        variant="elevated"
+                        className='fav-icon-button'
+                        onClick={(event) => handleFavorite(event, username)}
+                        sx={{
+                          display: { xs: 'none', sm: 'flex', md: 'flex' },
+                          padding: '0',
+                          paddingRight: '5px',
+                          boxShadow: 3,
+                          justifyContent: "space-evenly",
+                          borderRadius: '50px',
+                          "@media (max-width: 600px)": {
+                            // margin: '0 0 10px',
+                          }
+                        }}
+                      >
+                        {pageFav ? (
+                          <FavSolid onClick={(event) => handleFavorite(event, username)} />
+                        ) : (
+                          <FavOutlined onClick={(event) => handleFavorite(event, username)} />
+                        )}
+                        add to Favorites
+                      </FavButton>
+                    </Grid>
+
+                    <Grid item xs={1}>
                       <SmallFavButton
                         backgroundColor='red'
                         onClick={(event) => handleFavorite(event, username)}
@@ -258,30 +288,9 @@ const SongPage = () => {
                         {/* add to Favorites */}
                       </SmallFavButton>
                     </Grid>
+
                   </Grid>
-                  <FavButton
-                    variant="elevated"
-                    className='fav-icon-button'
-                    onClick={(event) => handleFavorite(event, username)}
-                    sx={{
-                      display: { xs: 'none', sm: 'flex', md: 'flex' },
-                      padding: '0',
-                      paddingRight: '5px',
-                      boxShadow: 3,
-                      justifyContent: "space-evenly",
-                      borderRadius: '50px',
-                      "@media (max-width: 600px)": {
-                        // margin: '0 0 10px',
-                      }
-                    }}
-                  >
-                    {pageFav ? (
-                      <FavSolid onClick={(event) => handleFavorite(event, username)} />
-                    ) : (
-                      <FavOutlined onClick={(event) => handleFavorite(event, username)} />
-                    )}
-                    add to Favorites
-                  </FavButton>
+
 
 
                 </Grid>
@@ -507,7 +516,7 @@ const SongPage = () => {
 
               }}>Credits</Typography>
 
-              <SearchId artists={songDetails.artists} song={songDetails.name} onReceiveAlias={handleAlias}/>
+              <SearchId artists={songDetails.artists} song={songDetails.name} onReceiveAlias={handleAlias} />
 
             </Grid>
 

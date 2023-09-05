@@ -1,7 +1,6 @@
-import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect} from 'react';
 import SearchData from './components/SearchData';
-// import DisplayData from './components/DisplayData';
 import Favorites from './components/Favs';
 import { useAuth } from './components/Auth';
 import ResponsiveAppBar from './components/Navbar';
@@ -12,6 +11,7 @@ import Splash from './components/Splash';
 import SongPage from './components/SongPage';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import backgroundImg from './assets/Musicplugbg.jpg';
+import Footer from './components/Footer';
 
 
 
@@ -96,6 +96,7 @@ function App() {
       <Router>
         <ResponsiveAppBar />
         <MainContent />
+        <Footer/>
       </Router>
     </ThemeProvider>
   );

@@ -24,7 +24,7 @@ export function AuthProvider({ children }) {
     //check for session
     const checkAuthentication = async () => {
         try {
-            const response = await fetch('http://localhost:4000/validate', {
+            const response = await fetch('/validate', {
                 method: 'GET',
                 credentials: 'include',
             });
@@ -46,7 +46,7 @@ export function AuthProvider({ children }) {
     //check remember me cookie
     const fetchRm = async () => {
         try {
-            const rememberMeResponse = await fetch('http://localhost:4000/check-remember-me', {
+            const rememberMeResponse = await fetch('/check-remember-me', {
                 method: 'GET',
                 credentials: 'include',
             });
@@ -61,7 +61,7 @@ export function AuthProvider({ children }) {
     //login
     const handleLogin = async (username, password, rememberMe) => {
         try {
-            const response = await fetch('http://localhost:4000/login', {
+            const response = await fetch('/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ export function AuthProvider({ children }) {
     //logout
     const handleLogout = async () => {
         try {
-            const response = await fetch('http://localhost:4000/logout', {
+            const response = await fetch('/logout', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ export function AuthProvider({ children }) {
     //signup
     const handleSignup = async (username, email, password, firstname, lastname) => {
         try {
-            const response = await fetch('http://localhost:4000/signup', {
+            const response = await fetch('/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

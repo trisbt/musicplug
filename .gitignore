@@ -23,5 +23,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# files
+.dnu.js
+
 #db
 pgModel.js

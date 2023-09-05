@@ -6,7 +6,7 @@ require('dotenv').config();
 const path = require('path');
 const mongoose = require('mongoose');
 const userController = require('./controllers/userController');
-const discogsController = require('./controllers/discogsController');
+// const discogsController = require('./controllers/discogsController');
 const discogsSQLController = require('./controllers/discogsSQLController')
 const cookieController = require('./controllers/cookieController');
 const controller = require('./controllers/controller')

@@ -137,7 +137,7 @@ const SongPage = () => {
 
     const { id, name, artists, albums, images, key, tempo, loudness } = songDetails;
     try {
-      const response = await fetch('http://localhost:4000/addFavs', {
+      const response = await fetch('/addFavs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

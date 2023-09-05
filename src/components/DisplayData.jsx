@@ -174,7 +174,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
     event.preventDefault();
     const { id, name, artists, albums, images, key, tempo, loudness } = item;
     try {
-      const response = await fetch('http://localhost:4000/addFavs', {
+      const response = await fetch('/addFavs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

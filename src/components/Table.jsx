@@ -254,7 +254,7 @@ export default function EnhancedTable({ favorites, initialRenderDone, activeSlic
 
   const handleDelete = (event) => {
     const idsToDelete = selected.map(item => item.id);
-    fetch('http://localhost:4000/removefavs', {
+    fetch('/removefavs', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -6,7 +6,7 @@ const SearchId = ({ artists, song, onReceiveAlias }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:4000/getCredits/?artist=${artists[0].name}&song=${song}`)
+    fetch(`/getCredits/?artist=${artists[0].name}&song=${song}`)
       .then(response => response.json())
       .then(res => {
         console.log(res.data)

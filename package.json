@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "main": "server/server.js",
+  "proxy": "http://localhost:4000",
+
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -37,6 +39,7 @@
     "react-scripts": "^5.0.1",
     "web-vitals": "^2.1.4"
   },
+
   "scripts": {
     "start": "concurrently \"npm run start-react\" \"npm run start-express\"",
     "start-react": "PORT=3000 react-scripts start",

@@ -68,7 +68,7 @@ const SearchData = ({ username, setShowSplash }) => {
             setLoading(true);
             setShowSplash(false);
             const searchQuery = encodeURIComponent(query);
-            fetch(`http://localhost:4000/search?query=${searchQuery}&offset=${newOffset}`)
+            fetch(`/search?query=${searchQuery}&offset=${newOffset}`)
                 .then(res => res.json())
                 .then(data => {
                     data.tracks.items.forEach((item) => {
@@ -78,7 +78,7 @@ const SearchData = ({ username, setShowSplash }) => {
                     navigate(`/?q=${searchQuery}`)
                     setResponse(prev => [...prev, ...searchData]);
                     setSearchResult(query||inputField);
-                    fetch(`http://localhost:4000/advancedSearch?query=${idCache.join(',')}`)
+                    fetch(`advancedSearch?query=${idCache.join(',')}`)
                         .then(res => res.json())
                         .then(data => {
                             const additionalData = data.audio_features
@@ -87,7 +87,7 @@ const SearchData = ({ username, setShowSplash }) => {
                         .catch(error => {
                             console.error('Error in advanced search:', error);
                         });
-                    fetch('http://localhost:4000/favs', {
+                    fetch('/favs', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

@@ -48,14 +48,27 @@ function createData(song, artist, album, key, tempo, id) {
 
 
 function descendingComparator(a, b, orderBy) {
+  if (typeof a[orderBy] === 'string' && typeof b[orderBy] === 'string') {
+      const lowerA = a[orderBy].toLowerCase();
+      const lowerB = b[orderBy].toLowerCase();
+
+      if (lowerB < lowerA) {
+          return -1;
+      }
+      if (lowerB > lowerA) {
+          return 1;
+      }
+      return 0;
+  }
   if (b[orderBy] < a[orderBy]) {
-    return -1;
+      return -1;
   }
   if (b[orderBy] > a[orderBy]) {
-    return 1;
+      return 1;
   }
   return 0;
 }
+
 
 function getComparator(order, orderBy) {
   return order === 'desc'

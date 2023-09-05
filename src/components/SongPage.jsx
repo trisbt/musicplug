@@ -107,6 +107,13 @@ const SongPage = () => {
   const isFavorite = location.state?.isFavorite;
   const [open, setOpen] = useState(false);
   const [pageFav, setPageFav] = useState(isFavorite)
+  const [aliasFromChild, setAliasFromChild] = useState(null);
+
+  //can show aliases for artist not used from songid
+  const handleAlias = (alias) => {
+    console.log(alias.join(', ').replace(/\s?\(.*?\)\s?/g, ''));
+    setAliasFromChild(alias.join(', ').replace(/\s?\(.*?\)\s?/g, ''));
+  };
 
   //handles for img modal
   const handleOpen = () => {
@@ -218,7 +225,8 @@ const SongPage = () => {
                   <Typography variant="h5" color='text.primary'>{songDetails.name}</Typography>
                   <Typography variant="h4">{songDetails.artists[0]?.name}</Typography>
                   <Typography variant="subtitle1">{songDetails.albums}</Typography>
-
+                  <Typography variant="subtitle2">Released: {songDetails.release_date}</Typography>
+                  <Typography>{aliasFromChild}</Typography>
                   <Grid container xs={12} alignItems='center'>
 
                     <Grid item xs={3}>
@@ -499,7 +507,7 @@ const SongPage = () => {
 
               }}>Credits</Typography>
 
-              <SearchId artists={songDetails.artists} song={songDetails.name} />
+              <SearchId artists={songDetails.artists} song={songDetails.name} onReceiveAlias={handleAlias}/>
 
             </Grid>
 

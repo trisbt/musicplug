@@ -46,7 +46,7 @@ app.get('/getTracks', controller.getAccessToken, controller.getSpotifyTracks, (r
 
 //discogs searches thru db
 app.get('/getCredits', discogsSQLController.discogsSearch, (req, res) => {
-    return res.status(200).json(res.locals.data);
+    return res.status(200).json({data:res.locals.data, alias:res.locals.alias});
 });
 
 //sign up 

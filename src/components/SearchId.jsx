@@ -1,20 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { Box, CircularProgress } from '@mui/material';
 
-const SearchId = ({ artists, song }) => {
+const SearchId = ({ artists, song, onReceiveAlias }) => {
   const [credits, setCredits] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetch(`http://localhost:4000/getCredits/?artist=${artists[0].name}&song=${song}`)
       .then(response => response.json())
-      .then(data => {
+      .then(res => {
+        console.log(res.data)
+      
         setIsLoading(false);  // Setting loading state to false here
-        if (data === 'No credits available') {
-          setCredits([{ name: 'No credits available' }]);
+        if (res.data === 'No credits available') {
+          setCredits([{ artist_name: 'No credits available. Last updated 6/1/23' }]);
           return;
+        }else{
+          
+            // onReceiveAlias(res.alias);
+        
         }
-        setCredits(data);
+        setCredits(res.data);
       })
       .catch(err => {
         console.log(err);
@@ -41,8 +47,8 @@ const SearchId = ({ artists, song }) => {
           paddingInlineStart: '0',
         }}>
           {credits.map((el, index) => (
-            <li key={`${el.name}`}>
-              <span className="even-credit">{el.name}</span><span className="odd-credit"> - {el.artistRole}</span>
+            <li key={`${el.artist_name}`}>
+              <span className="even-credit">{el.artist_name}</span><span className="odd-credit"> - {el.role}</span>
             </li>
           ))}
         </ul>

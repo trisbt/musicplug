@@ -1,25 +1,43 @@
 const db = require('../models/pgModel.js');
 
-function getStringBeforeParenthesis(str) {
+// function getStringBeforeParenthesis(str) {
+//   const indexOfParenthesis = str.indexOf('(');
+//   if (indexOfParenthesis !== -1) {
+//     return str.substring(0, indexOfParenthesis).trim(); // trim to remove any spaces before '('
+//   }
+//   return str;
+// }
+
+function normalize(str) {
+  // Check for and remove everything after '('
   const indexOfParenthesis = str.indexOf('(');
   if (indexOfParenthesis !== -1) {
-    return str.substring(0, indexOfParenthesis).trim(); // trim to remove any spaces before '('
+    str = str.substring(0, indexOfParenthesis).trim(); // trim to remove any spaces before '('
   }
+
+  // Check for and remove everything after 'feat.'
+  const indexOfFeat = str.toLowerCase().indexOf('feat.');
+  if (indexOfFeat !== -1) {
+    str = str.substring(0, indexOfFeat).trim(); // trim to remove any spaces before 'feat.'
+  }
+
   return str;
 }
 
 const discogsSearch = async (req, res, next) => {
   const artist = req.query.artist.split('/')[0];
-  let song = req.query.song;
-  song = getStringBeforeParenthesis(song);
+  let song = normalize(req.query.song);
+  // song = getStringBeforeParenthesis(song)
   function determineTableName(baseName, firstCharacter) {
     const alphabet = "abcdefghijklmnopqrstuvwxyz";
     if (alphabet.includes(firstCharacter.toLowerCase())) {
-        return `${baseName}_${firstCharacter.toLowerCase()}`;
+      return `${baseName}_${firstCharacter.toLowerCase()}`;
     } else {
-        return `${baseName}_default`;
+      return `${baseName}_default`;
     }
-}
+  }
+  console.log(song)
+  console.log(artist)
   const validArtistTableNames = [
     "release_track_artist_a",
     "release_track_artist_b",
@@ -49,7 +67,7 @@ const discogsSearch = async (req, res, next) => {
     "release_track_artist_z",
     "release_track_artist_default",
   ];
-    
+
   const validTrackTableNames = [
     "release_track_a",
     "release_track_b",
@@ -96,40 +114,100 @@ const discogsSearch = async (req, res, next) => {
   }
 
   try {
-    const query = `
-        WITH Track AS (
-            SELECT rt.track_id
-            FROM ${artistTableName} rta
-            JOIN ${trackTableName} rt 
-            ON rta.release_id = rt.release_id AND rta.track_id = rt.track_id
-            WHERE rta.artist_name ILIKE $1 AND LOWER(rt.title) = LOWER($2)
-        )
-        SELECT rta.artist_name, rta.extra, rta.role
-        FROM release_track_artist rta
-        WHERE rta.track_id IN (SELECT track_id FROM Track);
-    `;
-    db.query(query, [`${artist}%`, song], (error, results) => {
+    const initialQuery = `
+      WITH AliasArtists AS (
+        SELECT DISTINCT artist_id
+        FROM artist_alias
+        WHERE alias_name = $1
+    )
+    SELECT MIN(aa.artist_id) AS artist_id, aa.alias_name
+    FROM artist_alias aa
+    JOIN AliasArtists a ON aa.artist_id = a.artist_id
+    GROUP BY aa.alias_name;
+      `;
+
+    db.query(initialQuery, [`${artist}`], (error, results) => {
       if (error) {
         throw error;
       }
-      const uniqueData = results.rows.reduce((acc, row) => {
-        if (!acc[row.artist_name]) {
-          acc[row.artist_name] = {
-            name: row.artist_name,
-            artistRole: row.role, 
-          };
+      const aliasNames = results.rows.map(row => row.alias_name);
+      const secondQuery = `
+        WITH MatchedTracks AS (
+      SELECT rt.track_id
+      FROM ${trackTableName} rt
+      JOIN release_track_artist rta ON rt.track_id = rta.track_id
+      WHERE rta.artist_name = ANY($1)
+      AND rt.title = $2
+    )
+      SELECT rta2.artist_name, rta2.role
+      FROM release_track_artist rta2
+      JOIN MatchedTracks mt ON rta2.track_id = mt.track_id
+      WHERE rta2.extra = 'true';
+  `;
+
+      db.query(secondQuery, [aliasNames, song], (error, trackResults) => {
+        if (error) {
+          throw error;
         }
-        return acc;
-      }, {});
-      let processedData = Object.values(uniqueData);
-      if(processedData.length <= 0){
-        res.locals.data = 'No credits available';
+        const uniqueNames = new Set();
+        const uniqueResults = trackResults.rows.filter((entry) => {
+          if (!uniqueNames.has(entry.artist_name)) {
+            uniqueNames.add(entry.artist_name);
+            return true;
+          }
+          return false;
+        });
+        if (uniqueResults.length <= 0) {
+              res.locals.data = 'No credits available';
+              return next();
+            }
+        console.log(uniqueResults);
+        res.locals.data = uniqueResults;
+        res.locals.alias = aliasNames;
         return next();
-      }
-      // console.log(processedData);
-      res.locals.data = processedData;
-      return next();
+      });
     });
+
+
+    //   const query = `
+    //   WITH MatchedTracks AS (
+    //     SELECT rt.track_id
+    //     FROM ${trackTableName} rt 
+    //     JOIN ${artistTableName} rta
+    //     ON rt.release_id = rta.release_id 
+    //     WHERE REPLACE(rta.artist_name, '.', '') ILIKE REPLACE($1, '.', '') 
+    //     AND REPLACE(LOWER(rt.title), '.', '') = REPLACE(LOWER($2), '.', '')
+    // )
+    // SELECT rta2.artist_name, rta2.role
+    // FROM release_track_artist rta2
+    // JOIN MatchedTracks mt ON rta2.track_id = mt.track_id
+    // WHERE rta2.extra = 'true';
+
+    //   `;
+
+    // db.query(query, [`${artist}%`, song], (error, results) => {
+    //   if (error) {
+    //     throw error;
+    //   }
+    //   console.log(results)
+    //   const uniqueData = results.rows.reduce((acc, row) => {
+    //     if (!acc[row.artist_name]) {
+    //       acc[row.artist_name] = {
+    //         name: row.artist_name,
+    //         artistRole: row.role,
+    //       };
+    //     }
+    //     return acc;
+    //   }, {});
+    //   let processedData = Object.values(uniqueData);
+    //   if (processedData.length <= 0) {
+    //     res.locals.data = 'No credits available';
+    //     return next();
+    //   }
+    //   // console.log(processedData);
+    //   res.locals.data = processedData;
+    //   return next();
+    // });
 
   } catch (err) {
     console.log(err);

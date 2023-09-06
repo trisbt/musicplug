@@ -10,7 +10,7 @@ function Favorites({ username }) {
 
   useEffect(() => {
     const fetchFavorites = () => {
-      fetch('http://localhost:4000/favs', {
+      fetch('/favs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

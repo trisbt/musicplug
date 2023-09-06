@@ -20,7 +20,7 @@ function Copyright(props) {
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="/">
-        Plug App
+        MusicPlug
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -53,7 +53,6 @@ export default function SignIn() {
     event.preventDefault();
     const username = event.target.username.value;
     const password = event.target.password.value;
-    console.log(rememberMe)
     try {
       await handleLogin(username, password, rememberMe);
     } catch (error) {

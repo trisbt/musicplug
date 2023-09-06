@@ -1,32 +1,12 @@
-import SearchId from './SearchId';
+import { Link } from 'react-router-dom';
 import React, { useState, useRef, useEffect, } from 'react';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import { Container } from '@mui/material';
-import Typography from '@mui/material/Typography';
+import { Button, Card, CardContent, CardMedia, Grid, IconButton, styled, Typography } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
-import { Button } from '@mui/material';
-import { IconButton } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
-const PlayButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
-  backgroundColor: grey[900],
-  '&:hover': {
-    color: 'white',
-    backgroundColor: '#00e676'
-  },
-  fontSize: '15px',
-  width: '200px',
-  height: '50px',
-  lineHeight: '0',
-}));
 
 const SmallPlayButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
@@ -38,21 +18,6 @@ const SmallPlayButton = styled(IconButton)(({ theme }) => ({
   fontSize: '15px',
   width: '40px',
   height: '40px',
-}));
-
-
-const FavButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
-  backgroundColor: grey[900],
-  '&:hover': {
-    color: 'white',
-    backgroundColor: '#00e676'
-  },
-  fontSize: '15px',
-  width: '200px',
-  height: '50px',
-  lineHeight: '0',
-
 }));
 
 const SmallFavButton = styled(IconButton)(({ theme }) => ({
@@ -91,37 +56,46 @@ const LoadButton = styled(Button)(({ theme }) => ({
   // padding: theme.spacing(1.2),
 }));
 
-const keyConvert = (num) => {
+const keyConvert = (num, mode) => {
   const chart = {
-    '0': 'C',
-    '1': 'C# | Db',
-    '2': 'D',
-    '3': 'D# | Eb',
-    '4': 'E',
-    '5': 'F',
-    '6': 'F# | Gb',
-    '7': 'G',
-    '8': 'G# | Ab',
-    '9': 'A',
-    '10': 'A# | Bb',
-    '11': 'B',
+    '0': ['C', 'Am'],
+    '1': ['Db', 'Bbm'],
+    '2': ['D', 'Bm'],
+    '3': ['Eb', 'Cm'],
+    '4': ['E', 'C#m'],
+    '5': ['F', 'Dm'],
+    '6': ['Gb', 'Ebm'],
+    '7': ['G', 'Em'],
+    '8': ['Ab', 'Fm'],
+    '9': ['A', 'F#m'],
+    '10': ['Bb', 'Gm'],
+    '11': ['B', 'G#m'],
   }
-  if (String(num) in chart) {
-    return chart[String(num)];
+
+  if (mode === 1) {
+    return chart[num][0];
+  } else if (mode === 0) {
+    return chart[num][1];
+  } else {
+    return "Unknown";
   }
 }
+
+
 function tempoRound(num) {
   return Math.round(num * 2) / 2;
 }
 
-const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchResult }) => {
+const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchResult, customStyles}) => {
   const [favoriteMap, setFavoriteMap] = useState({});
+  const [pageFav, setPageFav] = useState('');
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState(null);
   const audioRef = useRef(null);
 
   //needed to show user favorites in search results
   useEffect(() => {
-    setFavoriteMap(userFav)
+    setFavoriteMap(userFav);
+    // console.log(userFav.id)
   }, [userFav])
 
   if (!data && !audioData) {
@@ -129,29 +103,43 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
   }
 
   const basicData = data.map((item) => {
-    const { name, album, preview_url } = item;
+    const { name, album, preview_url, explicit, popularity } = item;
     const artists = item.artists
-    const images = album.images[1].url;
+    const images = album.images[0].url;
     const id = item.id;
     const release_date = item.album.release_date;
     const albums = item.album.name;
-    return { name, images, id, preview_url, release_date, artists, albums };
+    return { name, images, id, preview_url, release_date, artists, albums, explicit, popularity };
   });
 
   const audioFeatures = audioData.map((item) => {
     if (item) {
-      const key = keyConvert(item.key);
+      const key = keyConvert(item.key, item.mode);
       const tempo = tempoRound(item.tempo);
-      const loudness = item.loudness;
-      const energy = item.energy;
-
-      return { key, tempo, loudness, energy };
+      const { loudness, energy, acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence } = item
+      return {
+        key,
+        tempo,
+        loudness,
+        energy,
+        acousticness,
+        analysis_url,
+        danceability,
+        duration_ms,
+        instrumentalness,
+        liveness,
+        time_signature,
+        track_href,
+        uri,
+        valence,
+      };
     } else {
       return {};
     }
   });
 
   const results = [];
+
   for (let i = 0; i < basicData.length; i++) {
     const combinedObject = {
       ...basicData[i],
@@ -160,7 +148,10 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
     results.push(combinedObject);
   }
 
-  const playAudio = (previewUrl) => {
+  const playAudio = (event, previewUrl) => {
+    event.stopPropagation();
+    event.preventDefault();
+
     audioRef.current.volume = .3;
     if (previewUrl) {
       if (audioRef.current.src === previewUrl && !audioRef.current.paused) {
@@ -178,10 +169,12 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
     }
   };
 
-  const handleFavorite = async (item, username) => {
+  const handleFavorite = async (event, item, username) => {
+    event.stopPropagation();
+    event.preventDefault();
     const { id, name, artists, albums, images, key, tempo, loudness } = item;
     try {
-      const response = await fetch('http://localhost:4000/addFavs', {
+      const response = await fetch('/addFavs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -210,38 +203,108 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
 
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'hidden' }}>
-
-      <Container maxWidth="xl" sx={{
-        "@media (max-width: 900px)": {
-          width: '110vw',
-        }
-      }}>
+    <div>
+      <Grid container justifyContent='center' >
         {results.length > 0 && (
           <>
-            <h4 style={{ textAlign: 'center', fontSize: '20px' }}>Search Results for {searchResult}:</h4>
-            <ul style={{ width: '100%', margin: '0 auto', padding: '0' }}>
-              {results.map((item, index) => (
-                <div key={index} >
-                  <Card sx={{
-                    margin: '10px 10px 0',
-                    boxShadow: 3,
+            {/* search result text row */}
+            <Grid item xs={12}>
+              <h4
+                style={{ textAlign: 'center', fontSize: '20px' }}>
+                Search Results for {searchResult}:</h4>
+            </Grid>
+
+            {/* main search */}
+            {results.map((item, index) => (
+
+              <Grid item xs={11} md={8} direction="row" key={index}>
+                {/* each card */}
+                <Link
+                  to={{
+                    pathname: `/${encodeURIComponent(item.name)}/${encodeURIComponent(item.artists[0].name)}/${item.id}`,
                   }}
+                  state={{
+                    songDetails: {
+                      id: item.id,
+                      name: item.name,
+                      artists: item.artists,
+                      albums: item.albums,
+                      images: item.images,
+                      release_date: item.release_date,
+                      preview_url:item.preview_url,
+                      key: item.key,
+                      tempo: item.tempo,
+                      loudness: item.loudness,
+                      energy: item.energy,
+                      acousticness: item.acousticness,
+                      analysis_url: item.analysis_url,
+                      danceability: item.danceability,
+                      duration_ms: item.duration_ms,
+                      instrumentalness: item.instrumentalness,
+                      liveness: item.liveness,
+                      time_signature: item.time_signature,
+                      track_href: item.track_href,
+                      uri: item.uri,
+                      valence: item.valence,
+                      explicit: item.explicit,
+                      popularity: item.popularity,
+                    },
+                    username: username,
+                    isFavorite: favoriteMap[item.id] || false,
+                  }}
+                  key={index}
+                >
+
+                  {/* <div key={index} > */}
+                  <Card
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      margin: '10px 10px 0',
+                      boxShadow: 3,
+                      "&:hover": {
+                        backgroundColor: "#f5f5f5",
+                      }
+                    }}
                   >
-                    <Box>
-                      <CardContent sx={{
-                        display: 'flex', flex: '1 0 auto', flexDirection: 'row', justifyContent: 'space-between',
-                      }}>
-                        <Box sx={{
-                          display: 'flex', flexDirection: 'column', width: '35%',
-                          "@media (max-width: 500px)": {
-                            width: '50%',
-                          }
+                    <CardContent sx={{
+                      paddingBottom: '15px',
+                      '&:last-child': {
+                        paddingBottom: '15px',
+                      }
+                    }}>
+                      <Grid container >
+                        {/* image */}
+                        <Grid item xs={3} sm={2} >
+                          <CardMedia
+                            component="img"
+                            sx={{
+                              // width: '80%',
+                              "@media (max-width: 600px)": {
+                                // width: '100%',
+                                // height:'60%'
+                              }
+                            }}
+                            image={item.images}
+                            alt={item.name}
+                          />
+                        </Grid>
+                        {/* song info */}
+                        <Grid item xs={9} sm={5} sx={{
+                          paddingLeft: '.5em',
                         }}>
-                          <Typography component="div" color="text.primary" variant="h5">
+                          <Typography component="div" color="text.primary" variant="h5" sx={{
+                            "@media (max-width: 600px)": {
+                              fontSize: '1rem'
+                            },
+                          }}>
                             {item.name}
                           </Typography>
-                          <Typography variant="h6" color="text.secondary" component="div">
+                          <Typography variant="h6" color="text.secondary" component="div" sx={{
+                            "@media (max-width: 600px)": {
+                              fontSize: '1rem'
+                            },
+                          }}>
                             {item.artists.map((artist, index) => (
                               <span key={index}>
                                 {artist.name}
@@ -253,220 +316,100 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                           </Typography>
                           <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
                             "@media (max-width: 600px)": {
-                              fontSize: '13px',
+                              fontSize: '.7em',
                             }
                           }}>
                             {item.albums}
                           </Typography>
+                        </Grid>
 
-                          <CardMedia
-                            component="img"
-                            sx={{
-                              width: 151,
-                              "@media (max-width: 500px)": {
-                                width: '75%',
-                                // height: '50%'
-                              }
-                            }}
-                            image={item.images}
-                            alt={item.name}
-                          />
-                          <Typography variant="subtitle2" color="text.secondary" component="div" sx={{
-                            "@media (max-width: 500px)": {
-                              fontSize: '10px'
-                            }
-                          }} >
-                            Released: {item.release_date}
-                          </Typography>
-                        </Box>
-                        <Box sx={{
-                          display: 'flex', flexDirection: 'column', width: '70%', justifyContent: 'space-between',
-                          "@media (max-width: 500px)": {
-                            justifyContent: 'space-between',
-                            marginRight: '0',
-                            width: '50%'
+                        <Grid container item xs={12} sm={5} alignItems='center' rowSpacing={1} sx={{
+                          "@media (max-width: 600px)": {
+                            paddingTop: '.8rem',
                           }
                         }}>
-                          <Box sx={{
-                            display: 'flex', flexDirection: 'row', height: '100px', justifyContent: 'space-around',
-                            "@media (max-width: 500px)": {
-                              display: 'flex',
-                              justifyContent: 'space-evenly',
-                              flexFlow: 'row wrap',
-                              width: '200px',
-                              height: '260px',
-                            }
-                          }}>
-                            <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
-                              display: 'flex', flexDirection: 'column', alignItems: 'center',
-                              "@media (max-width: 600px)": {
-                                // fontSize: '20px',
-                                width: '65px',
-                              }
-                            }}>
-                              Key
-                              <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
+                          <Grid item xs={3} sm={6}  >
+                            {/* <Card sx={{ width: '90%' }}> */}
+                            <Typography variant="subtitle1" color="text.secondary" component="div"
+                              sx={{
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: '0.5rem',
                                 "@media (max-width: 600px)": {
-                                  fontSize: '20px',
-                                  display: 'flex',
-                                  justifyContent: 'center',
-                                  width: '70px',
+                                  fontSize: '.8em',
+                                }
+                              }}
+                            >
+                              Key
+                              <Typography className='song-sub-info' variant="h4" color="text.primary" component="div" sx={{
+                                "@media (max-width: 600px)": {
+                                  fontSize: '1.5rem',
                                 }
                               }}>
                                 {item.key}
                               </Typography>
                             </Typography>
+                            {/* </Card> */}
+                          </Grid>
 
-                            <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
-                              display: 'flex', flexDirection: 'column', alignItems: 'center',
-                              "@media (max-width: 600px)": {
-                                // fontSize: '20px',
-                                width: '65px',
-                              }
-                            }}>
-                              BPM
-                              <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
+                          <Grid item xs={3.5} sm={6} sx={{
+                            "@media (max-width: 600px)": {
+                              marginRight: '.5em',
+                            }
+                          }}>
+                            {/* <Card sx={{ width: '90%' }}> */}
+                            <Typography variant="subtitle1" color="text.secondary" component="div"
+                              sx={{
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: '0.5rem',
                                 "@media (max-width: 600px)": {
-                                  fontSize: '20px'
+                                  fontSize: '.8em',
+                                }
+                              }}
+                            >
+                              BPM
+                              <Typography className='song-sub-info' variant="h4" color="text.primary" component="div" sx={{
+                                "@media (max-width: 600px)": {
+                                  fontSize: '1.5rem',
                                 }
                               }}>
                                 {item.tempo}
                               </Typography>
                             </Typography>
+                            {/* </Card> */}
+                          </Grid>
 
-                            <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
-                              display: 'flex', flexDirection: 'column', alignItems: 'center',
-                              "@media (max-width: 600px)": {
-                                // fontSize: '20px',
-                                width: '95px',
-                              }
-                            }}>
-                              Loudness
-                              <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
-                                "@media (max-width: 600px)": {
-                                  fontSize: '20px'
-                                }
-                              }}>
-                                {item.loudness}
-                              </Typography>
-                            </Typography>
-
-                            <Typography variant="subtitle1" color="text.secondary" component="div" sx={{
-                              display: 'flex', flexDirection: 'column', alignItems: 'center',
-                              "@media (max-width: 600px)": {
-                                // fontSize: '20px',
-                                width: '95px',
-                              }
-                            }}>
-                              Energy
-                              <Typography className='song-sub-info' variant="h4" color="text.secondary" component="div" sx={{
-                                "@media (max-width: 600px)": {
-                                  fontSize: '20px'
-                                }
-                              }}>
-                                {item.energy}
-                              </Typography>
-                            </Typography>
-                          </Box>
-                          <Box className='card-buttons'
-                            sx={{
-                              display: 'flex',
-                              flexDirection: 'row',
-                              justifyContent: item.preview_url ? 'space-evenly' : 'center',
-                              "@media (max-width: 600px)": {
-                                alignItems: 'flex-end',
-                                justifyContent: 'space-between',
-                                height: '45px',
-                                width: '110px',
-                                // flexDirection: 'column',
-                                // alignItems: 'center',
-                              }
-                            }}
-                          >
-                            
-                            <FavButton
-                              variant="elevated"
-                              className='fav-icon-button'
-                              onClick={() => handleFavorite(item, username)}
-                              // noWrap
-                              sx={{
-                                display: { xs: 'none', sm: 'flex', md: 'flex' },
-                                padding: '0',
-                                paddingRight: '5px',
-                                boxShadow: 3,
-                                justifyContent: "space-evenly",
-                                borderRadius: '50px',
-
-                                "@media (max-width: 600px)": {
-                                  margin: '0 0 10px',
-                                  // width:'100px',
-                                }
-                              }}
-                            >
-                              {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
-                              add to Favorites
-                            </FavButton>
-                            
+                          {/* fav button */}
+                          <Grid item xs={2.5} sm={6} sx={{
+                            display: 'flex',
+                            justifyContent: 'center'
+                          }} >
                             <SmallFavButton
                               size='small'
                               className='small-fav-icon-button'
-                              // noWrap
-                              onClick={() => handleFavorite(item, username)}
+                              onClick={(event) => handleFavorite(event, item, username)}
                               sx={{
-                                display: { xs: 'flex', sm: 'none', md: 'none' },
-                                padding: '0',
                                 boxShadow: 3,
-                                justifyContent: "space-evenly",
-                                borderRadius: '50px',
                               }}
                             >
                               {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
                             </SmallFavButton>
-
-                            {item.preview_url && (
-                              <PlayButton className='preview-button' sx={{
-                                boxShadow: 3,
-                                borderRadius: '50px',
-                                display: { xs: 'none', sm: 'flex', md: 'flex' },
-                              }}
-                                onClick={() => playAudio(item.preview_url)}>
-                                {currentlyPlayingUrl === item.preview_url ? (
-                                  <>
-                                    <StopIcon aria-label="stop"
-                                      sx={{
-                                        height: 35,
-                                        width: 35,
-                                      }}
-                                    />
-                                    Stop track
-                                  </>
-                                ) : (
-                                  <>
-                                    <PlayArrowIcon aria-label="play/pause"
-                                      sx={{
-                                        height: 35,
-                                        width: 35,
-                                      }}
-                                    />
-                                    Preview track
-                                  </>
-                                )}
-                              </PlayButton>
-                            )}
-
+                          </Grid>
+                          {/* preview button */}
+                          <Grid item xs={2.5} sm={6} sx={{
+                            display: 'flex',
+                            justifyContent: 'center'
+                          }} >
                             {item.preview_url && (
                               <SmallPlayButton className='preview-button' sx={{
                                 boxShadow: 3,
                                 borderRadius: '50px',
-                                display: { xs: 'flex', sm: 'none', md: 'none' },
+                                // display: { xs: 'flex', sm: 'none', md: 'none' },
                               }}
-                                onClick={() => playAudio(item.preview_url)}>
+                                onClick={(event) => playAudio(event, item.preview_url)}>
                                 {currentlyPlayingUrl === item.preview_url ? (
                                   <>
                                     <StopIcon aria-label="stop"
                                       sx={{
-                                        height: 35,
-                                        width: 35,
+                                        height: 36,
+                                        width: 36,
                                       }}
                                     />
                                   </>
@@ -483,52 +426,44 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                               </SmallPlayButton>
                             )}
                             <audio ref={audioRef}></audio>
-                          </Box>
+                          </Grid>
 
-                        </Box>
-                      </CardContent>
-                    </Box>
-                  </Card>
-                  <Card sx={{
-                    margin: '0 10px 0', borderTop: '1px solid grey', boxShadow: 3,
-                    "@media (max-width: 600px)": {
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'flex-start',
-
-                    }
-                  }}>
-                    <CardContent sx={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'space-evenly',
-
-                    }}>
-                      <SearchId id={item.id} name={item.name} artists={item.artists} album={item.albums} />
+                          {/* </Grid> */}
+                        </Grid>
+                      </Grid>
                     </CardContent>
+
                   </Card>
-                  <hr />
-                </div>
-              ))}
-            </ul>
-            <div className='loadmore'>
-              <LoadButton
-                onClick={onLoadMore}
-                variant='outlined'
-                size='large'
-                sx={{
-                  // display: 'flex',
-                  marginBottom: '30px',
-                }}
-              >Load More...
-              </LoadButton>
-            </div>
+
+
+                </Link>
+              </Grid>
+            ))}
+
+
+            <Grid xs={12} sx={{
+              paddingTop: '1em',
+              paddingBottom: '1em',
+            }}>
+              <div className='loadmore'>
+                <LoadButton
+                  onClick={onLoadMore}
+                  variant='outlined'
+                  size='large'
+                  sx={{
+                    // marginBottom: '30px',
+                  }}
+                >Load More...
+                </LoadButton>
+              </div>
+            </Grid>
           </>
         )
         }
-      </Container >
-
+      </Grid >
     </div >
+
+
   );
 };
 

@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "main": "server/server.js",
+  "proxy": "http://localhost:4000",
+
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -28,6 +30,7 @@
     "mongoose": "^7.2.2",
     "nanoid": "^3.3.6",
     "node-fetch": "^2.3.0",
+    "pg": "^8.11.3",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
@@ -36,6 +39,7 @@
     "react-scripts": "^5.0.1",
     "web-vitals": "^2.1.4"
   },
+
   "scripts": {
     "start": "concurrently \"npm run start-react\" \"npm run start-express\"",
     "start-react": "PORT=3000 react-scripts start",

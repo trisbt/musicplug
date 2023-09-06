@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Card } from '@mui/material';
 import DisplayData from './DisplayData';
 import { Button } from '@mui/material';
 import Input from '@mui/material/Input';
@@ -39,7 +38,7 @@ const StyledInput = styled(Input)(({ theme }) => ({
 }));
 
 //main search to spotify
-const SearchData = ({ username, setShowSplash }) => {
+const SearchData = ({ username, customStyles, pStyles}) => {
     const [response, setResponse] = useState([]);
     const [audioInfo, setAudioInfo] = useState([]);
     const [userFav, setUserFav] = useState([])
@@ -53,11 +52,13 @@ const SearchData = ({ username, setShowSplash }) => {
     const [searchResult, setSearchResult] = useState('');
     const searchInputRef = useRef(null);
 
+
+    
     useEffect(() => {
         if (initialSearchQuery) {
             setInputField(initialSearchQuery);
             fetchData(1, initialSearchQuery);
-            setShowSplash(false);
+            // setShowSplash(false);
         }
     }, []);
     
@@ -67,9 +68,9 @@ const SearchData = ({ username, setShowSplash }) => {
         const idCache = [];
         if (query.trim() !== '') {
             setLoading(true);
-            setShowSplash(false);
+            // setShowSplash(false);
             const searchQuery = encodeURIComponent(query);
-            fetch(`http://localhost:4000/search?query=${searchQuery}&offset=${newOffset}`)
+            fetch(`/search?query=${searchQuery}&offset=${newOffset}`)
                 .then(res => res.json())
                 .then(data => {
                     data.tracks.items.forEach((item) => {
@@ -79,7 +80,7 @@ const SearchData = ({ username, setShowSplash }) => {
                     navigate(`/?q=${searchQuery}`)
                     setResponse(prev => [...prev, ...searchData]);
                     setSearchResult(query||inputField);
-                    fetch(`http://localhost:4000/advancedSearch?query=${idCache.join(',')}`)
+                    fetch(`advancedSearch?query=${idCache.join(',')}`)
                         .then(res => res.json())
                         .then(data => {
                             const additionalData = data.audio_features
@@ -88,7 +89,7 @@ const SearchData = ({ username, setShowSplash }) => {
                         .catch(error => {
                             console.error('Error in advanced search:', error);
                         });
-                    fetch('http://localhost:4000/favs', {
+                    fetch('/favs', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -137,21 +138,19 @@ const SearchData = ({ username, setShowSplash }) => {
         fetchData(nextOffset);
     }
 
-
-console.log('inputField',inputField)
-
     return (
         <ThemeProvider theme={theme}>
-            <div>
+            <div style={{ marginTop: loading || response.length ? '10px' : '0' }}>
                 {!loading ? (
                     <div className='searchform-container'>
                         <form className='searchform' onSubmit={handleFormSubmit}>
                             <FormControl>
                                 <StyledInput
                                     className='searchbox'
-                                    placeholder='find songs'
+                                    placeholder='find songs...'
                                     type='text'
                                     inputRef = {searchInputRef}
+                                    style={{ ...customStyles }}
                                     // value={inputField}
                                     // onChange={handleInputChange}
                                 />
@@ -163,7 +162,8 @@ console.log('inputField',inputField)
                     </div>
                 ) : null}
                 {loading ? (
-                    <p>Plugging Results</p>
+                    <p style={{ ...pStyles }}>Plugging Results</p>
+
                 ) : (
                     <DisplayData data={response} audioData={audioInfo} userFav={userFav} username={username} theme={theme} onLoadMore={handleLoadMore} searchResult={searchResult} />
                 )}
@@ -171,6 +171,7 @@ console.log('inputField',inputField)
         </ThemeProvider>
     );
 }
+
 
 
 export default SearchData;

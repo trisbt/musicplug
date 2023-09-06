@@ -86,7 +86,7 @@ function tempoRound(num) {
   return Math.round(num * 2) / 2;
 }
 
-const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchResult }) => {
+const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchResult, showSplash,setShowSplash}) => {
   const [favoriteMap, setFavoriteMap] = useState({});
   const [pageFav, setPageFav] = useState('');
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState(null);
@@ -231,6 +231,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                       albums: item.albums,
                       images: item.images,
                       release_date: item.release_date,
+                      preview_url:item.preview_url,
                       key: item.key,
                       tempo: item.tempo,
                       loudness: item.loudness,
@@ -249,8 +250,10 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                       popularity: item.popularity,
                     },
                     username: username,
-                    isFavorite:favoriteMap[item.id] || false,
-                    // onFavoriteToggle:(e) => handleFavorite(e, item, username)
+                    isFavorite: favoriteMap[item.id] || false,
+                    // showSplash: showSplash,
+                    // setShowSplash: setShowSplash,
+
                   }}
                   key={index}
                 >
@@ -428,17 +431,8 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                             <audio ref={audioRef}></audio>
                           </Grid>
 
-
                           {/* </Grid> */}
                         </Grid>
-
-
-
-
-
-
-
-
                       </Grid>
                     </CardContent>
 
@@ -452,7 +446,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
 
             <Grid xs={12} sx={{
               paddingTop: '1em',
-              paddingBottom:'1em',
+              paddingBottom: '1em',
             }}>
               <div className='loadmore'>
                 <LoadButton

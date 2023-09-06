@@ -25,7 +25,7 @@ function normalize(str) {
 }
 
 const discogsSearch = async (req, res, next) => {
-  const artist = req.query.artist.split('/')[0];
+  let artist = req.query.artist.split('/')[0];
   let song = normalize(req.query.song);
   // song = getStringBeforeParenthesis(song)
   function determineTableName(baseName, firstCharacter) {
@@ -112,7 +112,10 @@ const discogsSearch = async (req, res, next) => {
     console.error('Invalid table name derived:', trackTableName);
     return res.status(400).send('Invalid artist name.');
   }
-
+  //handle duplicate discogs names here for now
+  if(artist === 'Travis Scott'){
+    artist = "Travis Scott (2)";
+  }
   try {
     const initialQuery = `
       WITH AliasArtists AS (
@@ -131,13 +134,17 @@ const discogsSearch = async (req, res, next) => {
         throw error;
       }
       const aliasNames = results.rows.map(row => row.alias_name);
+      if(aliasNames.length === 0){
+        aliasNames.push(artist)
+      }
+      console.log(aliasNames)
       const secondQuery = `
         WITH MatchedTracks AS (
       SELECT rt.track_id
       FROM ${trackTableName} rt
       JOIN release_track_artist rta ON rt.track_id = rta.track_id
       WHERE rta.artist_name = ANY($1)
-      AND rt.title = $2
+      AND LOWER(rt.title) = LOWER($2)
     )
       SELECT rta2.artist_name, rta2.role
       FROM release_track_artist rta2

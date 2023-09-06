@@ -38,7 +38,7 @@ const StyledInput = styled(Input)(({ theme }) => ({
 }));
 
 //main search to spotify
-const SearchData = ({ username, setShowSplash }) => {
+const SearchData = ({ username, setShowSplash, showSplash }) => {
     const [response, setResponse] = useState([]);
     const [audioInfo, setAudioInfo] = useState([]);
     const [userFav, setUserFav] = useState([])
@@ -145,7 +145,7 @@ const SearchData = ({ username, setShowSplash }) => {
                             <FormControl>
                                 <StyledInput
                                     className='searchbox'
-                                    placeholder='find songs'
+                                    placeholder='find songs...'
                                     type='text'
                                     inputRef = {searchInputRef}
                                     // value={inputField}
@@ -161,7 +161,7 @@ const SearchData = ({ username, setShowSplash }) => {
                 {loading ? (
                     <p>Plugging Results</p>
                 ) : (
-                    <DisplayData data={response} audioData={audioInfo} userFav={userFav} username={username} theme={theme} onLoadMore={handleLoadMore} searchResult={searchResult} />
+                    <DisplayData data={response} audioData={audioInfo} userFav={userFav} username={username} theme={theme} onLoadMore={handleLoadMore} searchResult={searchResult} showSplash={showSplash} setShowSplash={setShowSplash} />
                 )}
             </div>
         </ThemeProvider>

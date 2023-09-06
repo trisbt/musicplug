@@ -139,7 +139,7 @@ export default function CircleOfFifths({ activeSlice, setActiveSlice }) {
               fontSize: '25px',
               display: 'flex',
               textAlign: 'center',
-              textShadow:'5px 8px 5px rgba(0, 0, 0, 0.9)',
+              // textShadow:'5px 8px 5px rgba(0, 0, 0, 0.9)',
               "@media (max-width: 600px)": {
                 fontSize: '12px'
               }

@@ -1,28 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button, Card, CardMedia, CardContent, createTheme, Fade, Grid, IconButton, LinearProgress, Modal, Paper, styled, Typography, } from '@mui/material';
 import { useParams, useLocation, Link } from 'react-router-dom';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import StopIcon from '@mui/icons-material/Stop';
 import { grey } from '@mui/material/colors';
 import SearchId from './SearchId';
+import SearchData from './SearchData';
 
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      light: '#99cbfd',
-      main: '#4d97f8',
-      dark: '#3746a2',
-      contrastText: '#fff',
-    },
-    secondary: {
-      light: '#fffbe8',
-      main: '#eec94b',
-      dark: '#9e7937',
-      contrastText: '#000',
-    },
-  },
-});
+// const theme = createTheme({
+//   palette: {
+//     primary: {
+//       light: '#99cbfd',
+//       main: '#4d97f8',
+//       dark: '#3746a2',
+//       contrastText: '#fff',
+//     },
+//     secondary: {
+//       light: '#fffbe8',
+//       main: '#eec94b',
+//       dark: '#9e7937',
+//       contrastText: '#000',
+//     },
+//   },
+// });
 
 const PlayButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
@@ -36,7 +39,17 @@ const PlayButton = styled(Button)(({ theme }) => ({
   height: '50px',
   lineHeight: '0',
 }));
-
+const SmallPlayButton = styled(IconButton)(({ theme }) => ({
+  color: theme.palette.primary.contrastText,
+  backgroundColor: grey[900],
+  '&:hover': {
+    color: 'white',
+    backgroundColor: '#00e676'
+  },
+  fontSize: '15px',
+  width: '50px',
+  height: '50px',
+}));
 const FavButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
   backgroundColor: grey[900],
@@ -104,10 +117,32 @@ const SongPage = () => {
   const location = useLocation();
   const songDetails = location.state?.songDetails;
   const username = location.state?.username;
+  const showSplash = location.state?.showSplash;
+  const setShowSplash = location.state?.setShowSplash;
   const isFavorite = location.state?.isFavorite;
   const [open, setOpen] = useState(false);
   const [pageFav, setPageFav] = useState(isFavorite)
   const [aliasFromChild, setAliasFromChild] = useState(null);
+  const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState(null);
+  const audioRef = useRef(null);
+
+  const playAudio = (event, previewUrl) => {
+    audioRef.current.volume = .3;
+    if (previewUrl) {
+      if (audioRef.current.src === previewUrl && !audioRef.current.paused) {
+        audioRef.current.pause();
+        setCurrentlyPlayingUrl(null);
+      } else {
+        if (!audioRef.current.paused) {
+          // Stop currently playing audio if there is any
+          audioRef.current.pause();
+        }
+        audioRef.current.src = previewUrl;
+        audioRef.current.play();
+        setCurrentlyPlayingUrl(previewUrl);
+      }
+    }
+  };
 
   //can show aliases for artist not used from songid
   const handleAlias = (alias) => {
@@ -158,10 +193,9 @@ const SongPage = () => {
     }
   };
 
-
   return (
     <div>
-
+ {/* <SearchData username={username}/> */}
       {songDetails && (
         <Card sx={{
           width: '90vw',
@@ -171,6 +205,7 @@ const SongPage = () => {
           borderRadius: '0',
           padding: '5px'
         }}>
+          <SearchData username={username} />
           {/* top row */}
           <Grid container xs={12} direction='row' justifyContent="center" sx={{
             padding: '1em',
@@ -229,11 +264,12 @@ const SongPage = () => {
                   <Typography variant="subtitle2">Released: {songDetails.release_date}</Typography>
                   <Typography>{aliasFromChild}</Typography>
 
-                  <Grid container xs={12} alignItems='center'>
+                  <Grid container xs={12}  alignItems='center' justifyContent='space-between' >
 
-                    <Grid item xs={1} sx ={{
-                      paddingRight:'2.2em'
-                    }}>
+                    {/*link spotify render*/}
+                    {/* <Grid display="flex" backgroundColor='red' sx={{
+                      // paddingRight: '2.2em'
+                    }}> */}
                       <Link to={songDetails.track_href}>
                         <svg
                           style={{ marginLeft: '-8px', paddingTop: '5px' }}
@@ -241,15 +277,16 @@ const SongPage = () => {
                           <path fill="#00e676" d="M17.9 10.9C14.7 9 9.35 8.8 6.3 9.75c-.5.15-1-.15-1.15-.6c-.15-.5.15-1 .6-1.15c3.55-1.05 9.4-.85 13.1 1.35c.45.25.6.85.35 1.3c-.25.35-.85.5-1.3.25m-.1 2.8c-.25.35-.7.5-1.05.25c-2.7-1.65-6.8-2.15-9.95-1.15c-.4.1-.85-.1-.95-.5c-.1-.4.1-.85.5-.95c3.65-1.1 8.15-.55 11.25 1.35c.3.15.45.65.2 1m-1.2 2.75c-.2.3-.55.4-.85.2c-2.35-1.45-5.3-1.75-8.8-.95c-.35.1-.65-.15-.75-.45c-.1-.35.15-.65.45-.75c3.8-.85 7.1-.5 9.7 1.1c.35.15.4.55.25.85M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2Z" />
                         </svg>
                       </Link>
-                    </Grid>
+                    {/* </Grid> */}
 
-                    <Grid item xs={1} >
+                    {/*fav button render*/}
+                    {/* <Grid display="flex" backgroundColor='blue'> */}
                       <FavButton
                         variant="elevated"
                         className='fav-icon-button'
                         onClick={(event) => handleFavorite(event, username)}
                         sx={{
-                          display: { xs: 'none', sm: 'flex', md: 'flex' },
+                          display: { xs: 'none', sm: 'none', md: 'flex' },
                           padding: '0',
                           paddingRight: '5px',
                           boxShadow: 3,
@@ -267,14 +304,50 @@ const SongPage = () => {
                         )}
                         add to Favorites
                       </FavButton>
-                    </Grid>
+                    {/* </Grid> */}
 
-                    <Grid item xs={1}>
+                    {/*play button render*/}
+                    {/* <Grid display="flex" backgroundColor='green'> */}
+                      {songDetails.preview_url && (
+                        <PlayButton className='preview-button' sx={{
+                          boxShadow: 3,
+                          borderRadius: '50px',
+                          display: { xs: 'none', sm: 'none', md: 'flex' },
+                        }}
+                          onClick={(event) => playAudio(event, songDetails.preview_url)}>
+                          {currentlyPlayingUrl === songDetails.preview_url ? (
+                            <>
+                              <StopIcon aria-label="stop"
+                                sx={{
+                                  height: 35,
+                                  width: 35,
+                                }}
+                              />
+                              Stop track
+                            </>
+                          ) : (
+                            <>
+                              <PlayArrowIcon aria-label="play/pause"
+                                sx={{
+                                  height: 35,
+                                  width: 35,
+                                }}
+                              />
+                              Preview track
+                            </>
+                          )}
+                        </PlayButton>
+                      )}
+                      <audio ref={audioRef}></audio>
+                    {/* </Grid> */}
+
+                    {/*small fav button render*/}
+                    {/* <Grid display="flex" backgroundColor='purple'> */}
                       <SmallFavButton
                         backgroundColor='red'
                         onClick={(event) => handleFavorite(event, username)}
                         sx={{
-                          display: { xs: 'flex', sm: 'none' },
+                          display: { xs: 'flex', sm: 'flex', md: 'none' },
                           boxShadow: 3,
                           width: '3.5em',
                           height: '3.5em',
@@ -285,14 +358,44 @@ const SongPage = () => {
                         ) : (
                           <FavOutlined onClick={(event) => handleFavorite(event, username)} />
                         )}
-                        {/* add to Favorites */}
                       </SmallFavButton>
-                    </Grid>
+                    {/* </Grid> */}
+
+                    {/*small play button render*/}
+                    {/* <Grid display="flex" backgroundColor='brown'> */}
+                      {songDetails.preview_url && (
+                        <SmallPlayButton className='preview-button' sx={{
+                          display: { xs: 'flex', sm: 'flex', md: 'none' },
+                          boxShadow: 3,
+                          width: '3.5em',
+                          height: '3.5em',
+                        }}
+                          onClick={(event) => playAudio(event, songDetails.preview_url)}>
+                          {currentlyPlayingUrl === songDetails.preview_url ? (
+                            <>
+                              <StopIcon aria-label="stop"
+                                sx={{
+                                  height: 36,
+                                  width: 36,
+                                }}
+                              />
+                            </>
+                          ) : (
+                            <>
+                              <PlayArrowIcon aria-label="play/pause"
+                                sx={{
+                                  height: 35,
+                                  width: 35,
+                                }}
+                              />
+                            </>
+                          )}
+                        </SmallPlayButton>
+                      )}
+                      <audio ref={audioRef}></audio>
+                    {/* </Grid> */}
 
                   </Grid>
-
-
-
                 </Grid>
 
                 {/* Other Details, shows inline with song details on large screens */}
@@ -540,40 +643,6 @@ const SongPage = () => {
 
 
 
-      {/* {item.preview_url && (
-                                    <PlayButton className='preview-button' sx={{
-                                      boxShadow: 3,
-                                      borderRadius: '50px',
-                                      display: { xs: 'none', sm: 'flex', md: 'flex' },
-                                    }}
-                                      onClick={(event) => playAudio(event, item.preview_url)}>
-                                      {currentlyPlayingUrl === item.preview_url ? (
-                                        <>
-                                          <StopIcon aria-label="stop"
-                                            sx={{
-                                              height: 35,
-                                              width: 35,
-                                            }}
-                                          />
-                                          Stop track
-                                        </>
-                                      ) : (
-                                        <>
-                                          <PlayArrowIcon aria-label="play/pause"
-                                            sx={{
-                                              height: 35,
-                                              width: 35,
-                                            }}
-                                          />
-                                          Preview track
-                                        </>
-                                      )}
-                                    </PlayButton>
-                                  )}
-
-
-
-                                   <audio ref={audioRef}></audio> */}
 
 
 

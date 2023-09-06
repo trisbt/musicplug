@@ -8,12 +8,10 @@ const SearchId = ({ artists, song, onReceiveAlias }) => {
   useEffect(() => {
     fetch(`/getCredits/?artist=${artists[0].name}&song=${song}`)
       .then(response => response.json())
-      .then(res => {
-        console.log(res.data)
-      
+      .then(res => {      
         setIsLoading(false);  // Setting loading state to false here
         if (res.data === 'No credits available') {
-          setCredits([{ artist_name: 'No credits available. Last updated 6/1/23' }]);
+          setCredits([{ artist_name: ' No credits available as of', role:'6/1/2023' }]);
           return;
         }else{
           

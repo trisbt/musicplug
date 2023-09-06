@@ -196,7 +196,7 @@ const SongPage = () => {
   };
 
   return (
-    <div>
+    <div className='song-page-container'>
       {/* <SearchData username={username}/> */}
       {songDetails && (
         <Card sx={{
@@ -222,7 +222,14 @@ const SongPage = () => {
             <SearchData username={username} customStyles={{
               color: 'black',             // change text color
               backgroundColor: '#f5f5f5' // change background color
-            }} />
+              
+            }} 
+            pStyles={{
+              fontSize:'20px',
+              fontStyle: 'italic',
+              fontWeight:'bold'
+            }}
+            />
           </Grid>
 
           {/* top row */}

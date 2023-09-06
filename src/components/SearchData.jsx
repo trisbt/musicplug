@@ -38,7 +38,7 @@ const StyledInput = styled(Input)(({ theme }) => ({
 }));
 
 //main search to spotify
-const SearchData = ({ username, customStyles }) => {
+const SearchData = ({ username, customStyles, pStyles}) => {
     const [response, setResponse] = useState([]);
     const [audioInfo, setAudioInfo] = useState([]);
     const [userFav, setUserFav] = useState([])
@@ -162,7 +162,8 @@ const SearchData = ({ username, customStyles }) => {
                     </div>
                 ) : null}
                 {loading ? (
-                    <p>Plugging Results</p>
+                    <p style={{ ...pStyles }}>Plugging Results</p>
+
                 ) : (
                     <DisplayData data={response} audioData={audioInfo} userFav={userFav} username={username} theme={theme} onLoadMore={handleLoadMore} searchResult={searchResult} />
                 )}

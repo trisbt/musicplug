@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Button, Card, CardMedia, CardContent, createTheme, Fade, Grid, IconButton, LinearProgress, Modal, Paper, styled, Typography, } from '@mui/material';
+import { Box, Button, Card, CardMedia, CardContent, createTheme, Fade, Grid, IconButton, LinearProgress, Modal, Paper, styled, Typography, } from '@mui/material';
 import { useParams, useLocation, Link } from 'react-router-dom';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
@@ -80,6 +80,8 @@ const FavSolid = styled(GradeIcon)(({ theme }) => ({
     color: theme.palette.secondary.dark,
     backgroundColor: 'none',
   },
+  width: '30px',
+  height: '30px',
 }));
 const FavOutlined = styled(GradeOutlinedIcon)(({ theme }) => ({
   color: theme.palette.secondary.main,
@@ -87,6 +89,8 @@ const FavOutlined = styled(GradeOutlinedIcon)(({ theme }) => ({
     backgroundColor: 'none',
     color: theme.palette.secondary.dark,
   },
+  width: '30px',
+  height: '30px',
 }));
 
 //progress value color function
@@ -117,8 +121,6 @@ const SongPage = () => {
   const location = useLocation();
   const songDetails = location.state?.songDetails;
   const username = location.state?.username;
-  const showSplash = location.state?.showSplash;
-  const setShowSplash = location.state?.setShowSplash;
   const isFavorite = location.state?.isFavorite;
   const [open, setOpen] = useState(false);
   const [pageFav, setPageFav] = useState(isFavorite)
@@ -195,7 +197,7 @@ const SongPage = () => {
 
   return (
     <div>
- {/* <SearchData username={username}/> */}
+      {/* <SearchData username={username}/> */}
       {songDetails && (
         <Card sx={{
           width: '90vw',
@@ -203,9 +205,26 @@ const SongPage = () => {
           overflowY: 'visible', // Display content even if it overflows vertically.
           maxHeight: 'inherit', // Ensures the card doesn't have an arbitrary height constraint
           borderRadius: '0',
-          padding: '5px'
+          paddingTop: '3px',
+          paddingLeft: '5px',
+          paddingRight: '5px',
+          paddingBottom: '5px'
         }}>
-          <SearchData username={username} />
+          <Grid container xs={12} direction='row' justifyContent="center" padding='0'
+            sx={{
+              // backgroundColor:'#1a237e',
+              width: '100vw',
+              height: '8vh',
+              alignItems: 'center',
+              padding: '0',
+
+            }}>
+            <SearchData username={username} customStyles={{
+              color: 'black',             // change text color
+              backgroundColor: '#f5f5f5' // change background color
+            }} />
+          </Grid>
+
           {/* top row */}
           <Grid container xs={12} direction='row' justifyContent="center" sx={{
             padding: '1em',
@@ -264,136 +283,126 @@ const SongPage = () => {
                   <Typography variant="subtitle2">Released: {songDetails.release_date}</Typography>
                   <Typography>{aliasFromChild}</Typography>
 
-                  <Grid container xs={12}  alignItems='center' justifyContent='space-between' >
+                  <Grid container xs={12} alignItems='center' justifyContent='space-between' >
 
                     {/*link spotify render*/}
-                    {/* <Grid display="flex" backgroundColor='red' sx={{
-                      // paddingRight: '2.2em'
-                    }}> */}
-                      <Link to={songDetails.track_href}>
-                        <svg
-                          style={{ marginLeft: '-8px', paddingTop: '5px' }}
-                          xmlns="http://www.w3.org/2000/svg" width="62" height="62" viewBox="0 0 24 24">
-                          <path fill="#00e676" d="M17.9 10.9C14.7 9 9.35 8.8 6.3 9.75c-.5.15-1-.15-1.15-.6c-.15-.5.15-1 .6-1.15c3.55-1.05 9.4-.85 13.1 1.35c.45.25.6.85.35 1.3c-.25.35-.85.5-1.3.25m-.1 2.8c-.25.35-.7.5-1.05.25c-2.7-1.65-6.8-2.15-9.95-1.15c-.4.1-.85-.1-.95-.5c-.1-.4.1-.85.5-.95c3.65-1.1 8.15-.55 11.25 1.35c.3.15.45.65.2 1m-1.2 2.75c-.2.3-.55.4-.85.2c-2.35-1.45-5.3-1.75-8.8-.95c-.35.1-.65-.15-.75-.45c-.1-.35.15-.65.45-.75c3.8-.85 7.1-.5 9.7 1.1c.35.15.4.55.25.85M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2Z" />
-                        </svg>
-                      </Link>
-                    {/* </Grid> */}
+                    <Link to={songDetails.track_href}>
+                      <svg
+                        style={{ marginLeft: '-8px', paddingTop: '5px' }}
+                        xmlns="http://www.w3.org/2000/svg" width="62" height="62" viewBox="0 0 24 24">
+                        <path fill="#00e676" d="M17.9 10.9C14.7 9 9.35 8.8 6.3 9.75c-.5.15-1-.15-1.15-.6c-.15-.5.15-1 .6-1.15c3.55-1.05 9.4-.85 13.1 1.35c.45.25.6.85.35 1.3c-.25.35-.85.5-1.3.25m-.1 2.8c-.25.35-.7.5-1.05.25c-2.7-1.65-6.8-2.15-9.95-1.15c-.4.1-.85-.1-.95-.5c-.1-.4.1-.85.5-.95c3.65-1.1 8.15-.55 11.25 1.35c.3.15.45.65.2 1m-1.2 2.75c-.2.3-.55.4-.85.2c-2.35-1.45-5.3-1.75-8.8-.95c-.35.1-.65-.15-.75-.45c-.1-.35.15-.65.45-.75c3.8-.85 7.1-.5 9.7 1.1c.35.15.4.55.25.85M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2Z" />
+                      </svg>
+                    </Link>
 
                     {/*fav button render*/}
-                    {/* <Grid display="flex" backgroundColor='blue'> */}
-                      <FavButton
-                        variant="elevated"
-                        className='fav-icon-button'
-                        onClick={(event) => handleFavorite(event, username)}
-                        sx={{
-                          display: { xs: 'none', sm: 'none', md: 'flex' },
-                          padding: '0',
-                          paddingRight: '5px',
-                          boxShadow: 3,
-                          justifyContent: "space-evenly",
-                          borderRadius: '50px',
-                          "@media (max-width: 600px)": {
-                            // margin: '0 0 10px',
-                          }
-                        }}
-                      >
-                        {pageFav ? (
-                          <FavSolid onClick={(event) => handleFavorite(event, username)} />
-                        ) : (
-                          <FavOutlined onClick={(event) => handleFavorite(event, username)} />
-                        )}
-                        add to Favorites
-                      </FavButton>
-                    {/* </Grid> */}
+                    <FavButton
+                      variant="elevated"
+                      className='fav-icon-button'
+                      onClick={(event) => handleFavorite(event, username)}
+                      sx={{
+                        display: { xs: 'none', sm: 'none', md: 'flex' },
+                        padding: '0',
+                        paddingRight: '5px',
+                        boxShadow: 3,
+                        justifyContent: "space-evenly",
+                        borderRadius: '50px',
+                        "@media (max-width: 600px)": {
+                          // margin: '0 0 10px',
+                        }
+                      }}
+                    >
+                      {pageFav ? (
+                        <FavSolid onClick={(event) => handleFavorite(event, username)} />
+                      ) : (
+                        <FavOutlined onClick={(event) => handleFavorite(event, username)} />
+                      )}
+                      add to Favorites
+                    </FavButton>
+
 
                     {/*play button render*/}
-                    {/* <Grid display="flex" backgroundColor='green'> */}
-                      {songDetails.preview_url && (
-                        <PlayButton className='preview-button' sx={{
-                          boxShadow: 3,
-                          borderRadius: '50px',
-                          display: { xs: 'none', sm: 'none', md: 'flex' },
-                        }}
-                          onClick={(event) => playAudio(event, songDetails.preview_url)}>
-                          {currentlyPlayingUrl === songDetails.preview_url ? (
-                            <>
-                              <StopIcon aria-label="stop"
-                                sx={{
-                                  height: 35,
-                                  width: 35,
-                                }}
-                              />
-                              Stop track
-                            </>
-                          ) : (
-                            <>
-                              <PlayArrowIcon aria-label="play/pause"
-                                sx={{
-                                  height: 35,
-                                  width: 35,
-                                }}
-                              />
-                              Preview track
-                            </>
-                          )}
-                        </PlayButton>
-                      )}
-                      <audio ref={audioRef}></audio>
-                    {/* </Grid> */}
+                    {songDetails.preview_url && (
+                      <PlayButton className='preview-button' sx={{
+                        boxShadow: 3,
+                        borderRadius: '50px',
+                        display: { xs: 'none', sm: 'none', md: 'flex' },
+                      }}
+                        onClick={(event) => playAudio(event, songDetails.preview_url)}>
+                        {currentlyPlayingUrl === songDetails.preview_url ? (
+                          <>
+                            <StopIcon aria-label="stop"
+                              sx={{
+                                height: 35,
+                                width: 35,
+                              }}
+                            />
+                            Stop track
+                          </>
+                        ) : (
+                          <>
+                            <PlayArrowIcon aria-label="play/pause"
+                              sx={{
+                                height: 35,
+                                width: 35,
+                              }}
+                            />
+                            Preview track
+                          </>
+                        )}
+                      </PlayButton>
+                    )}
+                    <audio ref={audioRef}></audio>
 
                     {/*small fav button render*/}
-                    {/* <Grid display="flex" backgroundColor='purple'> */}
-                      <SmallFavButton
-                        backgroundColor='red'
-                        onClick={(event) => handleFavorite(event, username)}
-                        sx={{
-                          display: { xs: 'flex', sm: 'flex', md: 'none' },
-                          boxShadow: 3,
-                          width: '3.5em',
-                          height: '3.5em',
-                        }}
-                      >
-                        {pageFav ? (
-                          <FavSolid onClick={(event) => handleFavorite(event, username)} />
-                        ) : (
-                          <FavOutlined onClick={(event) => handleFavorite(event, username)} />
-                        )}
-                      </SmallFavButton>
-                    {/* </Grid> */}
+
+                    <SmallFavButton
+                      backgroundColor='red'
+                      onClick={(event) => handleFavorite(event, username)}
+                      sx={{
+                        display: { xs: 'flex', sm: 'flex', md: 'none' },
+                        boxShadow: 3,
+                        width: '3.5em',
+                        height: '3.5em',
+                      }}
+                    >
+                      {pageFav ? (
+                        <FavSolid onClick={(event) => handleFavorite(event, username)} />
+                      ) : (
+                        <FavOutlined onClick={(event) => handleFavorite(event, username)} />
+                      )}
+                    </SmallFavButton>
 
                     {/*small play button render*/}
-                    {/* <Grid display="flex" backgroundColor='brown'> */}
-                      {songDetails.preview_url && (
-                        <SmallPlayButton className='preview-button' sx={{
-                          display: { xs: 'flex', sm: 'flex', md: 'none' },
-                          boxShadow: 3,
-                          width: '3.5em',
-                          height: '3.5em',
-                        }}
-                          onClick={(event) => playAudio(event, songDetails.preview_url)}>
-                          {currentlyPlayingUrl === songDetails.preview_url ? (
-                            <>
-                              <StopIcon aria-label="stop"
-                                sx={{
-                                  height: 36,
-                                  width: 36,
-                                }}
-                              />
-                            </>
-                          ) : (
-                            <>
-                              <PlayArrowIcon aria-label="play/pause"
-                                sx={{
-                                  height: 35,
-                                  width: 35,
-                                }}
-                              />
-                            </>
-                          )}
-                        </SmallPlayButton>
-                      )}
-                      <audio ref={audioRef}></audio>
-                    {/* </Grid> */}
+                    {songDetails.preview_url && (
+                      <SmallPlayButton className='preview-button' sx={{
+                        display: { xs: 'flex', sm: 'flex', md: 'none' },
+                        boxShadow: 3,
+                        width: '3.5em',
+                        height: '3.5em',
+                      }}
+                        onClick={(event) => playAudio(event, songDetails.preview_url)}>
+                        {currentlyPlayingUrl === songDetails.preview_url ? (
+                          <>
+                            <StopIcon aria-label="stop"
+                              sx={{
+                                height: 36,
+                                width: 36,
+                              }}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <PlayArrowIcon aria-label="play/pause"
+                              sx={{
+                                height: 35,
+                                width: 35,
+                              }}
+                            />
+                          </>
+                        )}
+                      </SmallPlayButton>
+                    )}
+                    <audio ref={audioRef}></audio>
 
                   </Grid>
                 </Grid>

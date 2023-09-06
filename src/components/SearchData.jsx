@@ -38,7 +38,7 @@ const StyledInput = styled(Input)(({ theme }) => ({
 }));
 
 //main search to spotify
-const SearchData = ({ username, setShowSplash, showSplash }) => {
+const SearchData = ({ username, customStyles }) => {
     const [response, setResponse] = useState([]);
     const [audioInfo, setAudioInfo] = useState([]);
     const [userFav, setUserFav] = useState([])
@@ -52,11 +52,13 @@ const SearchData = ({ username, setShowSplash, showSplash }) => {
     const [searchResult, setSearchResult] = useState('');
     const searchInputRef = useRef(null);
 
+
+    
     useEffect(() => {
         if (initialSearchQuery) {
             setInputField(initialSearchQuery);
             fetchData(1, initialSearchQuery);
-            setShowSplash(false);
+            // setShowSplash(false);
         }
     }, []);
     
@@ -66,7 +68,7 @@ const SearchData = ({ username, setShowSplash, showSplash }) => {
         const idCache = [];
         if (query.trim() !== '') {
             setLoading(true);
-            setShowSplash(false);
+            // setShowSplash(false);
             const searchQuery = encodeURIComponent(query);
             fetch(`/search?query=${searchQuery}&offset=${newOffset}`)
                 .then(res => res.json())
@@ -138,7 +140,7 @@ const SearchData = ({ username, setShowSplash, showSplash }) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <div>
+            <div style={{ marginTop: loading || response.length ? '10px' : '0' }}>
                 {!loading ? (
                     <div className='searchform-container'>
                         <form className='searchform' onSubmit={handleFormSubmit}>
@@ -148,6 +150,7 @@ const SearchData = ({ username, setShowSplash, showSplash }) => {
                                     placeholder='find songs...'
                                     type='text'
                                     inputRef = {searchInputRef}
+                                    style={{ ...customStyles }}
                                     // value={inputField}
                                     // onChange={handleInputChange}
                                 />
@@ -161,12 +164,13 @@ const SearchData = ({ username, setShowSplash, showSplash }) => {
                 {loading ? (
                     <p>Plugging Results</p>
                 ) : (
-                    <DisplayData data={response} audioData={audioInfo} userFav={userFav} username={username} theme={theme} onLoadMore={handleLoadMore} searchResult={searchResult} showSplash={showSplash} setShowSplash={setShowSplash} />
+                    <DisplayData data={response} audioData={audioInfo} userFav={userFav} username={username} theme={theme} onLoadMore={handleLoadMore} searchResult={searchResult} />
                 )}
             </div>
         </ThemeProvider>
     );
 }
+
 
 
 export default SearchData;

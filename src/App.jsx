@@ -37,9 +37,16 @@ const theme = createTheme({
 
 function MainContent() {
   const { isLoggedIn, loggedInUser, successfulLogin, setSuccessfulLogin, successfulLogout, setSuccessfulLogout } = useAuth();
-  const [showSplash, setShowSplash] = useState(true);
+  // const [showSplash, setShowSplash] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
+  const isHomePage = location.pathname === '/' && !location.search;
+
+  // Use this value to set the showSplash state directly
+  const [showSplash, setShowSplash] = useState(isHomePage);
+  useEffect(() => {
+    setShowSplash(isHomePage);
+}, [location.pathname, location.search]);
 
   useEffect(() => {
       if (successfulLogin || successfulLogout) {
@@ -77,7 +84,7 @@ function MainContent() {
         <div className="App">
           <div className="App-search">
             <Routes>
-              <Route path="/" element={<SearchData username={loggedInUser} showSplash={showSplash} setShowSplash={setShowSplash} />} />
+              <Route path="/" element={<SearchData username={loggedInUser}  />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/:name/:artist/:id" element={<SongPage />} />
               {!isLoggedIn && <Route path="/login" element={<SignIn />} />}

@@ -86,7 +86,7 @@ function tempoRound(num) {
   return Math.round(num * 2) / 2;
 }
 
-const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchResult, showSplash,setShowSplash}) => {
+const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchResult, customStyles}) => {
   const [favoriteMap, setFavoriteMap] = useState({});
   const [pageFav, setPageFav] = useState('');
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState(null);
@@ -251,9 +251,6 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                     },
                     username: username,
                     isFavorite: favoriteMap[item.id] || false,
-                    // showSplash: showSplash,
-                    // setShowSplash: setShowSplash,
-
                   }}
                   key={index}
                 >

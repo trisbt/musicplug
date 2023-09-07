@@ -113,6 +113,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
   });
 
   const audioFeatures = audioData.map((item) => {
+    // console.log('ddddiem', item)
     if (item) {
       const key = keyConvert(item.key, item.mode);
       const tempo = tempoRound(item.tempo);
@@ -204,7 +205,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
 
   return (
     <div>
-      <Grid container justifyContent='center' >
+      <Grid container xs ={12}justifyContent='center' >
         {results.length > 0 && (
           <>
             {/* search result text row */}

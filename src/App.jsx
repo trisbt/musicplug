@@ -9,6 +9,7 @@ import SignIn from './components/Login';
 import SignUp from './components/Signup';
 import Splash from './components/Splash';
 import SongPage from './components/SongPage';
+import TopTracks from './components/TopTracks';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import backgroundImg from './assets/Musicplugbg.jpg';
 import Footer from './components/Footer';
@@ -38,6 +39,7 @@ const theme = createTheme({
 function MainContent() {
   const { isLoggedIn, loggedInUser, successfulLogin, setSuccessfulLogin, successfulLogout, setSuccessfulLogout } = useAuth();
   // const [showSplash, setShowSplash] = useState(true);
+  
   const location = useLocation();
   const navigate = useNavigate();
   const isHomePage = location.pathname === '/' && !location.search;
@@ -61,7 +63,7 @@ function MainContent() {
     if (showSplash && location.pathname !== '/favs') {
       return {
         backgroundImage: `linear-gradient(rgb(40, 60, 80, 0.7), rgb(5,12,24, 0.7)), url(${backgroundImg})`,
-        backgroundSize: 'cover',
+        backgroundSize: 'contain',
         backgroundPosition: 'center 26%',
       };
     } else {
@@ -90,6 +92,7 @@ function MainContent() {
               {!isLoggedIn && <Route path="/login" element={<SignIn />} />}
               {isLoggedIn && <Route path="/favs" element={<Favorites username={loggedInUser} />} />}
             </Routes>
+            {/* <TopTracks username={loggedInUser} /> */}
           </div>
         </div>
       </div>

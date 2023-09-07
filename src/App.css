@@ -61,6 +61,7 @@ body {
   color: white;
 }
 
+
 li {
   list-style: none;
 }
@@ -80,12 +81,6 @@ li {
   color: rgb(120, 107, 107);
 }
 
-.credits-container {
-  /* display: flex; */
-  /* align-items: center; */
-  /* justify-content: center; */
-  /* flex-direction: column; */
-}
 
 ul div {
   font-size: calc(5px + 2vmin);
@@ -101,44 +96,6 @@ hr {
   display: flex;
   justify-content: center;
 }
-
-/* .song-info {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: flex-start;
-  flex-direction: column;
-  margin-left: 10px;
-} */
-
-/* .result-name {
-  font-weight: bold;
-  color: rgb(179, 199, 218);
-}
-
-.result-album {
-  color: rgb(163, 164, 166);
-  font-size: calc(2px + 2vmin);
-}
-
-.result-image {
-  display: flex;
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-} */
-
-/* .release-date {
-  font-size: calc(2px + 1.5vmin);
-  font-weight: 400;
-  color: rgb(210, 210, 210);
-} */
-
-
-/* div h2 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} */
 
 #tableTitle {
   display: flex;

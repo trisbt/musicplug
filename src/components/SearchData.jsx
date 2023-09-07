@@ -140,7 +140,10 @@ const SearchData = ({ username, customStyles, pStyles}) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <div style={{ marginTop: loading || response.length ? '10px' : '0' }}>
+            <div style={{ 
+                marginTop: loading || response.length ? '10px' : '0' 
+                
+                }}>
                 {!loading ? (
                     <div className='searchform-container'>
                         <form className='searchform' onSubmit={handleFormSubmit}>

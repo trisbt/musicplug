@@ -38,6 +38,9 @@ app.get('/advancedSearch', controller.getAccessToken, controller.getSpotifyAudio
 app.get('/getTracks', controller.getAccessToken, controller.getSpotifyTracks, (req, res) => {
     return res.status(200).json(res.locals.data);
 });
+app.get('/toptracks', controller.getAccessToken,controller.getSpotifyTopTracks, (req, res) => {
+    return res.status(200).json(res.locals.data);
+})
 
 //discogs searches old api
 // app.get('/getCredits', discogsController.discogsSearch, (req, res) => {

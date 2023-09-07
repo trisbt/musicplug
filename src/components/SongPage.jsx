@@ -222,13 +222,13 @@ const SongPage = () => {
             <SearchData username={username} customStyles={{
               color: 'black',             // change text color
               backgroundColor: '#f5f5f5' // change background color
-              
-            }} 
-            pStyles={{
-              fontSize:'20px',
-              fontStyle: 'italic',
-              fontWeight:'bold'
+
             }}
+              pStyles={{
+                fontSize: '20px',
+                fontStyle: 'italic',
+                fontWeight: 'bold'
+              }}
             />
           </Grid>
 
@@ -302,30 +302,31 @@ const SongPage = () => {
                     </Link>
 
                     {/*fav button render*/}
-                    <FavButton
-                      variant="elevated"
-                      className='fav-icon-button'
-                      onClick={(event) => handleFavorite(event, username)}
-                      sx={{
-                        display: { xs: 'none', sm: 'none', md: 'flex' },
-                        padding: '0',
-                        paddingRight: '5px',
-                        boxShadow: 3,
-                        justifyContent: "space-evenly",
-                        borderRadius: '50px',
-                        "@media (max-width: 600px)": {
-                          // margin: '0 0 10px',
-                        }
-                      }}
-                    >
-                      {pageFav ? (
-                        <FavSolid onClick={(event) => handleFavorite(event, username)} />
-                      ) : (
-                        <FavOutlined onClick={(event) => handleFavorite(event, username)} />
-                      )}
-                      add to Favorites
-                    </FavButton>
-
+                    {username && (
+                      <FavButton
+                        variant="elevated"
+                        className='fav-icon-button'
+                        onClick={(event) => handleFavorite(event, username)}
+                        sx={{
+                          display: { xs: 'none', sm: 'none', md: 'flex' },
+                          padding: '0',
+                          paddingRight: '5px',
+                          boxShadow: 3,
+                          justifyContent: "space-evenly",
+                          borderRadius: '50px',
+                          "@media (max-width: 600px)": {
+                            // margin: '0 0 10px',
+                          }
+                        }}
+                      >
+                        {pageFav ? (
+                          <FavSolid onClick={(event) => handleFavorite(event, username)} />
+                        ) : (
+                          <FavOutlined onClick={(event) => handleFavorite(event, username)} />
+                        )}
+                        add to Favorites
+                      </FavButton>
+                    )}
 
                     {/*play button render*/}
                     {songDetails.preview_url && (
@@ -361,7 +362,7 @@ const SongPage = () => {
                     <audio ref={audioRef}></audio>
 
                     {/*small fav button render*/}
-
+                    {username && (
                     <SmallFavButton
                       backgroundColor='red'
                       onClick={(event) => handleFavorite(event, username)}
@@ -378,6 +379,7 @@ const SongPage = () => {
                         <FavOutlined onClick={(event) => handleFavorite(event, username)} />
                       )}
                     </SmallFavButton>
+                    )}
 
                     {/*small play button render*/}
                     {songDetails.preview_url && (

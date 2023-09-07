@@ -88,7 +88,7 @@ function MainContent() {
             <Routes>
               <Route path="/" element={<SearchData username={loggedInUser}  />} />
               <Route path="/signup" element={<SignUp />} />
-              <Route path="/:name/:artist/:id" element={<SongPage />} />
+              <Route path="/:name/:artist/:id" element={<SongPage username={loggedInUser} />} />
               {!isLoggedIn && <Route path="/login" element={<SignIn />} />}
               {isLoggedIn && <Route path="/favs" element={<Favorites username={loggedInUser} />} />}
             </Routes>

@@ -86,17 +86,19 @@ function tempoRound(num) {
   return Math.round(num * 2) / 2;
 }
 
-const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchResult, customStyles}) => {
+const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchResult, customStyles }) => {
   const [favoriteMap, setFavoriteMap] = useState({});
-  const [pageFav, setPageFav] = useState('');
+  // const [pageFav, setPageFav] = useState('');
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState(null);
   const audioRef = useRef(null);
 
   //needed to show user favorites in search results
   useEffect(() => {
-    setFavoriteMap(userFav);
-    // console.log(userFav.id)
-  }, [userFav])
+    if (username) {
+      setFavoriteMap(userFav);
+    }
+  }, [userFav, username]);
+
 
   if (!data && !audioData) {
     return null;
@@ -205,7 +207,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
 
   return (
     <div>
-      <Grid container xs ={12}justifyContent='center' >
+      <Grid container xs={12} justifyContent='center' >
         {results.length > 0 && (
           <>
             {/* search result text row */}
@@ -232,7 +234,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                       albums: item.albums,
                       images: item.images,
                       release_date: item.release_date,
-                      preview_url:item.preview_url,
+                      preview_url: item.preview_url,
                       key: item.key,
                       tempo: item.tempo,
                       loudness: item.loudness,
@@ -381,18 +383,21 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
                           <Grid item xs={2.5} sm={6} sx={{
                             display: 'flex',
                             justifyContent: 'center'
-                          }} >
-                            <SmallFavButton
-                              size='small'
-                              className='small-fav-icon-button'
-                              onClick={(event) => handleFavorite(event, item, username)}
-                              sx={{
-                                boxShadow: 3,
-                              }}
-                            >
-                              {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
-                            </SmallFavButton>
+                          }}>
+                            {username && (
+                              <SmallFavButton
+                                size='small'
+                                className='small-fav-icon-button'
+                                onClick={(event) => handleFavorite(event, item, username)}
+                                sx={{
+                                  boxShadow: 3,
+                                }}
+                              >
+                                {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
+                              </SmallFavButton>
+                            )}
                           </Grid>
+
                           {/* preview button */}
                           <Grid item xs={2.5} sm={6} sx={{
                             display: 'flex',

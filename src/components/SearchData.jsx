@@ -58,7 +58,6 @@ const SearchData = ({ username, customStyles, pStyles}) => {
         if (initialSearchQuery) {
             setInputField(initialSearchQuery);
             fetchData(1, initialSearchQuery);
-            // setShowSplash(false);
         }
     }, []);
     
@@ -89,14 +88,17 @@ const SearchData = ({ username, customStyles, pStyles}) => {
                         .catch(error => {
                             console.error('Error in advanced search:', error);
                         });
-                    fetch('/favs', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ username }),
-                        credentials: 'include',
-                    })
+    
+                    // Only fetch favorites if username exists
+                    if (username) {
+                        fetch('/favs', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ username }),
+                            credentials: 'include',
+                        })
                         .then(res => res.json())
                         .then(res => {
                             const favArray = res.favorites.map(el => el.id);
@@ -111,6 +113,8 @@ const SearchData = ({ username, customStyles, pStyles}) => {
                         .catch(err => {
                             console.log(err);
                         });
+                    }
+    
                     setLoading(false);
                     //need a fetch to favorites to check if already fav and pass prop to display    
                     setOffset(newOffset);
@@ -121,6 +125,7 @@ const SearchData = ({ username, customStyles, pStyles}) => {
                 });
         }
     };
+    
 
 
 

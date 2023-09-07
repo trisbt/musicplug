@@ -50,21 +50,22 @@ function MainContent() {
     setShowSplash(isHomePage);
 }, [location.pathname, location.search]);
 
-  useEffect(() => {
-      if (successfulLogin || successfulLogout) {
-          setSuccessfulLogin(false);
-          setSuccessfulLogout(false);
-          navigate('/');
-      }
-  }, [successfulLogin, successfulLogout]);
-  
+useEffect(() => {
+  if (successfulLogin || successfulLogout) {
+      setSuccessfulLogin(false);
+      setSuccessfulLogout(false);
+      navigate('/');
+  }
+}, [successfulLogin, successfulLogout]);
+
 
   const getBackgroundStyle = (path) => {
     if (showSplash && location.pathname !== '/favs') {
       return {
         backgroundImage: `linear-gradient(rgb(40, 60, 80, 0.7), rgb(5,12,24, 0.7)), url(${backgroundImg})`,
-        backgroundSize: 'contain',
+        backgroundSize: 'cover',
         backgroundPosition: 'center 26%',
+        
       };
     } else {
       return {
@@ -86,7 +87,7 @@ function MainContent() {
         <div className="App">
           <div className="App-search">
             <Routes>
-              <Route path="/" element={<SearchData username={loggedInUser}  />} />
+              <Route path="/" element={<SearchData key={location.search} username={loggedInUser}  />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/:name/:artist/:id" element={<SongPage username={loggedInUser} />} />
               {!isLoggedIn && <Route path="/login" element={<SignIn />} />}

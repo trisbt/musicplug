@@ -11,7 +11,8 @@ export function AuthProvider({ children }) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState('');
     const [successfulLogin, setSuccessfulLogin] = useState(false);
-    const [logout, setLogout] = useState(false);
+    // need this?
+    // const [logout, setLogout] = useState(false);
     const [successfulLogout, setSuccessfulLogout] = useState(false);
 
     //always check if logged in
@@ -94,7 +95,7 @@ export function AuthProvider({ children }) {
             const data = await response.json();
             setIsLoggedIn(false);
             setLoggedInUser('');
-            setLogout(true);
+            // setLogout(true);
             setSuccessfulLogout(true);
         } catch (error) {
             console.error('Error:', error);

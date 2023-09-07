@@ -16,15 +16,10 @@ body {
   overflow-x: hidden;
 }
 
-
-
 .plug-logo {
   display: flex;
   width: 200px;
   height: 200px;
-
-  /* margin-bottom: 10px; */
-  /* background-color:rgba(0, 0, 0, 0.2) */
 }
 
 .splash {
@@ -39,16 +34,10 @@ body {
   display: flex;
   justify-content: center;
 }
-.song-page-container{
-
-}
-/* .searchform-container {
-  justify-content: center;
+.App{
   display: flex;
-  margin-top: 10px;
-
-} */
-
+  justify-content: center;
+}
 .App-search {
   background-repeat: repeat-y;
   min-height: 100vh;
@@ -60,7 +49,6 @@ body {
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
 
 li {
   list-style: none;

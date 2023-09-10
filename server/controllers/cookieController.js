@@ -6,7 +6,7 @@ const cookieController = {};
 cookieController.setRememberMeCookie = async (req, res, next) => {
     const ONE_WEEK = 7 * 24 * 60 * 60 * 1000;
     const remember = res.locals.user.rememberMe;
-    const username = res.locals.user.user1.username;
+    const username = res.locals.user.username;
     const filter = {username};
     
     if (!remember) {

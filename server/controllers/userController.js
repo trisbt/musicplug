@@ -25,7 +25,14 @@ userController.verifyUser = async (req, res, next) => {
     if (user1) {
       const isPasswordValid = await bcrypt.compare(password, user1.password);
       if (isPasswordValid) {
-        res.locals.user = { user1, rememberMe };
+        res.locals.user = {
+          id: user1._id,
+          username: user1.username,
+          firstname: user1.firstname,
+          lastname: user1.lastname,
+          email: user1.email,
+          rememberMe: rememberMe
+        };
         return next();
       } else {
         return res.status(401).json({ message: 'Invalid password' });
@@ -51,6 +58,51 @@ userController.logoutUser = async (req, res, next) => {
     return next(err);
   }
 };
+
+userController.changePassword = async (req, res, next) => {
+  const { username, email, passwordOld, passwordNew } = req.body;
+  console.log(username, email, passwordOld, passwordNew)
+  try {
+    const currentUser = await User.findOne({ username, email }).exec();
+    console.log(currentUser)
+    if (!currentUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const isOldPasswordValid = await bcrypt.compare(passwordOld, currentUser.password);
+
+    if (!isOldPasswordValid) {
+      return res.status(401).json({ message: 'Incorrect old password' });
+    }
+
+    // If old password is valid, hash the new password and update in database
+    const salt = await bcrypt.genSalt(10);
+    const hashedNewPassword = await bcrypt.hash(passwordNew, salt);
+
+    currentUser.password = hashedNewPassword;
+    await currentUser.save();
+
+    res.locals.message = 'Password successfully changed'
+    return next();
+  } catch (err) {
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+userController.deleteAccount = async (req, res, next) => {
+  const { username, email } = req.body;
+  try {
+    const user = await User.findOneAndDelete({ username, email })
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.locals.message = 'Account successfully deleted';
+    return next();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
 
 
 userController.addFavorites = async (req, res, next) => {
@@ -107,7 +159,7 @@ userController.getFavorites = (req, res, next) => {
 }
 userController.deleteFavorites = async (req, res, next) => {
   const { username, idsToDelete } = req.body;
-  console.log(username, idsToDelete)
+  // console.log(username, idsToDelete)
   if (!username || !idsToDelete || !Array.isArray(idsToDelete)) {
     return res.status(400).json({ message: "Invalid request data." });
   }

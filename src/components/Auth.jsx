@@ -14,6 +14,7 @@ export function AuthProvider({ children }) {
   //state for redirects
   const [successfulLogin, setSuccessfulLogin] = useState(false);
   const [successfulLogout, setSuccessfulLogout] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
 
   //always check if logged in and authenticated
@@ -88,16 +89,25 @@ export function AuthProvider({ children }) {
         credentials: 'include',
       });
       const data = await response.json();
+      
+      if (response.status !== 200) {
+        setErrorMsg(data.message); // Assuming the error message is under the "error" key in the response
+        return;
+      }
+      
       if (data.message === 'logged in') {
         setIsLoggedIn(true);
         checkAuthentication();
       } else {
         setIsLoggedIn(false);
+        setErrorMsg('Unknown error occurred. Please try again.'); 
       }
     } catch (error) {
       console.error('Error:', error);
+      setErrorMsg('Network error. Please try again later.');
     }
   };
+
 
   //logout
   const handleLogout = async () => {
@@ -134,13 +144,16 @@ export function AuthProvider({ children }) {
       });
 
       if (response.ok) {
+        setErrorMsg('');  // Clearing any previous error messages
         console.log('Signup successful');
         handleLogin(username, password);
       } else {
-        console.log('Signup failed');
+        const data = await response.json();
+        setErrorMsg(data.error || 'Signup failed');
       }
     } catch (error) {
       console.error('Error:', error);
+      setErrorMsg('An error occurred. Please try again.');
     }
   };
 
@@ -192,7 +205,8 @@ export function AuthProvider({ children }) {
   }
 
   const value = useMemo(() => ({
-
+    errorMsg,
+    setErrorMsg,
     isLoggedIn,
     changePass,
     deleteAcct,
@@ -205,7 +219,7 @@ export function AuthProvider({ children }) {
     successfulLogout,
     setSuccessfulLogout,
     userDetails
-  }), [isLoggedIn, loggedInUser, successfulLogin, successfulLogout]);
+  }), [isLoggedIn, loggedInUser, successfulLogin, successfulLogout, errorMsg]);
 
 
   return (

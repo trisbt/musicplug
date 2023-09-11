@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -42,7 +42,7 @@ const defaultTheme = createTheme({
 
 export default function SignIn() {
   const [rememberMe, setRememberMe] = useState(false);
-  const { handleLogin } = useAuth();
+  const { handleLogin, errorMsg } = useAuth();
 
   const handleCheckboxChange = (event) => {
     setRememberMe(event.target.checked);
@@ -55,6 +55,7 @@ export default function SignIn() {
     const password = event.target.password.value;
     try {
       await handleLogin(username, password, rememberMe);
+
     } catch (error) {
       console.error('Error:', error);
     }
@@ -117,6 +118,11 @@ export default function SignIn() {
               }
               label="Remember me"
             />
+            {errorMsg && (
+              <Typography variant="body2" color="error">
+                {errorMsg}
+              </Typography>
+            )}
             <Button
               type="submit"
               fullWidth

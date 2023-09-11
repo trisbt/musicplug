@@ -28,7 +28,7 @@ export default function AccountSettings() {
 	const [openPasswordDialog, setOpenPasswordDialog] = useState(false);
 	const username = userDetails.userInfo.username;
 	const email = userDetails.userInfo.email;
-console.log(username, email)
+
 	const handleClickOpen = (type) => {
 		if (type === "delete") {
 			setOpenDialog(true);

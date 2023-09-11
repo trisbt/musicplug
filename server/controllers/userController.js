@@ -7,15 +7,37 @@ const userController = {};
 userController.createUser = async (req, res, next) => {
   try {
     const { username, password, email, firstname, lastname } = req.body;
+
+    // Check if username or email already exists
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+
+    if (existingUser) {
+      if (existingUser.email === email) {
+        return res.status(400).json({ error: 'Email already in use.' });
+      }
+      if (existingUser.username === username) {
+        return res.status(400).json({ error: 'Username already in use.' });
+      }
+    }
+
+    // Continue with user creation if no conflicts
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    const user = { firstname: firstname, lastname: lastname, username: username, password: hashedPassword, email: email };
+    const user = { 
+      firstname: firstname, 
+      lastname: lastname, 
+      username: username, 
+      password: hashedPassword, 
+      email: email 
+    };
     res.locals.user = await User.create(user);
+
     return next();
   } catch (err) {
     return next({ err: 'middleware createUser error' });
   }
 };
+
 
 userController.verifyUser = async (req, res, next) => {
 

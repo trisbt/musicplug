@@ -3,29 +3,28 @@ const User = require('../models/userModel');
 const cookieController = {};
 
 //add to user schema
+const ONE_WEEK = 7 * 24 * 60 * 60 * 1000;
+
 cookieController.setRememberMeCookie = async (req, res, next) => {
-    const ONE_WEEK = 7 * 24 * 60 * 60 * 1000;
-    const remember = res.locals.user.rememberMe;
-    const username = res.locals.user.username;
-    const filter = {username};
-    
-    if (!remember) {
+    if (!res.locals.user.rememberMe) {
         return next();
-    } else {
-        try {
-            const keepMeLoggedIn = nanoid();
-            const update = {keepMeLoggedIn}
-            await res.cookie('plugKeepMeLoggedIn', keepMeLoggedIn, { httpOnly: true, maxAge: ONE_WEEK });
-            const userFound = await User.findOneAndUpdate(filter, update, { new: true });
-            res.locals.foundUser = userFound.username
-            return next();
-        } catch (err) {
-            console.error('Error setting remember me cookie:', err);
-            return next(err);
-        }
     }
 
+    try {
+        const keepMeLoggedIn = nanoid();
+        await res.cookie('plugKeepMeLoggedIn', keepMeLoggedIn, { httpOnly: true, maxAge: ONE_WEEK });
+
+        const filter = { username: res.locals.user.username };
+        const update = { keepMeLoggedIn }
+        await User.findOneAndUpdate(filter, update, { new: true });
+
+        return next();
+    } catch (err) {
+        console.error('Error setting remember me cookie:', err);
+        return next(err);
+    }
 };
+
 
 cookieController.checkRememberMeCookie = async (req, res, next) => {
     const rememberMeCookie = req.cookies.plugKeepMeLoggedIn;
@@ -41,6 +40,7 @@ cookieController.checkRememberMeCookie = async (req, res, next) => {
     }
 }
 
+const ONE_HOUR = 60 * 60 * 1000;
 
 cookieController.setSSIDCookie = async (req, res, next) => {
     try {

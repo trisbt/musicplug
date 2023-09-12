@@ -11,9 +11,6 @@ export function AuthProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState('');
   const [userDetails, setUserDetails] = useState({});
-  //state for redirects
-  const [successfulLogin, setSuccessfulLogin] = useState(false);
-  const [successfulLogout, setSuccessfulLogout] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
 
@@ -47,8 +44,6 @@ export function AuthProvider({ children }) {
         setUserDetails(data);
         setIsLoggedIn(true);
         setLoggedInUser(data.userInfo.username);
-        // setIsLoggedIn(true);
-        setSuccessfulLogin(true);
       } else {
 
         setIsLoggedIn(false);
@@ -78,7 +73,7 @@ export function AuthProvider({ children }) {
   }
 
   //login
-  const handleLogin = async (username, password, rememberMe) => {
+  const handleLogin = async (username, password, rememberMe, onSuccess) => {
     try {
       const response = await fetch('/login', {
         method: 'POST',
@@ -98,6 +93,9 @@ export function AuthProvider({ children }) {
       if (data.message === 'logged in') {
         setIsLoggedIn(true);
         checkAuthentication();
+        if (onSuccess) {
+          onSuccess();
+        }
       } else {
         setIsLoggedIn(false);
         setErrorMsg('Unknown error occurred. Please try again.'); 
@@ -110,7 +108,7 @@ export function AuthProvider({ children }) {
 
 
   //logout
-  const handleLogout = async () => {
+  const handleLogout = async (onSuccess) => {
     try {
       const response = await fetch('/logout', {
         method: 'POST',
@@ -123,7 +121,9 @@ export function AuthProvider({ children }) {
       if (data.message === 'Logged out successfully') {
         setIsLoggedIn(false);
         setLoggedInUser('');
-        setSuccessfulLogout(true);
+        if (onSuccess) {
+          onSuccess();
+        }
       }
 
     } catch (error) {
@@ -214,12 +214,8 @@ export function AuthProvider({ children }) {
     handleLogout,
     handleLogin,
     handleSignup,
-    successfulLogin,
-    setSuccessfulLogin,
-    successfulLogout,
-    setSuccessfulLogout,
     userDetails
-  }), [isLoggedIn, loggedInUser, successfulLogin, successfulLogout, errorMsg]);
+  }), [isLoggedIn, loggedInUser, errorMsg]);
 
 
   return (

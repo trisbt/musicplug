@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigation, useSearchParams } from "react-router-dom";
+import { useNavigation, useSearchParams, useNavigate } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -23,6 +23,7 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -117,7 +118,7 @@ function ResponsiveAppBar() {
                         switch (setting) {
                           case 'Logout':
                             return (
-                              <MenuItem key={setting} onClick={() => { handleCloseUserMenu(); handleLogout(); }}>
+                              <MenuItem key={setting} onClick={() => { handleCloseUserMenu(); handleLogout(() => navigate('/')); }}>
                                 <Typography textAlign="center" color="black">{setting}</Typography>
                               </MenuItem>
                             );

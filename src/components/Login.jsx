@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -43,7 +44,7 @@ const defaultTheme = createTheme({
 export default function SignIn() {
   const [rememberMe, setRememberMe] = useState(false);
   const { handleLogin, errorMsg } = useAuth();
-
+  const navigate = useNavigate();
   const handleCheckboxChange = (event) => {
     setRememberMe(event.target.checked);
 
@@ -54,7 +55,7 @@ export default function SignIn() {
     const username = event.target.username.value;
     const password = event.target.password.value;
     try {
-      await handleLogin(username, password, rememberMe);
+      await handleLogin(username, password, rememberMe, () => navigate('/'));
 
     } catch (error) {
       console.error('Error:', error);

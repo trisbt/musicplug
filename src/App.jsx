@@ -38,11 +38,8 @@ const theme = createTheme({
 });
 
 function MainContent() {
-  const { isLoggedIn, loggedInUser, successfulLogin, setSuccessfulLogin, successfulLogout, setSuccessfulLogout } = useAuth();
-  // const [showSplash, setShowSplash] = useState(true);
-
+  const { isLoggedIn, loggedInUser} = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
   const isHomePage = location.pathname === '/' && !location.search;
 
   // Use this value to set the showSplash state directly
@@ -50,15 +47,6 @@ function MainContent() {
   useEffect(() => {
     setShowSplash(isHomePage);
   }, [location.pathname, location.search]);
-
-  useEffect(() => {
-    if (successfulLogin || successfulLogout) {
-      setSuccessfulLogin(false);
-      setSuccessfulLogout(false);
-      navigate('/');
-    }
-  }, [successfulLogin, successfulLogout]);
-
 
   const getBackgroundStyle = (path) => {
     if (showSplash && location.pathname !== '/favs') {

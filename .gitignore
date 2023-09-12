@@ -24,9 +24,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # files
-dnu.js
-NavSearchBar.js
-discogsController.js
+dnu.ts
+NavSearchBar.tsx
+discogsController.ts
 
 #db
-pgModel.js
+pgModel.ts

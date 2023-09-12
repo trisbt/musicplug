@@ -69,7 +69,7 @@ const SearchData = ({ username, customStyles, pStyles}) => {
             setLoading(true);
             // setShowSplash(false);
             const searchQuery = encodeURIComponent(query);
-            fetch(`/search?query=${searchQuery}&offset=${newOffset}`)
+            fetch(`/api/search?query=${searchQuery}&offset=${newOffset}`)
                 .then(res => res.json())
                 .then(data => {
                     data.tracks.items.forEach((item) => {
@@ -79,7 +79,7 @@ const SearchData = ({ username, customStyles, pStyles}) => {
                     navigate(`/?q=${searchQuery}`)
                     setResponse(prev => [...prev, ...searchData]);
                     setSearchResult(query||inputField);
-                    fetch(`advancedSearch?query=${idCache.join(',')}`)
+                    fetch(`/api/advancedSearch?query=${idCache.join(',')}`)
                         .then(res => res.json())
                         .then(data => {
                             const additionalData = data.audio_features
@@ -91,7 +91,7 @@ const SearchData = ({ username, customStyles, pStyles}) => {
     
                     // Only fetch favorites if username exists
                     if (username) {
-                        fetch('/favs', {
+                        fetch('/api/favs', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

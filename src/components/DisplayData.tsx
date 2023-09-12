@@ -177,7 +177,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
     event.preventDefault();
     const { id, name, artists, albums, images, key, tempo, loudness } = item;
     try {
-      const response = await fetch('/addFavs', {
+      const response = await fetch('/api/addFavs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -207,7 +207,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
 
   return (
     <div>
-      <Grid container xs={12} justifyContent='center' >
+      <Grid container item xs={12} justifyContent='center' >
         {results.length > 0 && (
           <>
             {/* search result text row */}
@@ -220,7 +220,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
             {/* main search */}
             {results.map((item, index) => (
 
-              <Grid item xs={11} md={8} direction="row" key={index}>
+              <Grid item xs={11} md={8} key={index}>
                 {/* each card */}
                 <Link
                   to={{
@@ -447,7 +447,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
             ))}
 
 
-            <Grid xs={12} sx={{
+            <Grid item xs={12} sx={{
               paddingTop: '1em',
               paddingBottom: '1em',
             }}>

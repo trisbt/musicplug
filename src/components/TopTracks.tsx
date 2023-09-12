@@ -29,7 +29,7 @@ const TopTracks = ({username}) => {
   useEffect(() => {
     //gets top tracks from spotify global playlist
     if (!TopTracks.cachedTracks || !TopTracks.cachedAudioFeatures) {
-      fetch('/toptracks')
+      fetch('/api/toptracks')
         .then(res => res.json())
         .then(data => {
           setTopTracks(data.trackData);
@@ -49,7 +49,7 @@ const TopTracks = ({username}) => {
     }
 
       //use favorite fetch
-    fetch('/favs', {
+    fetch('/api/favs', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

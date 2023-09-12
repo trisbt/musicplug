@@ -6,7 +6,7 @@ const SearchId = ({ artists, song, onReceiveAlias }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/getCredits/?artist=${artists[0].name}&song=${song}`)
+    fetch(`/api/getCredits/?artist=${artists[0].name}&song=${song}`)
       .then(response => response.json())
       .then(res => {      
         setIsLoading(false);  // Setting loading state to false here

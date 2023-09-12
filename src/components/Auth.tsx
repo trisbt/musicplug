@@ -34,12 +34,15 @@ export function AuthProvider({ children }) {
   //check for session
   const checkAuthentication = async () => {
     try {
-      const response = await fetch('/validate', {
+      const response = await fetch('/api/validate', {
         method: 'GET',
         credentials: 'include',
       });
+      
       const data = await response.json();
+      console.log(data);
       if (data.message === 'user validated') {
+        
         //update here
         setUserDetails(data);
         setIsLoggedIn(true);
@@ -60,7 +63,7 @@ export function AuthProvider({ children }) {
   //check remember me cookie
   const fetchRm = async () => {
     try {
-      const rememberMeResponse = await fetch('/check-remember-me', {
+      const rememberMeResponse = await fetch('/api/crm', {
         method: 'GET',
         credentials: 'include',
       });
@@ -75,7 +78,7 @@ export function AuthProvider({ children }) {
   //login
   const handleLogin = async (username, password, rememberMe, onSuccess) => {
     try {
-      const response = await fetch('/login', {
+      const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -110,7 +113,7 @@ export function AuthProvider({ children }) {
   //logout
   const handleLogout = async (onSuccess) => {
     try {
-      const response = await fetch('/logout', {
+      const response = await fetch('/api/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -134,7 +137,7 @@ export function AuthProvider({ children }) {
   //signup
   const handleSignup = async (username, email, password, firstname, lastname) => {
     try {
-      const response = await fetch('/signup', {
+      const response = await fetch('/api/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -160,7 +163,7 @@ export function AuthProvider({ children }) {
   //change password
   const changePass = async (username, email, passwordOld, passwordNew) => {
     try {
-      const response = await fetch('/acct', {
+      const response = await fetch('/api/acct', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -185,7 +188,7 @@ export function AuthProvider({ children }) {
   //delete account
   const deleteAcct = async(username, email, password) => {
     try {
-      const response = await fetch('/deleteacct', {
+      const response = await fetch('/api/deleteacct', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

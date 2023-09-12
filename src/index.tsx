@@ -8,11 +8,8 @@ const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
   <React.StrictMode>
-
     <AuthProvider>
       <App />
     </AuthProvider>
-
-  </React.StrictMode>,
-  // document.getElementById('root')
+  </React.StrictMode>
 );

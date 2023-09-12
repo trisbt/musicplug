@@ -28,7 +28,7 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-  const { handleSignup } = useAuth();
+  const { handleSignup, errorMsg, setErrorMsg } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -37,13 +37,20 @@ export default function SignUp() {
     const email = event.target.email.value;
     const firstname = event.target.firstname.value;
     const lastname = event.target.lastname.value;
+  
+    if (!email.includes('@')) {
+      setErrorMsg('Invalid email format.');
+      return;
+    }
+    // Add other validations here...
+  
     try {
       await handleSignup(username, email, password, firstname, lastname);
     } catch (error) {
       console.error('Error:', error);
     }
-
   };
+  
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -122,6 +129,7 @@ export default function SignUp() {
                 />
               </Grid>
             </Grid>
+            {errorMsg && <Typography color="error">{errorMsg}</Typography>}
             <Button
               type="submit"
               fullWidth

@@ -1,3 +1,5 @@
+
+
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -38,11 +40,10 @@ app.get('/advancedSearch', controller.getAccessToken, controller.getSpotifyAudio
 app.get('/getTracks', controller.getAccessToken, controller.getSpotifyTracks, (req, res) => {
     return res.status(200).json(res.locals.data);
 });
+app.get('/toptracks', controller.getAccessToken,controller.getSpotifyTopTracks, (req, res) => {
+    return res.status(200).json(res.locals.data);
+})
 
-//discogs searches old api
-// app.get('/getCredits', discogsController.discogsSearch, (req, res) => {
-//     return res.status(200).json(res.locals.data);
-// });
 
 //discogs searches thru db
 app.get('/getCredits', discogsSQLController.discogsSearch, (req, res) => {
@@ -56,18 +57,36 @@ app.post('/signup', userController.createUser, (req, res) => {
 
 //verify user 
 app.post('/login', userController.verifyUser, sessionController.startSession, cookieController.setSSIDCookie, cookieController.setRememberMeCookie, (req, res, next) => {
-    return res.status(200).json({message: "logged in"});
+    return res.status(200).json({
+        message: "logged in", 
+    });
 });
+//validated session
+app.get('/validate', sessionController.isLoggedIn, (req, res) => {
+    return res.status(200).json({
+        message: "user validated",
+        userInfo: res.locals.verifiedUser,
+    });
+})
+//logout
 app.post('/logout', userController.logoutUser, (req, res) => {
     return res.status(200).json({message: 'logged out'});
 })
-app.get('/validate', sessionController.isLoggedIn, (req, res) => {
-    return res.status(200).json({message: "user validated"});
-})
+
 //remember me
 app.get('/check-remember-me', cookieController.checkRememberMeCookie, (req, res) => {
     return res.status(200).json({valid: res.locals.valid, username: res.locals.userFound});
 });
+
+//change password user
+app.post('/acct', userController.changePassword, (req, res) => {
+    return res.status(200).json(res.locals.message);
+})
+
+app.post('/deleteacct', userController.deleteAccount, (req, res) => {
+    return res.status(200).json(res.locals.message);
+})
+
 
 //get favs 
 app.post('/favs', userController.getFavorites, (req, res) => {

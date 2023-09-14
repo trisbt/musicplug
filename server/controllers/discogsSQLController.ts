@@ -20,15 +20,21 @@ function normalize(str: string): string {
 }
 
 interface DiscogsSearchInterface {
-  discogsSearch: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  discogsSearch: (req: DiscogsSearchRequest, res: Response, next: NextFunction) => Promise<void>
+}
+interface DiscogsSearchRequest extends Request {
+  query: {
+    artist: string;
+    song: string;
+  };
 }
 
-const discogsSQLController: DiscogsSearchInterface = {
 
-  discogsSearch: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    console.log(typeof req.query.artist);
-    let artist: string = (req.query.artist as string).split('/')[0];
-    let song: string = normalize(req.query.song as string);
+
+const discogsSQLController: DiscogsSearchInterface = {
+  discogsSearch: async (req: DiscogsSearchRequest, res: Response, next: NextFunction): Promise<void> => {
+    let artist: string = req.query.artist.split('/')[0];
+    let song: string = normalize(req.query.song);
 
     function determineTableName(baseName: string, firstCharacter: string) {
       const alphabet = "abcdefghijklmnopqrstuvwxyz";
@@ -171,7 +177,6 @@ const discogsSQLController: DiscogsSearchInterface = {
             res.locals.data = 'No credits available';
             return next();
           }
-          // console.log(uniqueResults);
           res.locals.data = uniqueResults;
           res.locals.alias = aliasNames;
           return next();

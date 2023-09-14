@@ -1,12 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FC } from 'react';
 import CircleOfFifths from './CircleOfFifths';
 import EnhancedTable from './Table';
 
-function Favorites({ username }) {
-  const [userFavorites, setUserFavorites] = useState([]);
-  const [initialRenderDone, setInitialRenderDone] = useState(false);
-  const [activeSlice, setActiveSlice] = useState(null);
-  const [favDeleteRender, setFavDeleteRender] = useState(false);
+interface FavoritesProps {
+  username: string;
+}
+interface UserFavorite {
+  album: string;
+  artist: string;
+  id: string;
+  image: string;
+  key: string;
+  loudness: number;
+  song: string;
+  tempo: number;
+  _id: string;
+}
+
+
+const Favorites: FC<FavoritesProps> = ({ username }) => {
+  const [userFavorites, setUserFavorites] = useState<UserFavorite[]>([]);
+  const [initialRenderDone, setInitialRenderDone] = useState<boolean>(false);
+  const [activeSlice, setActiveSlice] = useState<number | null>(null);
+  const [favDeleteRender, setFavDeleteRender] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchFavorites = () => {
@@ -35,7 +51,7 @@ function Favorites({ username }) {
   return (
     <div>
       <CircleOfFifths activeSlice={activeSlice} setActiveSlice={setActiveSlice} />
-      <EnhancedTable username = {username} favorites={userFavorites} initialRenderDone={initialRenderDone} favDeleteRender={favDeleteRender}setFavDeleteRender={setFavDeleteRender} activeSlice={activeSlice} />
+      <EnhancedTable username={username} favorites={userFavorites} initialRenderDone={initialRenderDone} favDeleteRender={favDeleteRender} setFavDeleteRender={setFavDeleteRender} activeSlice={activeSlice} />
 
     </div>
   );

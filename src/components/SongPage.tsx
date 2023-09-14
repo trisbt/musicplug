@@ -8,24 +8,10 @@ import StopIcon from '@mui/icons-material/Stop';
 import { grey } from '@mui/material/colors';
 import SearchId from './SearchId';
 import SearchData from './SearchData';
+import { Artist, Image, LocationState, SongDetails } from './types/dataTypes';
 
 
-// const theme = createTheme({
-//   palette: {
-//     primary: {
-//       light: '#99cbfd',
-//       main: '#4d97f8',
-//       dark: '#3746a2',
-//       contrastText: '#fff',
-//     },
-//     secondary: {
-//       light: '#fffbe8',
-//       main: '#eec94b',
-//       dark: '#9e7937',
-//       contrastText: '#000',
-//     },
-//   },
-// });
+
 
 const PlayButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
@@ -94,7 +80,7 @@ const FavOutlined = styled(GradeOutlinedIcon)(({ theme }) => ({
 }));
 
 //progress value color function
-function determineColor(value) {
+function determineColor(value: number): string {
   if (value > 80) {
     return 'linear-gradient(to right, rgba(66,187,7,0.7595413165266106) 0%, rgba(149,255,2,0.7595413165266106) 100%)';
   } else if (value > 50) {
@@ -106,7 +92,7 @@ function determineColor(value) {
   }
 }
 //convert song duration format
-const msConvert = (num) => {
+const msConvert = (num: number): string => {
   let totalSeconds = Math.floor(num / 1000);
   let minutes = Math.floor(totalSeconds / 60);
   let seconds = totalSeconds % 60;
@@ -118,17 +104,18 @@ const msConvert = (num) => {
 //main page func
 const SongPage = () => {
   // const { id } = useParams();
-  const location = useLocation();
+  const location = useLocation<LocationState>();
   const songDetails = location.state?.songDetails;
   const username = location.state?.username;
   const isFavorite = location.state?.isFavorite;
-  const [open, setOpen] = useState(false);
-  const [pageFav, setPageFav] = useState(isFavorite)
-  const [aliasFromChild, setAliasFromChild] = useState(null);
-  const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState(null);
-  const audioRef = useRef(null);
 
-  const playAudio = (event, previewUrl) => {
+  const [open, setOpen] = useState<boolean>(false);
+  const [pageFav, setPageFav] = useState<boolean>(isFavorite || false);
+  const [aliasFromChild, setAliasFromChild] = useState<string | null>(null);
+  const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const playAudio = (event: React.MouseEvent, previewUrl: string | null) => {
     audioRef.current.volume = .3;
     if (previewUrl) {
       if (audioRef.current.src === previewUrl && !audioRef.current.paused) {
@@ -147,7 +134,7 @@ const SongPage = () => {
   };
 
   //can show aliases for artist not used from songid
-  const handleAlias = (alias) => {
+  const handleAlias = (alias: string[]) => {
     console.log(alias.join(', ').replace(/\s?\(.*?\)\s?/g, ''));
     setAliasFromChild(alias.join(', ').replace(/\s?\(.*?\)\s?/g, ''));
   };
@@ -170,7 +157,7 @@ const SongPage = () => {
     color: theme.palette.text.secondary,
   }));
 
-  const handleFavorite = async (event, username) => {
+  const handleFavorite = async (event: React.MouseEvent, username: string) => {
 
     const { id, name, artists, albums, images, key, tempo, loudness } = songDetails;
     try {
@@ -202,8 +189,8 @@ const SongPage = () => {
         <Card sx={{
           width: '90vw',
           // height: '100vh',
-          overflowY: 'visible', // Display content even if it overflows vertically.
-          maxHeight: 'inherit', // Ensures the card doesn't have an arbitrary height constraint
+          overflowY: 'visible',
+          maxHeight: 'inherit',
           borderRadius: '0',
           paddingTop: '3px',
           paddingLeft: '5px',
@@ -220,14 +207,14 @@ const SongPage = () => {
 
             }}>
             <SearchData username={username} customStyles={{
-              color: 'black',             // change text color
-              backgroundColor: '#f5f5f5' // change background color
+              color: 'black',
+              backgroundColor: '#f5f5f5',
 
             }}
               pStyles={{
                 fontSize: '20px',
                 fontStyle: 'italic',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
               }}
             />
           </Grid>
@@ -246,8 +233,6 @@ const SongPage = () => {
                   component="img"
                   onClick={handleOpen}
                   sx={{
-                    // width: 300,
-                    // height: 'auto',
                     cursor: 'pointer',
                     boxShadow: 2,
                     "@media (max-width: 500px)": {
@@ -363,22 +348,22 @@ const SongPage = () => {
 
                     {/*small fav button render*/}
                     {username && (
-                    <SmallFavButton
-                      backgroundColor='red'
-                      onClick={(event) => handleFavorite(event, username)}
-                      sx={{
-                        display: { xs: 'flex', sm: 'flex', md: 'none' },
-                        boxShadow: 3,
-                        width: '3.5em',
-                        height: '3.5em',
-                      }}
-                    >
-                      {pageFav ? (
-                        <FavSolid onClick={(event) => handleFavorite(event, username)} />
-                      ) : (
-                        <FavOutlined onClick={(event) => handleFavorite(event, username)} />
-                      )}
-                    </SmallFavButton>
+                      <SmallFavButton
+                        backgroundColor='red'
+                        onClick={(event) => handleFavorite(event, username)}
+                        sx={{
+                          display: { xs: 'flex', sm: 'flex', md: 'none' },
+                          boxShadow: 3,
+                          width: '3.5em',
+                          height: '3.5em',
+                        }}
+                      >
+                        {pageFav ? (
+                          <FavSolid onClick={(event) => handleFavorite(event, username)} />
+                        ) : (
+                          <FavOutlined onClick={(event) => handleFavorite(event, username)} />
+                        )}
+                      </SmallFavButton>
                     )}
 
                     {/*small play button render*/}
@@ -640,16 +625,7 @@ const SongPage = () => {
               <SearchId artists={songDetails.artists} song={songDetails.name} onReceiveAlias={handleAlias} />
 
             </Grid>
-
-
           </Grid>
-
-
-
-          {/* credits row */}
-
-
-
         </Card>
       )}
 

@@ -38,14 +38,21 @@ const cookieController = {
 
     if (rememberMeCookie) {
       const userFound = await User.findOne({ keepMeLoggedIn: `${rememberMeCookie}` });
-      res.locals.userFound = userFound.username;
-      res.locals.valid = true;
+      // Check if userFound is not null before accessing its properties
+      if (userFound) {
+        res.locals.userFound = userFound.username;
+        res.locals.valid = true;
+      } else {
+        // Handle the case where no matching user is found
+        res.locals.valid = false;
+      }
       return next();
     } else {
       res.locals.valid = false;
       return next();
     }
   },
+
 
   setSSIDCookie: async (req: Request, res: Response, next: NextFunction) => {
     try {

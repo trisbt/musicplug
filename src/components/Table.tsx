@@ -21,13 +21,48 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import {Alert} from '@mui/material';
-import {AlertTitle} from '@mui/material';
+import { Alert } from '@mui/material';
+import { AlertTitle } from '@mui/material';
 import { Container } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { blueGrey } from '@mui/material/colors';
-import {indigo} from '@mui/material/colors';
+import { indigo } from '@mui/material/colors';
 
+interface Row {
+  song: string;
+  artist: string;
+  album: string;
+  key: string;
+  tempo: number;
+  id: string;
+};
+interface EnhancedTableHeadProps {
+  numSelected: number;
+  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Row) => void;
+  onSelectAllClick: React.ChangeEventHandler<HTMLInputElement>;
+  order: 'asc' | 'desc';
+  orderBy: keyof Row;
+  rowCount: number;
+};
+interface EnhancedTableToolbarProps {
+  numSelected: number;
+  handleDelete: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+};
+interface EnhancedTableProps {
+  favorites: any[];
+  initialRenderDone: boolean;
+  activeSlice?: string;
+  username: string;
+  setFavDeleteRender: React.Dispatch<React.SetStateAction<boolean>>;
+  favDeleteRender: boolean;
+};
+
+interface HeadCell {
+  id: keyof Row;
+  numeric: boolean;
+  disablePadding: boolean;
+  label: string;
+};
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -40,43 +75,41 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-function createData(song, artist, album, key, tempo, id) {
+const createData: Row = (song, artist, album, key, tempo, id) => {
   return {
     song, artist, album, key, tempo, id
   };
 }
 
-
-function descendingComparator(a, b, orderBy) {
+const descendingComparator = (a: Row, b:Row, orderBy: keyof Row): number=>{
   if (typeof a[orderBy] === 'string' && typeof b[orderBy] === 'string') {
-      const lowerA = a[orderBy].toLowerCase();
-      const lowerB = b[orderBy].toLowerCase();
+    const lowerA = a[orderBy].toLowerCase();
+    const lowerB = b[orderBy].toLowerCase();
 
-      if (lowerB < lowerA) {
-          return -1;
-      }
-      if (lowerB > lowerA) {
-          return 1;
-      }
-      return 0;
+    if (lowerB < lowerA) {
+      return -1;
+    }
+    if (lowerB > lowerA) {
+      return 1;
+    }
+    return 0;
   }
   if (b[orderBy] < a[orderBy]) {
-      return -1;
+    return -1;
   }
   if (b[orderBy] > a[orderBy]) {
-      return 1;
+    return 1;
   }
   return 0;
 }
 
-
-function getComparator(order, orderBy) {
+const getComparator = (order: 'asc' | 'desc', orderBy: keyof Row) =>  {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function stableSort(array, comparator) {
+const stableSort = (array: Row[], comparator: (a: Row, b: Row) => number): Row[] => {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -88,7 +121,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
+const headCells: HeadCell = [
   {
     id: 'song',
     numeric: false,
@@ -121,7 +154,7 @@ const headCells = [
   },
 ];
 
-function EnhancedTableHead(props) {
+const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = (props) => {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
     props;
   const createSortHandler = (property) => (event) => {
@@ -177,7 +210,7 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-function EnhancedTableToolbar(props) {
+const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
   const { numSelected, handleDelete } = props;
 
   return (
@@ -190,7 +223,7 @@ function EnhancedTableToolbar(props) {
         ...(numSelected > 0 && {
           bgcolor: (theme) =>
             alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-            color:'black',
+          color: 'black',
         }),
       }}
     >
@@ -244,15 +277,14 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function EnhancedTable({ favorites, initialRenderDone, activeSlice, username, setFavDeleteRender, favDeleteRender }) {
-
+const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderDone, activeSlice, username, setFavDeleteRender, favDeleteRender }) => {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('song');
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState<Row[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
 
-  let rows = favorites.map(favorite => createData(
+  let rows: Row[] = favorites.map(favorite => createData(
     favorite.song,
     favorite.artist,
     favorite.album,
@@ -280,7 +312,7 @@ export default function EnhancedTable({ favorites, initialRenderDone, activeSlic
         setSelected([]);
         setFavDeleteRender(true);
         setTimeout(() => {
-          setFavDeleteRender(false); 
+          setFavDeleteRender(false);
         }, 2000);
       })
       .catch(err => {
@@ -366,7 +398,7 @@ export default function EnhancedTable({ favorites, initialRenderDone, activeSlic
           width: '100%',
           mb: 2,
           border: "1px solid black",
-          
+
         }}>
           <EnhancedTableToolbar numSelected={selected.length} handleDelete={handleDelete} />
           {
@@ -458,3 +490,5 @@ export default function EnhancedTable({ favorites, initialRenderDone, activeSlic
     </Container>
   );
 }
+
+export default EnhancedTable;

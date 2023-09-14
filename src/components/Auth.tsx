@@ -1,13 +1,13 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, ReactNode } from 'react';
+import { AuthContextValue, AuthProviderProps } from './types/authTypes'; 
 
+const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-const AuthContext = createContext();
-
-export function useAuth() {
+export function useAuth(): AuthContextValue {
   return useContext(AuthContext);
 }
 
-export function AuthProvider({ children }) {
+export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState('');
   const [userDetails, setUserDetails] = useState({});
@@ -21,6 +21,7 @@ export function AuthProvider({ children }) {
     }
   }, [isLoggedIn]);
 
+
   const checkUserStatus = async () => {
     try {
       await fetchRm();
@@ -29,7 +30,6 @@ export function AuthProvider({ children }) {
       console.error('Error checking user status:', error);
     }
   };
-
 
   //check for session
   const checkAuthentication = async () => {
@@ -40,10 +40,8 @@ export function AuthProvider({ children }) {
       });
       
       const data = await response.json();
-      console.log(data);
       if (data.message === 'user validated') {
         
-        //update here
         setUserDetails(data);
         setIsLoggedIn(true);
         setLoggedInUser(data.userInfo.username);
@@ -68,8 +66,8 @@ export function AuthProvider({ children }) {
         credentials: 'include',
       });
       const rememberMeData = await rememberMeResponse.json();
-      setLoggedInUser(rememberMeData.username);
-      setIsLoggedIn(rememberMeData.valid);
+        setLoggedInUser(rememberMeData.username);
+        setIsLoggedIn(rememberMeData.valid);
     } catch (error) {
       console.error('Error checking "Remember Me" status:', error);
     }
@@ -89,7 +87,7 @@ export function AuthProvider({ children }) {
       const data = await response.json();
       
       if (response.status !== 200) {
-        setErrorMsg(data.message); // Assuming the error message is under the "error" key in the response
+        setErrorMsg(data.message); 
         return;
       }
       
@@ -108,7 +106,6 @@ export function AuthProvider({ children }) {
       setErrorMsg('Network error. Please try again later.');
     }
   };
-
 
   //logout
   const handleLogout = async (onSuccess) => {
@@ -207,7 +204,7 @@ export function AuthProvider({ children }) {
     }
   }
 
-  const value = useMemo(() => ({
+  const value: AuthContextValue = useMemo(() => ({
     errorMsg,
     setErrorMsg,
     isLoggedIn,

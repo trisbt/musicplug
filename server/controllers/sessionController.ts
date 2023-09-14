@@ -6,7 +6,14 @@ import { Request, Response, NextFunction } from 'express';
 interface SessionControllerInterface{
   isLoggedIn: (req: Request, res: Response, next: NextFunction) => Promise<void>;
   startSession: (req: Request, res: Response, next: NextFunction) => Promise<void>;
-}
+};
+
+interface MongoError extends Error {
+  code?: number;
+  keyPattern?: { [key: string]: number };
+  keyValue?: { [key: string]: any };
+};
+
 const ONE_HOUR = 60 * 60 * 1000; // 1 hour expiry ms
 
 const sessionController = {
@@ -15,7 +22,6 @@ const sessionController = {
   
     try {
       const session = await Session.findOne({ sessionToken }).exec();
-  
       if (session) {
         // Renew the session by updating the createdAt timestamp
         session.createdAt = new Date();
@@ -77,15 +83,24 @@ const sessionController = {
         res.locals.sessionToken = sessionToken;
         return next();
       } catch (err) {
-        if (err.code === 11000 && err.keyPattern && err.keyPattern.cookieId) {
+        const error = err as MongoError;
+        
+        if (
+          error.code === 11000 && 
+          error.keyPattern && 
+          error.keyPattern.cookieId &&
+          error.keyValue && 
+          error.keyValue.cookieId
+        ) {
           // Detected a duplicate cookieId error
-          await clearSessionByCookieId(err.keyValue.cookieId);
+          await clearSessionByCookieId(error.keyValue.cookieId);
           attempts++;
         } else {
-          console.error('Error creating session:', err);
-          return next(err);
+          console.error('Error creating session:', error);
+          return next(error);
         }
       }
+      
     }
   
     // If reached here, it means we've made 3 attempts and all failed

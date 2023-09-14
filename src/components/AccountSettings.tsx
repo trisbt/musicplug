@@ -17,19 +17,34 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuth } from './Auth';
 
+interface UserDetails {
+	userInfo: {
+		username: string;
+		email: string;
+		firstname: string;
+		lastname: string;
+	};
+}
+
+interface AuthHooks {
+	userDetails: UserDetails;
+	changePass: (username: string, email: string, passwordOld: string, passwordNew: string) => Promise<string>;
+	deleteAcct: (username: string, email: string) => Promise<string>;
+	handleLogout: () => void;
+}
 
 const defaultTheme = createTheme();
 
 export default function AccountSettings() {
-	const { userDetails, changePass, deleteAcct, handleLogout } = useAuth();
-	const [errorMsg, setErrorMsg] = useState('');
-	const [successMsg, setSuccessMsg] = useState('');
-	const [openDialog, setOpenDialog] = useState(false);
-	const [openPasswordDialog, setOpenPasswordDialog] = useState(false);
-	const username = userDetails.userInfo.username;
-	const email = userDetails.userInfo.email;
+	const { userDetails, changePass, deleteAcct, handleLogout }: AuthHooks = useAuth();
+	const [errorMsg, setErrorMsg] = useState<string>('');
+	const [successMsg, setSuccessMsg] = useState<string>('');
+	const [openDialog, setOpenDialog] = useState<boolean>(false);
 
-	const handleClickOpen = (type) => {
+	const username: string = userDetails.userInfo.username;
+	const email: string = userDetails.userInfo.email;
+
+	const handleClickOpen = (type: string) => {
 		if (type === "delete") {
 			setOpenDialog(true);
 		} else if (type === "password") {
@@ -37,15 +52,11 @@ export default function AccountSettings() {
 		}
 	};
 
-	const handlePasswordClose = () => {
-		setOpenPasswordDialog(false);
-	};
-
 	const handleClose = () => {
 		setOpenDialog(false);
 	};
 
-	const handleChangePw = async (event) => {
+	const handleChangePw = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		const passwordOld = event.target['current-password'].value;
 		const passwordNew = event.target['new-password'].value;
@@ -58,21 +69,21 @@ export default function AccountSettings() {
 			const responseMessage = await changePass(username, email, passwordOld, passwordNew);
 			if (responseMessage === 'pw changed successful') {
 				setSuccessMsg('Successfully changed password');
-				setErrorMsg(''); // Clear error message if any
+				setErrorMsg('');
 			}
 		} catch (err) {
 			setErrorMsg(err.message || 'An error occurred');
-			setSuccessMsg(''); // Clear success message if any
+			setSuccessMsg('');
 		}
 	};
 
-	const handleDeleteAcct = async (event) => {
+	const handleDeleteAcct = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		event.preventDefault();
 		try {
 			const responseMessage = await deleteAcct(username, email);
 			if (responseMessage === 'successfully deleted account') {
 				setSuccessMsg('Successfully deleted account');
-				setErrorMsg(''); // Clear error message if any
+				setErrorMsg('');
 			}
 			handleClose();
 			setTimeout(() => {
@@ -81,7 +92,7 @@ export default function AccountSettings() {
 
 		} catch (err) {
 			setErrorMsg(err.message || 'An error occurred');
-			setSuccessMsg(''); // Clear success message if any
+			setSuccessMsg('');
 		}
 
 	}
@@ -104,7 +115,7 @@ export default function AccountSettings() {
 					<Typography component="h1" variant="h5" sx={{ color: 'black', marginBottom: 2 }}>
 						Account Settings
 					</Typography>
-					
+
 					<Typography variant="subtitle1" gutterBottom>Personal Information</Typography>
 					<Box sx={{ width: '100%', mb: 2, pl: 2, pr: 2 }}>
 						<Typography variant="body1" color='#424242'>

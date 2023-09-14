@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FC } from 'react';
 import SearchData from './components/SearchData';
 import Favorites from './components/Favs';
 import { useAuth } from './components/Auth';
@@ -14,6 +14,7 @@ import AccountSettings from './components/AccountSettings';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import backgroundImg from './assets/Musicplugbg.jpg';
 import Footer from './components/Footer';
+import { AuthContextValue } from './types/authTypes';
 
 
 
@@ -37,8 +38,8 @@ const theme = createTheme({
   },
 });
 
-function MainContent() {
-  const { isLoggedIn, loggedInUser} = useAuth();
+const MainContent: FC = () => {
+  const { isLoggedIn, loggedInUser } = useAuth() as AuthContextValue;
   const location = useLocation();
   const isHomePage = location.pathname === '/' && !location.search;
 

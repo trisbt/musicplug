@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -13,10 +13,14 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider, Theme } from '@mui/material/styles';
 import { useAuth } from './Auth';
+import {AuthContextValue, CopyrightProps } from './types/authTypes'; 
 
-function Copyright(props) {
+interface SignInProps {};
+
+
+function Copyright(props: CopyrightProps) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
@@ -30,7 +34,7 @@ function Copyright(props) {
 }
 
 
-const defaultTheme = createTheme({
+const defaultTheme: Theme = createTheme({
   palette: {
     primary: {
       main: '#0052cc',
@@ -41,16 +45,16 @@ const defaultTheme = createTheme({
   },
 });
 
-export default function SignIn() {
+export default function SignIn(props:SignInProps) {
   const [rememberMe, setRememberMe] = useState(false);
-  const { handleLogin, errorMsg } = useAuth();
+  const { handleLogin, errorMsg } = useAuth() as AuthContextValue;
   const navigate = useNavigate();
-  const handleCheckboxChange = (event) => {
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRememberMe(event.target.checked);
 
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const username = event.target.username.value;
     const password = event.target.password.value;
@@ -66,14 +70,10 @@ export default function SignIn() {
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs" sx={{
         backgroundColor: 'white',
-        // backdropFilter: 'blur(10px)',
-        // backgroundColor: 'rgba(255, 255, 255, 0.4)', 
-        // opacity: 0.5
       }}>
         <CssBaseline />
         <Box
           sx={{
-            // backgroundColor: 'white',
             marginTop: 8,
             display: 'flex',
             flexDirection: 'column',
@@ -113,8 +113,8 @@ export default function SignIn() {
                 <Checkbox
                   value="remember"
                   color="primary"
-                  checked={rememberMe} // Checked status
-                  onChange={handleCheckboxChange} // Change handler
+                  checked={rememberMe} 
+                  onChange={handleCheckboxChange} 
                 />
               }
               label="Remember me"

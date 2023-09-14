@@ -1,37 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { Box, CircularProgress } from '@mui/material';
 
-const SearchId = ({ artists, song, onReceiveAlias }) => {
-  const [credits, setCredits] = useState([]);
+interface Credit {
+  artist_name: string;
+  role: string;
+}
+
+interface SearchIdProps {
+  artists: { name: string }[];
+  song: string;
+  onReceiveAlias: () => void;
+}
+
+const SearchId: React.FC<SearchIdProps>= ({ artists, song, onReceiveAlias }) => {
+  const [credits, setCredits] = useState<Credit[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+
   useEffect(() => {
-    fetch(`/getCredits/?artist=${artists[0].name}&song=${song}`)
+    fetch(`/api/getCredits/?artist=${artists[0].name}&song=${song}`)
       .then(response => response.json())
-      .then(res => {      
-        setIsLoading(false);  // Setting loading state to false here
+      .then(res => {
+        setIsLoading(false);
         if (res.data === 'No credits available') {
-          setCredits([{ artist_name: ' No credits available as of', role:'6/1/2023' }]);
+          setCredits([{ artist_name: ' No credits available as of', role: '6/1/2023' }]);
           return;
-        }else{
-          
-            // onReceiveAlias(res.alias);
-        
         }
         setCredits(res.data);
       })
       .catch(err => {
         console.log(err);
-        setIsLoading(false);  // Also setting loading state to false in case of an error
+        setIsLoading(false);
         return;
       })
   }, []);
 
   if (isLoading) {
     return (
-      <Box
-      //  display="flex" justifyContent="center" alignItems="center" height="100vh"
-       >
+      <Box>
         <CircularProgress />
       </Box>
     );

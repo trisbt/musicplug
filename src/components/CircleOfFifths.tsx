@@ -3,14 +3,19 @@ import { ArcElement } from "chart.js";
 import Chart from "chart.js/auto";
 import { Pie, Doughnut } from 'react-chartjs-2';
 import Grid from '@mui/material/Grid'
-
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { grey } from '@mui/material/colors';
 
 Chart.register(ArcElement)
-const data = [
+
+interface CircleOfFifthsProps{
+  activeSlice: string | null;
+  setActiveSlice: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+const data: DataItem[] = [
   { id: 1, value: 10, label: 'C' },
   { id: 2, value: 10, label: 'G' },
   { id: 3, value: 10, label: 'D' },
@@ -24,7 +29,7 @@ const data = [
   { id: 11, value: 10, label: 'Bb' },
   { id: 12, value: 10, label: 'F' },
 ];
-const minorKeys = [
+const minorKeys: DataItem[] = [
   { id: 1, value: 10, label: 'Am' },
   { id: 2, value: 10, label: 'Em' },
   { id: 3, value: 10, label: 'Bm' },
@@ -39,11 +44,10 @@ const minorKeys = [
   { id: 12, value: 10, label: 'Dm' },
 ];
 
-const defaultColors = Array(data.length).fill(grey[500]);
+const defaultColors: string[] = Array(data.length).fill(grey[500]);
+const hoverColors: string[] = ['#b71c1c', '#ff5722', '#ff9800', '#ffeb3b', '#8bc34a', '#4caf50', '#26a69a', '#00bcd4', '#03a9f4', '#3f51b5', '#673ab7', '#9c27b0'];
 
-const hoverColors = ['#b71c1c', '#ff5722', '#ff9800', '#ffeb3b', '#8bc34a', '#4caf50', '#26a69a', '#00bcd4', '#03a9f4', '#3f51b5', '#673ab7', '#9c27b0'];
-
-export default function CircleOfFifths({ activeSlice, setActiveSlice }) {
+const CircleOfFifths: React.FC<CircleOfFifthsProps> = ({ activeSlice, setActiveSlice }) => {
   const chartData = {
     labels: [...data.map(d => d.label), ...minorKeys.map(d => d.label)],
     datasets: [
@@ -183,10 +187,4 @@ export default function CircleOfFifths({ activeSlice, setActiveSlice }) {
     </div>
   );
 }
-
-
-
-
-
-
-
+export default CircleOfFifths;

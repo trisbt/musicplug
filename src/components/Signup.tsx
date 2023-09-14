@@ -9,10 +9,13 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider, Theme } from '@mui/material/styles';
 import { useAuth } from './Auth';
+import { AuthContextValue, CopyrightProps } from './types/authTypes';
 
-function Copyright(props) {
+interface SignUpProps { };
+
+function Copyright(props: CopyrightProps) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
@@ -25,32 +28,32 @@ function Copyright(props) {
   );
 }
 
-const defaultTheme = createTheme();
+const defaultTheme: Theme = createTheme();
 
-export default function SignUp() {
-  const { handleSignup, errorMsg, setErrorMsg } = useAuth();
+export default function SignUp(props: SignUpProps) {
+  const { handleSignup, errorMsg, setErrorMsg } = useAuth() as AuthContextValue;
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const username = event.target.username.value;
     const password = event.target.password.value;
     const email = event.target.email.value;
     const firstname = event.target.firstname.value;
     const lastname = event.target.lastname.value;
-  
+
     if (!email.includes('@')) {
       setErrorMsg('Invalid email format.');
       return;
     }
     // Add other validations here...
-  
+
     try {
       await handleSignup(username, email, password, firstname, lastname);
     } catch (error) {
       console.error('Error:', error);
     }
   };
-  
+
 
   return (
     <ThemeProvider theme={defaultTheme}>

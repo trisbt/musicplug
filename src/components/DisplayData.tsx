@@ -6,8 +6,23 @@ import { Button, Card, CardContent, CardMedia, Grid, IconButton, styled, Typogra
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import { grey } from '@mui/material/colors';
+import { Artists, DataItem, AudioDataItem } from '.types/dataTypes'
 
+interface KeyMapping {
+  [key: number]: [string, string];
+}
 
+interface DisplayDataProps {
+  data: DataItem[];
+  audioData: AudioDataItem[];
+  username: string | null;
+  onLoadMore: () => void;
+  userFav: Record<string, boolean>;
+  searchResult: string;
+  customStyles: React.CSSProperties;
+}
+
+//styled buttons
 const SmallPlayButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
   backgroundColor: grey[900],
@@ -56,7 +71,8 @@ const LoadButton = styled(Button)(({ theme }) => ({
   // padding: theme.spacing(1.2),
 }));
 
-const keyConvert = (num, mode) => {
+//bpm and key helper conversions
+const keyConvert: KeyMapping = (num: number, mode: number): string => {
   const chart = {
     '0': ['C', 'Am'],
     '1': ['Db', 'Bbm'],
@@ -80,17 +96,14 @@ const keyConvert = (num, mode) => {
     return "Unknown";
   }
 }
-
-
-function tempoRound(num) {
+function tempoRound(num: number): number {
   return Math.round(num * 2) / 2;
 }
 
-const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchResult, customStyles }) => {
-  const [favoriteMap, setFavoriteMap] = useState({});
-  // const [pageFav, setPageFav] = useState('');
-  const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState(null);
-  const audioRef = useRef(null);
+const DisplayData: React.FC<DisplayDataProps> = ({ data, audioData, username, onLoadMore, userFav, searchResult, customStyles }) => {
+  const [favoriteMap, setFavoriteMap] = useState<Record<string, boolean>>({});
+  const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   //needed to show user favorites in search results
   useEffect(() => {
@@ -98,7 +111,6 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
       setFavoriteMap(userFav);
     }
   }, [userFav, username]);
-
 
   if (!data && !audioData) {
     return null;
@@ -151,7 +163,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
     results.push(combinedObject);
   }
 
-  const playAudio = (event, previewUrl) => {
+  const playAudio = (event: React.MouseEvent, previewUrl: string | null) => {
     event.stopPropagation();
     event.preventDefault();
 
@@ -171,13 +183,22 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
       }
     }
   };
-
-  const handleFavorite = async (event, item, username) => {
+  interface HandleFavoriteItem {
+    id: string;
+    name: string;
+    artists: string[];
+    albums: string;
+    images: string;
+    key: string;
+    tempo: number;
+    loudness: number;
+  }
+  const handleFavorite = async (event: React.MouseEvent, item, username: string) => {
     event.stopPropagation();
     event.preventDefault();
     const { id, name, artists, albums, images, key, tempo, loudness } = item;
     try {
-      const response = await fetch('/addFavs', {
+      const response = await fetch('/api/addFavs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -207,7 +228,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
 
   return (
     <div>
-      <Grid container xs={12} justifyContent='center' >
+      <Grid container item xs={12} justifyContent='center' >
         {results.length > 0 && (
           <>
             {/* search result text row */}
@@ -220,7 +241,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
             {/* main search */}
             {results.map((item, index) => (
 
-              <Grid item xs={11} md={8} direction="row" key={index}>
+              <Grid item xs={11} md={8} key={index}>
                 {/* each card */}
                 <Link
                   to={{
@@ -447,7 +468,7 @@ const DisplayData = ({ data, audioData, username, onLoadMore, userFav, searchRes
             ))}
 
 
-            <Grid xs={12} sx={{
+            <Grid item xs={12} sx={{
               paddingTop: '1em',
               paddingBottom: '1em',
             }}>

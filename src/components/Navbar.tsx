@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, MouseEvent } from 'react';
 import { useNavigation, useSearchParams, useNavigate } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -15,17 +15,22 @@ import { Card } from '@mui/material';
 import musicpluglogow from '../assets/musicpluglogow.png';
 import { useAuth } from './Auth';
 
+interface MenuState {
+  anchorElNav: null | HTMLElement;
+  anchorElUser: null | HTMLElement;
+}
 // const pages = [];
 const settings = ['Favorites', 'Account', 'Logout'];
 
 function ResponsiveAppBar() {
-  const { loggedInUser, isLoggedIn, handleLogout } = useAuth();
-  const [anchorElNav, setAnchorElNav] = useState(null);
-  const [anchorElUser, setAnchorElUser] = useState(null);
+  const { loggedInUser, isLoggedIn, handleLogout } = useAuth() as AuthContextValue;
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const handleOpenUserMenu = (event) => {
+
+  const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
 
@@ -38,7 +43,7 @@ function ResponsiveAppBar() {
   };
   const userInitial = loggedInUser ? loggedInUser[0].toUpperCase() : '';
 
-  const handleHomeClick = (event) => {
+  const handleHomeClick = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     setSearchParams({ q: '' });
     window.location.href = '/';

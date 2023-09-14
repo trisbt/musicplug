@@ -1,0 +1,72 @@
+import React from "react";
+
+export interface Artist {
+    name: string;
+}
+export interface DataItem {
+    name: string;
+    album: {
+        images: { url: string }[];
+        release_date: string;
+        name: string;
+    };
+    artists: Artist[];
+    preview_url: string;
+    explicit: boolean;
+    popularity: number;
+    id: string;
+}
+export interface AudioDataItem {
+    key: number;
+    mode: number;
+    tempo: number;
+    loudness: number;
+    energy: number;
+    acousticness: number;
+    analysis_url: string;
+    danceability: number;
+    duration_ms: number;
+    instrumentalness: number;
+    liveness: number;
+    time_signature: number;
+    track_href: string;
+    uri: string;
+    valence: number;
+}
+
+export interface SongDetails {
+    id: string;
+    name: string;
+    artists: Artist[];
+    albums: any[];  
+    images: Image[];  
+    release_date: string;
+    preview_url: string;
+    key: number;
+    tempo: number;
+    loudness: number;
+    energy: number;
+    acousticness: number;
+    analysis_url: string;
+    danceability: number;
+    duration_ms: number;
+    instrumentalness: number;
+    liveness: number;
+    time_signature: number;
+    track_href: string;
+    uri: string;
+    valence: number;
+    explicit: boolean;
+    popularity: number;
+  }
+  export interface Image {
+    url: string;
+    width: number;
+    height: number;
+  }
+  
+  export interface LocationState {
+    songDetails: SongDetails;
+    username: string;
+    isFavorite: boolean;
+  }

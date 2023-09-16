@@ -1,20 +1,26 @@
 import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { useState, useEffect, FC } from 'react';
+import React, { useState, useEffect, FC } from 'react';
 import SearchData from './components/SearchData';
-import Favorites from './components/Favs';
 import { useAuth } from './components/Auth';
 import ResponsiveAppBar from './components/Navbar';
 import './App.css';
-import SignIn from './components/Login';
-import SignUp from './components/Signup';
 import Splash from './components/Splash';
-import SongPage from './components/SongPage';
-import AccountSettings from './components/AccountSettings';
+// import SongPage from './components/SongPage';
+// import AccountSettings from './components/AccountSettings';
+// import SignIn from './components/Login';
+// import SignUp from './components/Signup';
+// import Favorites from './components/Favs';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import backgroundImg from './assets/Musicplugbg.jpg';
 import Footer from './components/Footer';
 import { AuthContextValue } from '@appTypes/authTypes';
-import {SearchDataProps} from '@appTypes/dataTypes'
+import { SearchDataProps } from '@appTypes/dataTypes'
+
+const SignUp = React.lazy(() => import('./components/Signup'));
+const SignIn = React.lazy(() => import('./components/Login'));
+const SongPage = React.lazy(() => import('./components/SongPage'));
+const Favorites = React.lazy(() => import('./components/Favs'));
+const AccountSettings = React.lazy(() => import('./components/AccountSettings'));
 
 
 
@@ -96,11 +102,14 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <ResponsiveAppBar />
-        <MainContent />
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <MainContent />
+        </React.Suspense>
         <Footer />
       </Router>
     </ThemeProvider>
   );
 }
+
 
 export default App;

@@ -27,6 +27,7 @@ yarn-error.log*
 dnu.ts
 NavSearchBar.tsx
 discogsController.ts
+TopTracks.tsx
 
 #db
 pgModel.ts

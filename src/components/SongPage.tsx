@@ -8,7 +8,8 @@ import StopIcon from '@mui/icons-material/Stop';
 import { grey } from '@mui/material/colors';
 import SearchId from './SearchId';
 import SearchData from './SearchData';
-import { Artist, Image, LocationState, SongDetails } from './types/dataTypes';
+import { Artist, LocationState, SongDetails, SongPageProps } from '@appTypes/dataTypes';
+
 
 
 
@@ -102,12 +103,13 @@ const msConvert = (num: number): string => {
 
 
 //main page func
-const SongPage = () => {
+const SongPage = (props: SongPageProps) => {
   // const { id } = useParams();
-  const location = useLocation<LocationState>();
-  const songDetails = location.state?.songDetails;
-  const username = location.state?.username;
-  const isFavorite = location.state?.isFavorite;
+  const location = useLocation();
+  const state = location.state as LocationState;
+  const songDetails = state?.songDetails;
+  const username = state?.username;
+  const isFavorite = state?.isFavorite;
 
   const [open, setOpen] = useState<boolean>(false);
   const [pageFav, setPageFav] = useState<boolean>(isFavorite || false);
@@ -116,8 +118,9 @@ const SongPage = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const playAudio = (event: React.MouseEvent, previewUrl: string | null) => {
-    audioRef.current.volume = .3;
-    if (previewUrl) {
+    if (audioRef.current && previewUrl) {
+      audioRef.current.volume = .3;
+
       if (audioRef.current.src === previewUrl && !audioRef.current.paused) {
         audioRef.current.pause();
         setCurrentlyPlayingUrl(null);
@@ -132,6 +135,7 @@ const SongPage = () => {
       }
     }
   };
+
 
   //can show aliases for artist not used from songid
   const handleAlias = (alias: string[]) => {
@@ -158,7 +162,10 @@ const SongPage = () => {
   }));
 
   const handleFavorite = async (event: React.MouseEvent, username: string) => {
-
+    if (!songDetails) {
+      console.error('songDetails is not defined.');
+      return; 
+    }
     const { id, name, artists, albums, images, key, tempo, loudness } = songDetails;
     try {
       const response = await fetch('/api/addFavs', {
@@ -289,7 +296,7 @@ const SongPage = () => {
                     {/*fav button render*/}
                     {username && (
                       <FavButton
-                        variant="elevated"
+                        // variant="elevated"
                         className='fav-icon-button'
                         onClick={(event) => handleFavorite(event, username)}
                         sx={{
@@ -349,7 +356,7 @@ const SongPage = () => {
                     {/*small fav button render*/}
                     {username && (
                       <SmallFavButton
-                        backgroundColor='red'
+                        // backgroundColor='red'
                         onClick={(event) => handleFavorite(event, username)}
                         sx={{
                           display: { xs: 'flex', sm: 'flex', md: 'none' },

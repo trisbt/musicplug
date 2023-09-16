@@ -36,6 +36,14 @@ interface Row {
   tempo: number;
   id: string;
 };
+
+interface SelectedRow {
+  song: string;
+  id: string;
+};
+
+type CreateDataType = (song: string, artist: string, album: string, key: string, tempo: number, id: string) => Row;
+
 interface EnhancedTableHeadProps {
   numSelected: number;
   onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Row) => void;
@@ -51,7 +59,7 @@ interface EnhancedTableToolbarProps {
 interface EnhancedTableProps {
   favorites: any[];
   initialRenderDone: boolean;
-  activeSlice?: string;
+  activeSlice?: string | null;
   username: string;
   setFavDeleteRender: React.Dispatch<React.SetStateAction<boolean>>;
   favDeleteRender: boolean;
@@ -75,7 +83,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-const createData: Row = (song, artist, album, key, tempo, id) => {
+const createData: CreateDataType = (song, artist, album, key, tempo, id) => {
   return {
     song, artist, album, key, tempo, id
   };
@@ -83,8 +91,8 @@ const createData: Row = (song, artist, album, key, tempo, id) => {
 
 const descendingComparator = (a: Row, b:Row, orderBy: keyof Row): number=>{
   if (typeof a[orderBy] === 'string' && typeof b[orderBy] === 'string') {
-    const lowerA = a[orderBy].toLowerCase();
-    const lowerB = b[orderBy].toLowerCase();
+    const lowerA = (a[orderBy] as string).toLowerCase();
+    const lowerB = (b[orderBy] as string).toLowerCase();
 
     if (lowerB < lowerA) {
       return -1;
@@ -110,7 +118,7 @@ const getComparator = (order: 'asc' | 'desc', orderBy: keyof Row) =>  {
 }
 
 const stableSort = (array: Row[], comparator: (a: Row, b: Row) => number): Row[] => {
-  const stabilizedThis = array.map((el, index) => [el, index]);
+  const stabilizedThis = array.map((el, index) => [el, index] as [Row, number]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) {
@@ -121,7 +129,7 @@ const stableSort = (array: Row[], comparator: (a: Row, b: Row) => number): Row[]
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells: HeadCell = [
+const headCells: HeadCell[] = [
   {
     id: 'song',
     numeric: false,
@@ -205,10 +213,11 @@ EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
+  order: PropTypes.oneOf<'asc' | 'desc'>(['asc', 'desc']).isRequired,
+  orderBy: PropTypes.oneOf<keyof Row>(['song', 'artist', 'album', 'key', 'tempo', 'id']).isRequired,
   rowCount: PropTypes.number.isRequired,
 };
+
 
 const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
   const { numSelected, handleDelete } = props;
@@ -278,9 +287,9 @@ EnhancedTableToolbar.propTypes = {
 };
 
 const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderDone, activeSlice, username, setFavDeleteRender, favDeleteRender }) => {
-  const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('song');
-  const [selected, setSelected] = useState<Row[]>([]);
+  const [order, setOrder] = useState<"desc" | "asc">("asc");
+  const [orderBy, setOrderBy] = useState<keyof Row>('song');
+  const [selected, setSelected] = useState<SelectedRow[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
 
@@ -329,18 +338,26 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => ({ song: n.song, id: n.id }));
+      const newSelected = rows.map((n) => ({ 
+        song: n.song, 
+        artist: n.artist, 
+        album: n.album, 
+        key: n.key, 
+        tempo: n.tempo, 
+        id: n.id 
+      }));
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
+  
 
 
   const handleClick = (event, name, id) => {
     const selectedIndex = selected.findIndex(item => item.song === name);
-    let newSelected = [];
-
+    let newSelected: SelectedRow[] = [];
+  
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, { song: name, id: id });
     } else if (selectedIndex === 0) {
@@ -353,9 +370,9 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
         selected.slice(selectedIndex + 1),
       );
     }
-
     setSelected(newSelected);
   };
+  
 
 
   const handleChangePage = (event, newPage) => {
@@ -367,7 +384,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
     setPage(0);
   };
 
-  const isSelected = (name) => selected.some(item => item.song === name);
+  const isSelected = (name, id) => selected.some(item => item.song === name && item.id === id);
 
 
   // Avoid a layout jump when reaching the last page with empty rows.

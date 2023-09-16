@@ -1,6 +1,7 @@
 import React, { useState, useEffect, FC } from 'react';
 import CircleOfFifths from './CircleOfFifths';
 import EnhancedTable from './Table';
+import { type } from 'os';
 
 interface FavoritesProps {
   username: string;
@@ -21,9 +22,10 @@ interface UserFavorite {
 const Favorites: FC<FavoritesProps> = ({ username }) => {
   const [userFavorites, setUserFavorites] = useState<UserFavorite[]>([]);
   const [initialRenderDone, setInitialRenderDone] = useState<boolean>(false);
-  const [activeSlice, setActiveSlice] = useState<number | null>(null);
+  const [activeSlice, setActiveSlice] = useState<string | null>(null);
   const [favDeleteRender, setFavDeleteRender] = useState<boolean>(false);
-
+console.log(activeSlice);
+console.log(typeof activeSlice)
   useEffect(() => {
     const fetchFavorites = () => {
       fetch('/api/favs', {

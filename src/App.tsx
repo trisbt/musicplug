@@ -9,12 +9,12 @@ import SignIn from './components/Login';
 import SignUp from './components/Signup';
 import Splash from './components/Splash';
 import SongPage from './components/SongPage';
-// import TopTracks from './components/TopTracks';
 import AccountSettings from './components/AccountSettings';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import backgroundImg from './assets/Musicplugbg.jpg';
 import Footer from './components/Footer';
-import { AuthContextValue } from './types/authTypes';
+import { AuthContextValue } from '@appTypes/authTypes';
+import {SearchDataProps} from '@appTypes/dataTypes'
 
 
 
@@ -84,7 +84,6 @@ const MainContent: FC = () => {
               {isLoggedIn && <Route path="/favs" element={<Favorites username={loggedInUser} />} />}
               {isLoggedIn && <Route path="/account" element={<AccountSettings />} />}
             </Routes>
-            {/* <TopTracks username={loggedInUser} /> */}
           </div>
         </div>
       </div>

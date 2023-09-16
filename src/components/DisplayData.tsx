@@ -2,24 +2,28 @@ import { Link } from 'react-router-dom';
 import React, { useState, useRef, useEffect, } from 'react';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
-import { Button, Card, CardContent, CardMedia, Grid, IconButton, styled, Typography } from '@mui/material';
+import { Button, Card, CardContent, CardMedia, Grid, IconButton, styled, Typography, Theme } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import { grey } from '@mui/material/colors';
-import { Artists, DataItem, AudioDataItem } from '.types/dataTypes'
+import { Artist, DataItem, AudioDataItem, ResultItem } from '@appTypes/dataTypes';
 
 interface KeyMapping {
   [key: number]: [string, string];
 }
+type KeyConvertFunction = (num: number, mode: number) => string;
+
+type CombinedDataType = DataItem & AudioDataItem;
 
 interface DisplayDataProps {
   data: DataItem[];
   audioData: AudioDataItem[];
-  username: string | null;
+  username?: string | null;
   onLoadMore: () => void;
-  userFav: Record<string, boolean>;
+  userFav?: Record<string, boolean>;
   searchResult: string;
-  customStyles: React.CSSProperties;
+  customStyles?: React.CSSProperties;
+  theme?: Theme;
 }
 
 //styled buttons
@@ -34,7 +38,6 @@ const SmallPlayButton = styled(IconButton)(({ theme }) => ({
   width: '40px',
   height: '40px',
 }));
-
 const SmallFavButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
   backgroundColor: grey[900],
@@ -46,7 +49,6 @@ const SmallFavButton = styled(IconButton)(({ theme }) => ({
   width: '40px',
   height: '40px',
 }));
-
 const FavSolid = styled(GradeIcon)(({ theme }) => ({
   color: theme.palette.secondary.main,
   '&:hover': {
@@ -72,8 +74,8 @@ const LoadButton = styled(Button)(({ theme }) => ({
 }));
 
 //bpm and key helper conversions
-const keyConvert: KeyMapping = (num: number, mode: number): string => {
-  const chart = {
+const keyConvert: KeyConvertFunction = (num: number, mode: number): string => {
+  const chart: KeyMapping = {
     '0': ['C', 'Am'],
     '1': ['Db', 'Bbm'],
     '2': ['D', 'Bm'],
@@ -107,7 +109,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ data, audioData, username, on
 
   //needed to show user favorites in search results
   useEffect(() => {
-    if (username) {
+    if (username && userFav) {
       setFavoriteMap(userFav);
     }
   }, [userFav, username]);
@@ -127,7 +129,6 @@ const DisplayData: React.FC<DisplayDataProps> = ({ data, audioData, username, on
   });
 
   const audioFeatures = audioData.map((item) => {
-    // console.log('ddddiem', item)
     if (item) {
       const key = keyConvert(item.key, item.mode);
       const tempo = tempoRound(item.tempo);
@@ -153,8 +154,8 @@ const DisplayData: React.FC<DisplayDataProps> = ({ data, audioData, username, on
     }
   });
 
-  const results = [];
-
+  const results: ResultItem[] = [];
+  console.log(results)
   for (let i = 0; i < basicData.length; i++) {
     const combinedObject = {
       ...basicData[i],
@@ -163,12 +164,13 @@ const DisplayData: React.FC<DisplayDataProps> = ({ data, audioData, username, on
     results.push(combinedObject);
   }
 
+
   const playAudio = (event: React.MouseEvent, previewUrl: string | null) => {
     event.stopPropagation();
     event.preventDefault();
+    if (audioRef.current && previewUrl) {
+      audioRef.current.volume = .3;
 
-    audioRef.current.volume = .3;
-    if (previewUrl) {
       if (audioRef.current.src === previewUrl && !audioRef.current.paused) {
         audioRef.current.pause();
         setCurrentlyPlayingUrl(null);
@@ -183,6 +185,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ data, audioData, username, on
       }
     }
   };
+
   interface HandleFavoriteItem {
     id: string;
     name: string;
@@ -193,6 +196,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ data, audioData, username, on
     tempo: number;
     loudness: number;
   }
+
   const handleFavorite = async (event: React.MouseEvent, item, username: string) => {
     event.stopPropagation();
     event.preventDefault();
@@ -239,7 +243,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ data, audioData, username, on
             </Grid>
 
             {/* main search */}
-            {results.map((item, index) => (
+            {results.map((item: ResultItem, index: number) => (
 
               <Grid item xs={11} md={8} key={index}>
                 {/* each card */}
@@ -430,7 +434,8 @@ const DisplayData: React.FC<DisplayDataProps> = ({ data, audioData, username, on
                                 borderRadius: '50px',
                                 // display: { xs: 'flex', sm: 'none', md: 'none' },
                               }}
-                                onClick={(event) => playAudio(event, item.preview_url)}>
+                                onClick={(event) => playAudio(event, item.preview_url || null)}
+                              >
                                 {currentlyPlayingUrl === item.preview_url ? (
                                   <>
                                     <StopIcon aria-label="stop"

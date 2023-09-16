@@ -9,7 +9,7 @@ interface Credit {
 interface SearchIdProps {
   artists: { name: string }[];
   song: string;
-  onReceiveAlias: () => void;
+  onReceiveAlias: (alias: string[]) => void;
 }
 
 const SearchId: React.FC<SearchIdProps>= ({ artists, song, onReceiveAlias }) => {

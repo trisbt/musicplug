@@ -16,6 +16,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuth } from './Auth';
+import { AuthContextValue } from '@appTypes/authTypes';
 
 interface UserDetails {
 	userInfo: {
@@ -26,31 +27,29 @@ interface UserDetails {
 	};
 }
 
-interface AuthHooks {
-	userDetails: UserDetails;
-	changePass: (username: string, email: string, passwordOld: string, passwordNew: string) => Promise<string>;
-	deleteAcct: (username: string, email: string) => Promise<string>;
-	handleLogout: () => void;
-}
+
 
 const defaultTheme = createTheme();
 
 export default function AccountSettings() {
-	const { userDetails, changePass, deleteAcct, handleLogout }: AuthHooks = useAuth();
+	const { userDetails, changePass, deleteAcct, handleLogout } = useAuth() as AuthContextValue;
 	const [errorMsg, setErrorMsg] = useState<string>('');
 	const [successMsg, setSuccessMsg] = useState<string>('');
 	const [openDialog, setOpenDialog] = useState<boolean>(false);
+	const [openPasswordDialog, setOpenPasswordDialog] = useState<boolean>(false);
 
 	const username: string = userDetails.userInfo.username;
 	const email: string = userDetails.userInfo.email;
 
-	const handleClickOpen = (type: string) => {
+	const handleClickOpen = (type: string) => (event: React.MouseEvent) => {
+		event.preventDefault();
 		if (type === "delete") {
 			setOpenDialog(true);
 		} else if (type === "password") {
 			setOpenPasswordDialog(true);
 		}
 	};
+
 
 	const handleClose = () => {
 		setOpenDialog(false);
@@ -72,9 +71,14 @@ export default function AccountSettings() {
 				setErrorMsg('');
 			}
 		} catch (err) {
-			setErrorMsg(err.message || 'An error occurred');
+			if (err instanceof Error) {
+				setErrorMsg(err.message || 'An error occurred');
+			} else {
+				setErrorMsg('An error occurred');
+			}
 			setSuccessMsg('');
 		}
+
 	};
 
 	const handleDeleteAcct = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -91,7 +95,11 @@ export default function AccountSettings() {
 			}, 1000);
 
 		} catch (err) {
-			setErrorMsg(err.message || 'An error occurred');
+			if (err instanceof Error) {
+				setErrorMsg(err.message || 'An error occurred');
+			} else {
+				setErrorMsg('An error occurred');
+			}
 			setSuccessMsg('');
 		}
 
@@ -182,9 +190,10 @@ export default function AccountSettings() {
 							</Grid>
 							<Grid container justifyContent="flex-end" mt={2}>
 								<Grid item>
-									<Link href="/deleteaccount" onClick={handleClickOpen} variant="body2" color="error">
+									<Link href="/deleteaccount" onClick={handleClickOpen("delete")} variant="body2" color="error">
 										Delete your account
 									</Link>
+
 									<Dialog
 										open={openDialog}
 										onClose={handleClose}

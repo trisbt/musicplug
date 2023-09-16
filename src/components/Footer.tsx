@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { Box, Link, Typography } from '@mui/material';
 
 const Footer: FC = () => {
@@ -7,8 +8,8 @@ const Footer: FC = () => {
       <Box
         sx={{
           backgroundColor: '#0047d4',
-          padding: '20px',  
-          maxHeight: '300px', 
+          padding: '20px',
+          maxHeight: '300px',
           overflowY: 'auto',
           display: 'flex',
           flexDirection: 'column',
@@ -35,7 +36,7 @@ const Footer: FC = () => {
           </Typography>
         </Box>
       </Box>
-          <hr />
+      <hr />
       <Box
         sx={{
           backgroundColor: '#FFFFFF',
@@ -53,16 +54,16 @@ const Footer: FC = () => {
           padding: '0.5rem',
         }}>
           <Typography variant="subtitle2" color='text.secondary' gutterBottom sx={{
-            display: 'flex',        
+            display: 'flex',
             alignItems: 'center',
-           
+
           }}>
             Song data provided by
-            <Link to={'https://www.spotify.com'} sx={{
+            <Link component={RouterLink} to={'https://www.spotify.com'} sx={{
               textDecoration: 'none',
               color: 'inherit',
-              display: 'flex',    
-              margin: '0.5rem',   
+              display: 'flex',
+              margin: '0.5rem',
               alignItems: 'center',
               ':hover': {
                 cursor: 'pointer',
@@ -83,11 +84,11 @@ const Footer: FC = () => {
           }}>
             Credits data provided by Discogs Monthly Data Dumps - last updated 06-01-2023
           </Typography>
-          
+
         </Box>
 
       </Box>
-      
+
     </div>
   );
 };

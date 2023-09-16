@@ -15,9 +15,10 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider, Theme } from '@mui/material/styles';
 import { useAuth } from './Auth';
-import {AuthContextValue, CopyrightProps } from './types/authTypes'; 
+import { AuthContextValue, CopyrightProps } from '@appTypes/authTypes';
 
-interface SignInProps {};
+
+interface SignInProps { };
 
 
 function Copyright(props: CopyrightProps) {
@@ -45,7 +46,7 @@ const defaultTheme: Theme = createTheme({
   },
 });
 
-export default function SignIn(props:SignInProps) {
+export default function SignIn(props: SignInProps) {
   const [rememberMe, setRememberMe] = useState(false);
   const { handleLogin, errorMsg } = useAuth() as AuthContextValue;
   const navigate = useNavigate();
@@ -56,8 +57,9 @@ export default function SignIn(props:SignInProps) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const username = event.target.username.value;
-    const password = event.target.password.value;
+    const form = event.target as HTMLFormElement;
+    const username = form.username.value;
+    const password = form.password.value;
     try {
       await handleLogin(username, password, rememberMe, () => navigate('/'));
 
@@ -113,8 +115,8 @@ export default function SignIn(props:SignInProps) {
                 <Checkbox
                   value="remember"
                   color="primary"
-                  checked={rememberMe} 
-                  onChange={handleCheckboxChange} 
+                  checked={rememberMe}
+                  onChange={handleCheckboxChange}
                 />
               }
               label="Remember me"

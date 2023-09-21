@@ -10,7 +10,7 @@ import SearchCredits from './SearchCredits';
 import SearchData from './SearchData';
 import SearchByIdOrArtistSong from '../utils/SearchByIdOrArtistSong';
 import { AuthContextValue } from '@appTypes/authTypes';
-import { Artist, LocationState, SongDetails, SongPageProps } from '@appTypes/dataTypes';
+import { Artist, LocationState, ResultItem, SongDetails, SongPageProps } from '@appTypes/dataTypes';
 import { useAuth } from './Auth';
 
 
@@ -109,14 +109,14 @@ const SongPage = (props: SongPageProps) => {
   const [aliasFromChild, setAliasFromChild] = useState<string | null>(null);
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [fetchedData, setFetchedData] = useState<LocationState | null>(null);
+  const [fetchedData, setFetchedData] = useState<{ songDetails: ResultItem; isFavorite: boolean | null } | null>(null);
   const { id, name, artist } = useParams();
   const { loggedInUser } = useAuth() as AuthContextValue;
   const dataToUse = state || fetchedData;
   const songDetails = dataToUse?.songDetails;
   const username = loggedInUser;
   const isFavorite = dataToUse?.isFavorite;
-  const [pageFav, setPageFav] = useState<boolean | null>(isFavorite);
+  const [pageFav, setPageFav] = useState<boolean | null>(isFavorite || null);
 
     //for navigation directly to page
     useEffect(() => {
@@ -130,7 +130,7 @@ const SongPage = (props: SongPageProps) => {
     }, [state, id, username]);
 
     useEffect(() => {
-      setPageFav(isFavorite);
+      setPageFav(isFavorite || null);
       document.title = `MusicPlug: ${artist} - ${name}`;
     }, [isFavorite, name, artist]);
 
@@ -330,9 +330,9 @@ const SongPage = (props: SongPageProps) => {
                         }}
                       >
                         {pageFav ? (
-                          <FavSolid onClick={(event) => handleFavorite(event, username)} />
+                          <FavSolid  />
                         ) : (
-                          <FavOutlined onClick={(event) => handleFavorite(event, username)} />
+                          <FavOutlined />
                         )}
                         add to Favorites
                       </FavButton>
@@ -384,9 +384,9 @@ const SongPage = (props: SongPageProps) => {
                         }}
                       >
                         {pageFav ? (
-                          <FavSolid onClick={(event) => handleFavorite(event, username)} />
+                          <FavSolid  />
                         ) : (
-                          <FavOutlined onClick={(event) => handleFavorite(event, username)} />
+                          <FavOutlined  />
                         )}
                       </SmallFavButton>
                     )}

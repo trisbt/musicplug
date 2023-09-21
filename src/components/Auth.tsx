@@ -62,7 +62,6 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
         setLoggedInUser(data.userInfo.username);
         return true; // User is authenticated
       }
-
       return false; // Handle other response statuses if needed
     } catch (error) {
       handleError(error);

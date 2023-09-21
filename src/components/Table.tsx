@@ -40,8 +40,9 @@ interface Row {
 };
 
 interface SelectedRow {
-  song: string;
+  name: string;
   id: string;
+  artist:string;
 };
 
 type CreateDataType = (song: string, artist: string, album: string, key: string, tempo: number, id: string) => Row;
@@ -232,13 +233,12 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
   };
 
   const handleClick = (event, name, id, artist) => {
-    const selectedIndex = selected.findIndex(item => item.song === name);
+    const selectedIndex = selected.findIndex(item => item.name === name);
     let newSelected: SelectedRow[] = [];
     if (selectedIndex === -1) {
       newSelected = [{ name: name, artist: artist, id: id }];
     }
     setSelected(newSelected);
-    console.log(newSelected[0].artist)
     navigate(`/${newSelected[0].name}/${newSelected[0].artist}/${newSelected[0].id}`);
 
   };
@@ -253,7 +253,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
     setPage(0);
   };
 
-  const isSelected = (name, artist, id) => selected.some(item => item.song === name && item.id === id && item.artist === artist);
+  const isSelected = (name, artist, id) => selected.some(item => item.name === name && item.id === id && item.artist === artist);
 
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -313,7 +313,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
                       selected={isItemSelected}
                       sx={{ cursor: 'pointer' }}
                     >
-                      <TableCell padding= '2'>
+                      <TableCell padding= 'none'>
                       </TableCell>
                       <TableCell
                         component="th"

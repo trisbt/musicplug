@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-//bpm and key helper conversions
+import { Artist, DataItem, AudioDataItem, ResultItem, SongDetails } from '@appTypes/dataTypes';
+
+interface KeyMapping {
+  [key: number]: [string, string];
+}
+type KeyConvertFunction = (num: number, mode: number) => string;
+
 const keyConvert: KeyConvertFunction = (num: number, mode: number): string => {
   const chart: KeyMapping = {
     '0': ['C', 'Am'],
@@ -28,7 +34,6 @@ function tempoRound(num: number): number {
   return Math.round(num * 2) / 2;
 }
 const SearchByIdOrArtistSong = async ({ id, username }) => {
-  // console.log('username', username)
   try {
     const response = await fetch(`/api/getById?id=${id}`);
     const data = await response.json();
@@ -61,7 +66,7 @@ const SearchByIdOrArtistSong = async ({ id, username }) => {
       uri: audioData.uri,
       valence: audioData.valence,
     };
-    const songDetails = { ...basicData, ...audioFeatures };
+    const songDetails: ResultItem = { ...basicData, ...audioFeatures };
     let favData;
     if (username) {
       try {
@@ -78,7 +83,7 @@ const SearchByIdOrArtistSong = async ({ id, username }) => {
         console.error('Error fetching favorites:', error);
       }
     }
-    
+
     const pageSongDetails = {
       songDetails: songDetails,
       isFavorite: favData,

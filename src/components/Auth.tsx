@@ -20,6 +20,9 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const [userDetails, setUserDetails] = useState({});
   const [errorMsg, setErrorMsg] = useState('');
 
+  const handleError = (error) => {
+    console.error('Error:', error);
+  };
 
   //always check if logged in and authenticated
   useEffect(() => {
@@ -28,17 +31,18 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     }
   }, [isLoggedIn]);
 
-  // console.log('atuh',loggedInUser)
-  const checkUserStatus = async () => {
+ const checkUserStatus = async () => {
     try {
       await fetchRm();
-      await checkAuthentication();
+      const isAuthenticated = await checkAuthentication();
+      if (isAuthenticated) {
+        setIsLoggedIn(true);
+      }
     } catch (error) {
-      console.error('Error checking user status:', error);
+      handleError(error);
     }
   };
 
-  //check for session
   const checkAuthentication = async () => {
     try {
       const response = await fetch('/api/validate', {
@@ -46,21 +50,26 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
         credentials: 'include',
       });
 
-      const data = await response.json();
-      if (data.message === 'user validated') {
-        setUserDetails(data);
-        setIsLoggedIn(true);
-        setLoggedInUser(data.userInfo.username);
-      } else {
+      if (response.status === 401) {
         setIsLoggedIn(false);
         setLoggedInUser('');
+        return false; // User is not authenticated
       }
+
+      if (response.ok) {
+        const data = await response.json();
+        setUserDetails(data);
+        setLoggedInUser(data.userInfo.username);
+        return true; // User is authenticated
+      }
+
+      return false; // Handle other response statuses if needed
     } catch (error) {
-      console.error('Error checking authentication:', error);
-      setIsLoggedIn(false);
-      setLoggedInUser('');
+      handleError(error);
+      return false; // An error occurred while checking authentication
     }
-  }
+  };
+
 
   //check remember me cookie
   const fetchRm = async () => {

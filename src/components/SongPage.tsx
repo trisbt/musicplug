@@ -243,7 +243,7 @@ const SongPage = (props: SongPageProps) => {
           </Grid>
 
           {/* top row */}
-          <Grid container xs={12} direction='row' justifyContent="center" sx={{
+          <Grid item container xs={12} direction='row' justifyContent="center" sx={{
             padding: '1em',
           }}>
             {/* First Row - Image and Song Details */}
@@ -298,7 +298,7 @@ const SongPage = (props: SongPageProps) => {
                   <Typography variant="subtitle2">Released: {songDetails.release_date}</Typography>
                   <Typography>{aliasFromChild}</Typography>
 
-                  <Grid container xs={12} alignItems='center' justifyContent='space-between' >
+                  <Grid item container xs={12} alignItems='center' justifyContent='space-between' >
 
                     {/*link spotify render*/}
                     <Link to={songDetails.track_href}>
@@ -488,16 +488,16 @@ const SongPage = (props: SongPageProps) => {
           </Grid>
 
           {/* analysis row */}
-          <Grid container xs={12} justifyContent='center' >
+          <Grid item container xs={12} justifyContent='center' >
 
-            <Grid container xs={12} md={6}>
+            <Grid item container xs={12} md={6}>
               <CardContent sx={{
                 // backgroundColor: 'green',
                 width: '100vw',
               }}>
 
                 {/* loudness */}
-                <Grid container direction="row" xs={12} alignItems='center'>
+                <Grid item container direction="row" xs={12} alignItems='center'>
                   <Grid item xs={3} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Loudness</Typography>
                   </Grid>
@@ -516,7 +516,7 @@ const SongPage = (props: SongPageProps) => {
                 </Grid>
 
                 {/* energy */}
-                <Grid container direction="row" xs={12} alignItems='center'>
+                <Grid item container direction="row" xs={12} alignItems='center'>
                   <Grid item xs={3} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Energy</Typography>
                   </Grid>
@@ -535,7 +535,7 @@ const SongPage = (props: SongPageProps) => {
                 </Grid>
 
                 {/* valence */}
-                <Grid container direction="row" xs={12} alignItems='center'>
+                <Grid item container direction="row" xs={12} alignItems='center'>
                   <Grid item xs={3} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Valence</Typography>
                   </Grid>
@@ -554,7 +554,7 @@ const SongPage = (props: SongPageProps) => {
                 </Grid>
 
                 {/* acousticness */}
-                <Grid container direction="row" xs={12} alignItems='center'>
+                <Grid item container direction="row" xs={12} alignItems='center'>
                   <Grid item xs={4} sm={2.5} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Acousticness</Typography>
                   </Grid>
@@ -573,7 +573,7 @@ const SongPage = (props: SongPageProps) => {
                 </Grid>
 
                 {/* danceability */}
-                <Grid container direction="row" xs={12} alignItems='center'>
+                <Grid item container direction="row" xs={12} alignItems='center'>
                   <Grid item xs={4} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Danceability</Typography>
                   </Grid>
@@ -593,7 +593,7 @@ const SongPage = (props: SongPageProps) => {
 
 
                 {/* liveness */}
-                <Grid container direction="row" xs={12} alignItems='center'>
+                <Grid item container direction="row" xs={12} alignItems='center'>
                   <Grid item xs={3} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Liveness</Typography>
                   </Grid>
@@ -613,7 +613,7 @@ const SongPage = (props: SongPageProps) => {
 
 
                 {/* popularity */}
-                <Grid container direction="row" xs={12} alignItems='center'>
+                <Grid item container direction="row" xs={12} alignItems='center'>
                   <Grid item xs={3} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Popularity</Typography>
                   </Grid>
@@ -634,7 +634,7 @@ const SongPage = (props: SongPageProps) => {
               </CardContent>
             </Grid>
 
-            <Grid container xs={10} md={6}
+            <Grid item container xs={10} md={6}
               // backgroundColor ='red'
               flexDirection='column'
               alignContent="center"

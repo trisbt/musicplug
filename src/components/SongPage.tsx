@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Box, Button, Card, CardMedia, CardContent, createTheme, Fade, Grid, IconButton, LinearProgress, Modal, Paper, styled, Typography, } from '@mui/material';
 import { useParams, useLocation, Link } from 'react-router-dom';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
@@ -6,12 +6,12 @@ import GradeIcon from '@mui/icons-material/Grade';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import { grey } from '@mui/material/colors';
-import SearchId from './SearchId';
+import SearchCredits from './SearchCredits';
 import SearchData from './SearchData';
+import SearchByIdOrArtistSong from '../utils/SearchByIdOrArtistSong';
+import { AuthContextValue } from '@appTypes/authTypes';
 import { Artist, LocationState, SongDetails, SongPageProps } from '@appTypes/dataTypes';
-
-
-
+import { useAuth } from './Auth';
 
 
 const PlayButton = styled(Button)(({ theme }) => ({
@@ -101,21 +101,38 @@ const msConvert = (num: number): string => {
   return minutes + ':' + formattedSeconds;
 }
 
-
 //main page func
 const SongPage = (props: SongPageProps) => {
-  // const { id } = useParams();
   const location = useLocation();
   const state = location.state as LocationState;
-  const songDetails = state?.songDetails;
-  const username = state?.username;
-  const isFavorite = state?.isFavorite;
-
   const [open, setOpen] = useState<boolean>(false);
-  const [pageFav, setPageFav] = useState<boolean>(isFavorite || false);
   const [aliasFromChild, setAliasFromChild] = useState<string | null>(null);
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [fetchedData, setFetchedData] = useState<LocationState | null>(null);
+  const { id } = useParams();
+  const { loggedInUser } = useAuth() as AuthContextValue;
+  const dataToUse = state || fetchedData;
+  const songDetails = dataToUse?.songDetails;
+  const username = loggedInUser;
+  const isFavorite = dataToUse?.isFavorite;
+  const [pageFav, setPageFav] = useState<boolean | null>(isFavorite);
+
+    //for navigation directly to page
+    useEffect(() => {
+      if (!state) {
+        async function fetchData() {
+          const data = await SearchByIdOrArtistSong({ id: id, username: username });
+          setFetchedData(data);
+        }
+        fetchData();
+      }
+    }, [state, id, username]);
+
+    useEffect(() => {
+      setPageFav(isFavorite);
+    }, [isFavorite]);
+
 
   const playAudio = (event: React.MouseEvent, previewUrl: string | null) => {
     if (audioRef.current && previewUrl) {
@@ -135,7 +152,6 @@ const SongPage = (props: SongPageProps) => {
       }
     }
   };
-
 
   //can show aliases for artist not used from songid
   const handleAlias = (alias: string[]) => {
@@ -164,7 +180,7 @@ const SongPage = (props: SongPageProps) => {
   const handleFavorite = async (event: React.MouseEvent, username: string) => {
     if (!songDetails) {
       console.error('songDetails is not defined.');
-      return; 
+      return;
     }
     const { id, name, artists, albums, images, key, tempo, loudness } = songDetails;
     try {
@@ -204,7 +220,7 @@ const SongPage = (props: SongPageProps) => {
           paddingRight: '5px',
           paddingBottom: '5px'
         }}>
-          <Grid container xs={12} direction='row' justifyContent="center" padding='0'
+          <Grid item container xs={12} direction='row' justifyContent="center" padding='0'
             sx={{
               // backgroundColor:'#1a237e',
               width: '100vw',
@@ -629,27 +645,12 @@ const SongPage = (props: SongPageProps) => {
 
               }}>Credits</Typography>
 
-              <SearchId artists={songDetails.artists} song={songDetails.name} onReceiveAlias={handleAlias} />
+              <SearchCredits artists={songDetails.artists} song={songDetails.name} onReceiveAlias={handleAlias} />
 
             </Grid>
           </Grid>
         </Card>
       )}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
   )
 }

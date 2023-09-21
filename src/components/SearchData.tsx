@@ -97,7 +97,7 @@ const SearchData: React.FC<SearchDataProps> = ({ username, customStyles, pStyles
             })
               .then(res => res.json())
               .then(res => {
-                const favArray = res.favorites.map(el => el.id);
+                const favArray = res.map(el => el.id);
                 const obj = {};
                 for (const el of favArray) {
                   if (!obj[el]) {

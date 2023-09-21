@@ -28,7 +28,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     }
   }, [isLoggedIn]);
 
-
+  // console.log('atuh',loggedInUser)
   const checkUserStatus = async () => {
     try {
       await fetchRm();
@@ -45,21 +45,18 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
         method: 'GET',
         credentials: 'include',
       });
-      
+
       const data = await response.json();
       if (data.message === 'user validated') {
-        
         setUserDetails(data);
         setIsLoggedIn(true);
         setLoggedInUser(data.userInfo.username);
       } else {
-
         setIsLoggedIn(false);
         setLoggedInUser('');
       }
     } catch (error) {
       console.error('Error checking authentication:', error);
-
       setIsLoggedIn(false);
       setLoggedInUser('');
     }
@@ -73,8 +70,8 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
         credentials: 'include',
       });
       const rememberMeData = await rememberMeResponse.json();
-        setLoggedInUser(rememberMeData.username);
-        setIsLoggedIn(rememberMeData.valid);
+      setLoggedInUser(rememberMeData.username);
+      setIsLoggedIn(rememberMeData.valid);
     } catch (error) {
       console.error('Error checking "Remember Me" status:', error);
     }
@@ -92,12 +89,12 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
         credentials: 'include',
       });
       const data = await response.json();
-      
+
       if (response.status !== 200) {
-        setErrorMsg(data.message); 
+        setErrorMsg(data.message);
         return;
       }
-      
+
       if (data.message === 'logged in') {
         setIsLoggedIn(true);
         checkAuthentication();
@@ -106,7 +103,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
         }
       } else {
         setIsLoggedIn(false);
-        setErrorMsg('Unknown error occurred. Please try again.'); 
+        setErrorMsg('Unknown error occurred. Please try again.');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -190,27 +187,27 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   }
 
   //delete account
-  const deleteAcct = async(username, email, password) => {
+  const deleteAcct = async (username, email, password) => {
     try {
-        const response = await fetch('/api/deleteacct', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, email, password }),
-            credentials: 'include',
-        });
-        if (response.ok) {
-            return 'successfully deleted account';
-        } else {
-            const data = await response.json();
-            return data.error || 'account deletion failed';
-        }
+      const response = await fetch('/api/deleteacct', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, email, password }),
+        credentials: 'include',
+      });
+      if (response.ok) {
+        return 'successfully deleted account';
+      } else {
+        const data = await response.json();
+        return data.error || 'account deletion failed';
+      }
     } catch (err) {
-        console.error(err);
-        return 'account deletion failed due to an error';
+      console.error(err);
+      return 'account deletion failed due to an error';
     }
-}
+  }
 
 
   const value: AuthContextValue = useMemo(() => ({

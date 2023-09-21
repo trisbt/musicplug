@@ -5,11 +5,6 @@ import { useAuth } from './components/Auth';
 import ResponsiveAppBar from './components/Navbar';
 import './App.css';
 import Splash from './components/Splash';
-// import SongPage from './components/SongPage';
-// import AccountSettings from './components/AccountSettings';
-// import SignIn from './components/Login';
-// import SignUp from './components/Signup';
-// import Favorites from './components/Favs';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import backgroundImg from './assets/Musicplugbg.jpg';
 import Footer from './components/Footer';
@@ -85,7 +80,7 @@ const MainContent: FC = () => {
             <Routes>
               <Route path="/" element={<SearchData key={location.search} username={loggedInUser} />} />
               <Route path="/signup" element={<SignUp />} />
-              <Route path="/:name/:artist/:id" element={<SongPage username={loggedInUser} />} />
+              <Route path="/:name/:artist/:id/" element={<SongPage username={loggedInUser} />} />
               {!isLoggedIn && <Route path="/login" element={<SignIn />} />}
               {isLoggedIn && <Route path="/favs" element={<Favorites username={loggedInUser} />} />}
               {isLoggedIn && <Route path="/account" element={<AccountSettings />} />}

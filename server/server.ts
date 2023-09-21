@@ -3,7 +3,6 @@ import cors from 'cors';
 import path from 'path';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
-
 import userController from './controllers/userController';
 import discogsSQLController from './controllers/discogsSQLController';
 import cookieController from './controllers/cookieController';
@@ -42,7 +41,10 @@ apiRouter.get('/advancedSearch', spotifyController.getAccessToken, spotifyContro
 apiRouter.get('/getTracks', spotifyController.getAccessToken, spotifyController.getSpotifyTracks, (req, res) => {
     return res.status(200).json(res.locals.data);
 });
-apiRouter.get('/toptracks', spotifyController.getAccessToken,spotifyController.getSpotifyTopTracks, (req, res) => {
+// apiRouter.get('/toptracks', spotifyController.getAccessToken,spotifyController.getSpotifyTopTracks, (req, res) => {
+//     return res.status(200).json(res.locals.data);
+// })
+apiRouter.get('/getById', spotifyController.getAccessToken,spotifyController.getSpotifyDataById, (req, res) => {
     return res.status(200).json(res.locals.data);
 })
 
@@ -92,6 +94,10 @@ apiRouter.post('/deleteacct', userController.deleteAccount, (req, res) => {
 
 //get favs 
 apiRouter.post('/favs', userController.getFavorites, (req, res) => {
+    return res.status(200).json(res.locals.userFavs);
+});
+
+apiRouter.post('/findfav', userController.getOneFavorites, (req, res) => {
     return res.status(200).json(res.locals.userFavs);
 });
 

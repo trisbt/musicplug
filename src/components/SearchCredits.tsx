@@ -6,13 +6,13 @@ interface Credit {
   role: string;
 }
 
-interface SearchIdProps {
+interface SearchCreditsProps {
   artists: { name: string }[];
   song: string;
   onReceiveAlias: (alias: string[]) => void;
 }
 
-const SearchId: React.FC<SearchIdProps>= ({ artists, song, onReceiveAlias }) => {
+const SearchCredits: React.FC<SearchCreditsProps>= ({ artists, song, onReceiveAlias }) => {
   const [credits, setCredits] = useState<Credit[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -61,4 +61,4 @@ const SearchId: React.FC<SearchIdProps>= ({ artists, song, onReceiveAlias }) => 
   );
 };
 
-export default SearchId;
+export default SearchCredits;

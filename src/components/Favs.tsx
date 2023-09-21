@@ -24,8 +24,6 @@ const Favorites: FC<FavoritesProps> = ({ username }) => {
   const [initialRenderDone, setInitialRenderDone] = useState<boolean>(false);
   const [activeSlice, setActiveSlice] = useState<string | null>(null);
   const [favDeleteRender, setFavDeleteRender] = useState<boolean>(false);
-console.log(activeSlice);
-console.log(typeof activeSlice)
   useEffect(() => {
     const fetchFavorites = () => {
       fetch('/api/favs', {
@@ -38,8 +36,8 @@ console.log(typeof activeSlice)
       })
         .then(res => res.json())
         .then(res => {
-          const favArray = res.favorites;
-          setUserFavorites(favArray);
+          // const favArray = res;
+          setUserFavorites(res);
           setInitialRenderDone(true);
         })
         .catch(err => {

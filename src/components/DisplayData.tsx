@@ -155,7 +155,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ data, audioData, username, on
   });
 
   const results: ResultItem[] = [];
-  console.log(results)
+
   for (let i = 0; i < basicData.length; i++) {
     const combinedObject = {
       ...basicData[i],

@@ -12,6 +12,7 @@ interface UserControllerInterface {
   addFavorites: (req: Request, res: Response, next: NextFunction) => Promise<void | Response>;
   getFavorites: (req: Request, res: Response, next: NextFunction) => Promise<void | Response>;
   deleteFavorites: (req: Request, res: Response, next: NextFunction) => Promise<void | Response>;
+  getOneFavorites: (req: Request, res: Response, next: NextFunction) => Promise<void | Response>;
 }
 const userController: UserControllerInterface = {
   createUser: async (req: Request, res: Response, next: NextFunction) => {
@@ -176,16 +177,45 @@ const userController: UserControllerInterface = {
     try {
       const { username } = req.body;
       const user = await User.findOne({ username: username });
-
-      res.locals.userFavs = user;
-      next();
+      if(user){
+        res.locals.userFavs = user.favorites;
+        return next();
+      }
+     
     } catch (err) {
       console.log('cannot get favs of user');
       next(err);
     }
   },
 
-
+  getOneFavorites: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { username, id } = req.body;
+      const query = {
+        username: username,
+        favorites: { $elemMatch: { id: id } },
+      };
+      const user = await User.findOne(query);
+      if (user) {
+        const matchingFavorite = user.favorites.find((favorite) => favorite.id === id);
+        if (matchingFavorite) {
+          res.locals.userFavs = true;
+          return next();
+        } else {
+          res.locals.userFavs = false;
+          console.log('Favorite not found.');
+          return next();
+        }
+      } else {
+        console.log('User not found.');
+      }
+    } catch (err) {
+      console.log('Error getting user favorites:', err);
+      next(err);
+    }
+  },
+  
+  
   deleteFavorites: async (req: Request, res: Response, next: NextFunction) => {
     const { username, idsToDelete } = req.body;
     // console.log(username, idsToDelete)

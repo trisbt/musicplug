@@ -5,11 +5,14 @@
 /.pnp
 .pnp.js
 
+# package
+.package-lock.json
+
 # testing
 /coverage
 
 # production
-/build
+/dist
 
 # misc
 .DS_Store
@@ -27,6 +30,7 @@ yarn-error.log*
 dnu.ts
 NavSearchBar.tsx
 discogsController.ts
+TopTracks.tsx
 
 #db
 pgModel.ts

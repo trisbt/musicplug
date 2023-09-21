@@ -1,20 +1,21 @@
 import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { useState, useEffect, FC } from 'react';
+import React, { useState, useEffect, FC } from 'react';
 import SearchData from './components/SearchData';
-import Favorites from './components/Favs';
 import { useAuth } from './components/Auth';
 import ResponsiveAppBar from './components/Navbar';
 import './App.css';
-import SignIn from './components/Login';
-import SignUp from './components/Signup';
 import Splash from './components/Splash';
-import SongPage from './components/SongPage';
-// import TopTracks from './components/TopTracks';
-import AccountSettings from './components/AccountSettings';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import backgroundImg from './assets/Musicplugbg.jpg';
 import Footer from './components/Footer';
-import { AuthContextValue } from './types/authTypes';
+import { AuthContextValue } from '@appTypes/authTypes';
+import { SearchDataProps } from '@appTypes/dataTypes'
+
+const SignUp = React.lazy(() => import('./components/Signup'));
+const SignIn = React.lazy(() => import('./components/Login'));
+const SongPage = React.lazy(() => import('./components/SongPage'));
+const Favorites = React.lazy(() => import('./components/Favs'));
+const AccountSettings = React.lazy(() => import('./components/AccountSettings'));
 
 
 
@@ -79,12 +80,11 @@ const MainContent: FC = () => {
             <Routes>
               <Route path="/" element={<SearchData key={location.search} username={loggedInUser} />} />
               <Route path="/signup" element={<SignUp />} />
-              <Route path="/:name/:artist/:id" element={<SongPage username={loggedInUser} />} />
+              <Route path="/:name/:artist/:id/" element={<SongPage username={loggedInUser} />} />
               {!isLoggedIn && <Route path="/login" element={<SignIn />} />}
               {isLoggedIn && <Route path="/favs" element={<Favorites username={loggedInUser} />} />}
               {isLoggedIn && <Route path="/account" element={<AccountSettings />} />}
             </Routes>
-            {/* <TopTracks username={loggedInUser} /> */}
           </div>
         </div>
       </div>
@@ -97,11 +97,14 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <ResponsiveAppBar />
-        <MainContent />
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <MainContent />
+        </React.Suspense>
         <Footer />
       </Router>
     </ThemeProvider>
   );
 }
+
 
 export default App;

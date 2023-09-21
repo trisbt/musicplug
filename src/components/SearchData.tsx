@@ -5,13 +5,8 @@ import { Button } from '@mui/material';
 import Input from '@mui/material/Input';
 import { FormControl } from '@mui/material';
 import { createTheme, ThemeProvider, styled, Theme } from '@mui/material/styles';
-import { Artists, DataItem, AudioDataItem } from '.types/dataTypes'
+import { Artist, DataItem, AudioDataItem, SearchDataProps } from '@appTypes/dataTypes';
 
-interface SearchDataProps {
-  username: string;
-  customStyles: React.CSSProperties;
-  pStyles: React.CSSProperties;
-};
 
 const theme: Theme = createTheme({
   palette: {
@@ -66,7 +61,7 @@ const SearchData: React.FC<SearchDataProps> = ({ username, customStyles, pStyles
   }, []);
 
   const fetchData = (newOffset = 1, query = inputField) => {
-    const idCache = [];
+    const idCache: string[] = [];
     if (query.trim() !== '') {
       setLoading(true);
       const searchQuery = encodeURIComponent(query);
@@ -102,7 +97,7 @@ const SearchData: React.FC<SearchDataProps> = ({ username, customStyles, pStyles
             })
               .then(res => res.json())
               .then(res => {
-                const favArray = res.favorites.map(el => el.id);
+                const favArray = res.map(el => el.id);
                 const obj = {};
                 for (const el of favArray) {
                   if (!obj[el]) {
@@ -132,8 +127,8 @@ const SearchData: React.FC<SearchDataProps> = ({ username, customStyles, pStyles
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const searchValue = searchInputRef.current.value;
-    setInputField(searchValue)
+    const searchValue = searchInputRef.current?.value || '';
+    setInputField(searchValue);    
     setResponse([]);
     setAudioInfo([]);
     fetchData(1, searchValue);

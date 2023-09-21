@@ -11,7 +11,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider, Theme } from '@mui/material/styles';
 import { useAuth } from './Auth';
-import { AuthContextValue, CopyrightProps } from './types/authTypes';
+import { AuthContextValue, CopyrightProps } from '@appTypes/authTypes';
+
+
 
 interface SignUpProps { };
 
@@ -35,11 +37,12 @@ export default function SignUp(props: SignUpProps) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const username = event.target.username.value;
-    const password = event.target.password.value;
-    const email = event.target.email.value;
-    const firstname = event.target.firstname.value;
-    const lastname = event.target.lastname.value;
+    const form = event.target as HTMLFormElement;
+    const username = form.username.value;
+    const password = form.password.value;
+    const email = form.email.value;
+    const firstname = form.firstname.value;
+    const lastname = form.lastname.value;
 
     if (!email.includes('@')) {
       setErrorMsg('Invalid email format.');

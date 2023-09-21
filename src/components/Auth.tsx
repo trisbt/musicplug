@@ -1,11 +1,18 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, ReactNode } from 'react';
-import { AuthContextValue, AuthProviderProps } from './types/authTypes'; 
+import { AuthContextValue, AuthProviderProps } from '@appTypes/authTypes';
+
+
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function useAuth(): AuthContextValue {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 }
+
 
 export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -13,6 +20,9 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const [userDetails, setUserDetails] = useState({});
   const [errorMsg, setErrorMsg] = useState('');
 
+  const handleError = (error) => {
+    console.error('Error:', error);
+  };
 
   //always check if logged in and authenticated
   useEffect(() => {
@@ -21,42 +31,44 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     }
   }, [isLoggedIn]);
 
-
-  const checkUserStatus = async () => {
+ const checkUserStatus = async () => {
     try {
       await fetchRm();
-      await checkAuthentication();
+      const isAuthenticated = await checkAuthentication();
+      if (isAuthenticated) {
+        setIsLoggedIn(true);
+      }
     } catch (error) {
-      console.error('Error checking user status:', error);
+      handleError(error);
     }
   };
 
-  //check for session
   const checkAuthentication = async () => {
     try {
       const response = await fetch('/api/validate', {
         method: 'GET',
         credentials: 'include',
       });
-      
-      const data = await response.json();
-      if (data.message === 'user validated') {
-        
-        setUserDetails(data);
-        setIsLoggedIn(true);
-        setLoggedInUser(data.userInfo.username);
-      } else {
 
+      if (response.status === 401) {
         setIsLoggedIn(false);
         setLoggedInUser('');
+        return false; // User is not authenticated
       }
-    } catch (error) {
-      console.error('Error checking authentication:', error);
 
-      setIsLoggedIn(false);
-      setLoggedInUser('');
+      if (response.ok) {
+        const data = await response.json();
+        setUserDetails(data);
+        setLoggedInUser(data.userInfo.username);
+        return true; // User is authenticated
+      }
+      return false; // Handle other response statuses if needed
+    } catch (error) {
+      handleError(error);
+      return false; // An error occurred while checking authentication
     }
-  }
+  };
+
 
   //check remember me cookie
   const fetchRm = async () => {
@@ -66,8 +78,8 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
         credentials: 'include',
       });
       const rememberMeData = await rememberMeResponse.json();
-        setLoggedInUser(rememberMeData.username);
-        setIsLoggedIn(rememberMeData.valid);
+      setLoggedInUser(rememberMeData.username);
+      setIsLoggedIn(rememberMeData.valid);
     } catch (error) {
       console.error('Error checking "Remember Me" status:', error);
     }
@@ -85,12 +97,12 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
         credentials: 'include',
       });
       const data = await response.json();
-      
+
       if (response.status !== 200) {
-        setErrorMsg(data.message); 
+        setErrorMsg(data.message);
         return;
       }
-      
+
       if (data.message === 'logged in') {
         setIsLoggedIn(true);
         checkAuthentication();
@@ -99,7 +111,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
         }
       } else {
         setIsLoggedIn(false);
-        setErrorMsg('Unknown error occurred. Please try again.'); 
+        setErrorMsg('Unknown error occurred. Please try again.');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -132,7 +144,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   };
 
   //signup
-  const handleSignup = async (username, email, password, firstname, lastname) => {
+  const handleSignup = async (username, email, password, firstname, lastname, rememberMe, onSuccess) => {
     try {
       const response = await fetch('/api/signup', {
         method: 'POST',
@@ -146,7 +158,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
       if (response.ok) {
         setErrorMsg('');  // Clearing any previous error messages
         console.log('Signup successful');
-        handleLogin(username, password);
+        handleLogin(username, password, rememberMe, onSuccess);
       } else {
         const data = await response.json();
         setErrorMsg(data.error || 'Signup failed');
@@ -183,7 +195,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   }
 
   //delete account
-  const deleteAcct = async(username, email, password) => {
+  const deleteAcct = async (username, email, password) => {
     try {
       const response = await fetch('/api/deleteacct', {
         method: 'POST',
@@ -194,15 +206,17 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
         credentials: 'include',
       });
       if (response.ok) {
-        // handleLogout()
         return 'successfully deleted account';
       } else {
-        throw new Error('account deletion failed');
+        const data = await response.json();
+        return data.error || 'account deletion failed';
       }
-    }catch(err){
-
+    } catch (err) {
+      console.error(err);
+      return 'account deletion failed due to an error';
     }
   }
+
 
   const value: AuthContextValue = useMemo(() => ({
     errorMsg,

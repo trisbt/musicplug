@@ -12,6 +12,7 @@ interface SpotifyControllerInterface {
   getSpotifyAudio: (req: Request, res: Response, next: NextFunction) => Promise<void | Response>;
   getSpotifyTracks: (req: Request, res: Response, next: NextFunction) => Promise<void | Response>;
   getSpotifyTopTracks: (req: Request, res: Response, next: NextFunction) => Promise<void | Response>;
+  getSpotifyDataById: (req: Request, res: Response, next: NextFunction) => Promise<void | Response>;
 }
 
 const spotifyController: SpotifyControllerInterface = {
@@ -131,7 +132,30 @@ const spotifyController: SpotifyControllerInterface = {
     } catch (error) {
       next(error);
     }
-  }
+  },
+
+  getSpotifyDataById: async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
+    try {
+      const { token } = res.locals;
+      const { id } = req.query;
+      const idResponse = await fetch(`https://api.spotify.com/v1/tracks/${id}`, {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      });
+      const trackData = await idResponse.json();
+      const advancedResponse = await fetch(`https://api.spotify.com/v1/audio-features/?ids=${id}`, {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      });
+      const audioData = await advancedResponse.json();
+      res.locals.data = { trackData: trackData, audioData: audioData.audio_features[0] };
+      return next();
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 export default spotifyController;

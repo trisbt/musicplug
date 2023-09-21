@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 import { Card } from '@mui/material';
 import musicpluglogow from '../assets/musicpluglogow.png';
 import { useAuth } from './Auth';
+import { AuthContextValue } from '@appTypes/authTypes';
 
 interface MenuState {
   anchorElNav: null | HTMLElement;

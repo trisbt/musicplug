@@ -8,14 +8,15 @@ import Typography from '@mui/material/Typography';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { grey } from '@mui/material/colors';
 
+
 Chart.register(ArcElement)
 
-interface CircleOfFifthsProps{
-  activeSlice: string | null;
-  setActiveSlice: React.Dispatch<React.SetStateAction<string | null>>;
-}
+// interface CircleOfFifthsProps {
+//   activeSlice: string | null;
+//   setActiveSlice: React.Dispatch<React.SetStateAction<string | null>>;
+// }
 
-const data: DataItem[] = [
+const data = [
   { id: 1, value: 10, label: 'C' },
   { id: 2, value: 10, label: 'G' },
   { id: 3, value: 10, label: 'D' },
@@ -29,7 +30,7 @@ const data: DataItem[] = [
   { id: 11, value: 10, label: 'Bb' },
   { id: 12, value: 10, label: 'F' },
 ];
-const minorKeys: DataItem[] = [
+const minorKeys = [
   { id: 1, value: 10, label: 'Am' },
   { id: 2, value: 10, label: 'Em' },
   { id: 3, value: 10, label: 'Bm' },
@@ -47,7 +48,7 @@ const minorKeys: DataItem[] = [
 const defaultColors: string[] = Array(data.length).fill(grey[500]);
 const hoverColors: string[] = ['#b71c1c', '#ff5722', '#ff9800', '#ffeb3b', '#8bc34a', '#4caf50', '#26a69a', '#00bcd4', '#03a9f4', '#3f51b5', '#673ab7', '#9c27b0'];
 
-const CircleOfFifths: React.FC<CircleOfFifthsProps> = ({ activeSlice, setActiveSlice }) => {
+const CircleOfFifths = ({ activeSlice, setActiveSlice }) => {
   const chartData = {
     labels: [...data.map(d => d.label), ...minorKeys.map(d => d.label)],
     datasets: [
@@ -82,10 +83,10 @@ const CircleOfFifths: React.FC<CircleOfFifthsProps> = ({ activeSlice, setActiveS
         color: '#fff',
         font: {
           size: 12,
-          weight: 'bold',
+          weight: 700,
         },
-        anchor: 'center',
-        align: 'end',
+        anchor: 'center' as 'center',
+        align: 'end' as const,
         offset: (context) => {
           if (context.datasetIndex === 0) {
             return -11;  // offset for major labels
@@ -110,7 +111,7 @@ const CircleOfFifths: React.FC<CircleOfFifthsProps> = ({ activeSlice, setActiveS
     animation: {
       duration: 0 // Set duration to 0 to disable animations
     },
-    rotation: '-15',
+    rotation: -15,
     responsive: true,
     maintainAspectRatio: false,
   };
@@ -162,7 +163,7 @@ const CircleOfFifths: React.FC<CircleOfFifthsProps> = ({ activeSlice, setActiveS
         }}>
           <Pie
             data={chartData}
-            plugins={[ChartDataLabels]}
+            plugins={[ChartDataLabels as any]}
             height={350}
             width={350}
             options={{

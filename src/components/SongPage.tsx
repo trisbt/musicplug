@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Box, Button, Card, CardMedia, CardContent, createTheme, Fade, Grid, IconButton, LinearProgress, Modal, Paper, styled, Typography, } from '@mui/material';
 import { useParams, useLocation, Link } from 'react-router-dom';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
@@ -6,11 +6,12 @@ import GradeIcon from '@mui/icons-material/Grade';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import { grey } from '@mui/material/colors';
-import SearchId from './SearchId';
+import SearchCredits from './SearchCredits';
 import SearchData from './SearchData';
-import { Artist, Image, LocationState, SongDetails } from './types/dataTypes';
-
-
+import SearchByIdOrArtistSong from '../utils/SearchByIdOrArtistSong';
+import { AuthContextValue } from '@appTypes/authTypes';
+import { Artist, LocationState, ResultItem, SongDetails, SongPageProps } from '@appTypes/dataTypes';
+import { useAuth } from './Auth';
 
 
 const PlayButton = styled(Button)(({ theme }) => ({
@@ -100,24 +101,45 @@ const msConvert = (num: number): string => {
   return minutes + ':' + formattedSeconds;
 }
 
-
 //main page func
-const SongPage = () => {
-  // const { id } = useParams();
-  const location = useLocation<LocationState>();
-  const songDetails = location.state?.songDetails;
-  const username = location.state?.username;
-  const isFavorite = location.state?.isFavorite;
-
+const SongPage = (props: SongPageProps) => {
+  const location = useLocation();
+  const state = location.state as LocationState;
   const [open, setOpen] = useState<boolean>(false);
-  const [pageFav, setPageFav] = useState<boolean>(isFavorite || false);
   const [aliasFromChild, setAliasFromChild] = useState<string | null>(null);
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [fetchedData, setFetchedData] = useState<{ songDetails: ResultItem; isFavorite: boolean | null } | null>(null);
+  const { id, name, artist } = useParams();
+  const { loggedInUser } = useAuth() as AuthContextValue;
+  const dataToUse = state || fetchedData;
+  const songDetails = dataToUse?.songDetails;
+  const username = loggedInUser;
+  const isFavorite = dataToUse?.isFavorite;
+  const [pageFav, setPageFav] = useState<boolean | null>(isFavorite || null);
+
+    //for navigation directly to page
+    useEffect(() => {
+      if (!state) {
+        async function fetchData() {
+          const data = await SearchByIdOrArtistSong({ id: id, username: username });
+          setFetchedData(data);
+        }
+        fetchData();
+      }
+    }, [state, id, username]);
+
+    useEffect(() => {
+      setPageFav(isFavorite || null);
+      document.title = `MusicPlug: ${artist} - ${name}`;
+    }, [isFavorite, name, artist]);
+
+
 
   const playAudio = (event: React.MouseEvent, previewUrl: string | null) => {
-    audioRef.current.volume = .3;
-    if (previewUrl) {
+    if (audioRef.current && previewUrl) {
+      audioRef.current.volume = .3;
+
       if (audioRef.current.src === previewUrl && !audioRef.current.paused) {
         audioRef.current.pause();
         setCurrentlyPlayingUrl(null);
@@ -158,7 +180,10 @@ const SongPage = () => {
   }));
 
   const handleFavorite = async (event: React.MouseEvent, username: string) => {
-
+    if (!songDetails) {
+      console.error('songDetails is not defined.');
+      return;
+    }
     const { id, name, artists, albums, images, key, tempo, loudness } = songDetails;
     try {
       const response = await fetch('/api/addFavs', {
@@ -197,7 +222,7 @@ const SongPage = () => {
           paddingRight: '5px',
           paddingBottom: '5px'
         }}>
-          <Grid container xs={12} direction='row' justifyContent="center" padding='0'
+          <Grid item container xs={12} direction='row' justifyContent="center" padding='0'
             sx={{
               // backgroundColor:'#1a237e',
               width: '100vw',
@@ -220,7 +245,7 @@ const SongPage = () => {
           </Grid>
 
           {/* top row */}
-          <Grid container xs={12} direction='row' justifyContent="center" sx={{
+          <Grid item container xs={12} direction='row' justifyContent="center" sx={{
             padding: '1em',
           }}>
             {/* First Row - Image and Song Details */}
@@ -275,7 +300,7 @@ const SongPage = () => {
                   <Typography variant="subtitle2">Released: {songDetails.release_date}</Typography>
                   <Typography>{aliasFromChild}</Typography>
 
-                  <Grid container xs={12} alignItems='center' justifyContent='space-between' >
+                  <Grid item container xs={12} alignItems='center' justifyContent='space-between' >
 
                     {/*link spotify render*/}
                     <Link to={songDetails.track_href}>
@@ -289,7 +314,7 @@ const SongPage = () => {
                     {/*fav button render*/}
                     {username && (
                       <FavButton
-                        variant="elevated"
+                        // variant="elevated"
                         className='fav-icon-button'
                         onClick={(event) => handleFavorite(event, username)}
                         sx={{
@@ -305,9 +330,9 @@ const SongPage = () => {
                         }}
                       >
                         {pageFav ? (
-                          <FavSolid onClick={(event) => handleFavorite(event, username)} />
+                          <FavSolid  />
                         ) : (
-                          <FavOutlined onClick={(event) => handleFavorite(event, username)} />
+                          <FavOutlined />
                         )}
                         add to Favorites
                       </FavButton>
@@ -349,7 +374,7 @@ const SongPage = () => {
                     {/*small fav button render*/}
                     {username && (
                       <SmallFavButton
-                        backgroundColor='red'
+                        // backgroundColor='red'
                         onClick={(event) => handleFavorite(event, username)}
                         sx={{
                           display: { xs: 'flex', sm: 'flex', md: 'none' },
@@ -359,9 +384,9 @@ const SongPage = () => {
                         }}
                       >
                         {pageFav ? (
-                          <FavSolid onClick={(event) => handleFavorite(event, username)} />
+                          <FavSolid  />
                         ) : (
-                          <FavOutlined onClick={(event) => handleFavorite(event, username)} />
+                          <FavOutlined  />
                         )}
                       </SmallFavButton>
                     )}
@@ -465,16 +490,16 @@ const SongPage = () => {
           </Grid>
 
           {/* analysis row */}
-          <Grid container xs={12} justifyContent='center' >
+          <Grid item container xs={12} justifyContent='center' >
 
-            <Grid container xs={12} md={6}>
+            <Grid item container xs={12} md={6}>
               <CardContent sx={{
                 // backgroundColor: 'green',
                 width: '100vw',
               }}>
 
                 {/* loudness */}
-                <Grid container direction="row" xs={12} alignItems='center'>
+                <Grid item container direction="row" xs={12} alignItems='center'>
                   <Grid item xs={3} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Loudness</Typography>
                   </Grid>
@@ -493,7 +518,7 @@ const SongPage = () => {
                 </Grid>
 
                 {/* energy */}
-                <Grid container direction="row" xs={12} alignItems='center'>
+                <Grid item container direction="row" xs={12} alignItems='center'>
                   <Grid item xs={3} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Energy</Typography>
                   </Grid>
@@ -512,7 +537,7 @@ const SongPage = () => {
                 </Grid>
 
                 {/* valence */}
-                <Grid container direction="row" xs={12} alignItems='center'>
+                <Grid item container direction="row" xs={12} alignItems='center'>
                   <Grid item xs={3} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Valence</Typography>
                   </Grid>
@@ -531,7 +556,7 @@ const SongPage = () => {
                 </Grid>
 
                 {/* acousticness */}
-                <Grid container direction="row" xs={12} alignItems='center'>
+                <Grid item container direction="row" xs={12} alignItems='center'>
                   <Grid item xs={4} sm={2.5} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Acousticness</Typography>
                   </Grid>
@@ -550,7 +575,7 @@ const SongPage = () => {
                 </Grid>
 
                 {/* danceability */}
-                <Grid container direction="row" xs={12} alignItems='center'>
+                <Grid item container direction="row" xs={12} alignItems='center'>
                   <Grid item xs={4} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Danceability</Typography>
                   </Grid>
@@ -570,7 +595,7 @@ const SongPage = () => {
 
 
                 {/* liveness */}
-                <Grid container direction="row" xs={12} alignItems='center'>
+                <Grid item container direction="row" xs={12} alignItems='center'>
                   <Grid item xs={3} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Liveness</Typography>
                   </Grid>
@@ -590,7 +615,7 @@ const SongPage = () => {
 
 
                 {/* popularity */}
-                <Grid container direction="row" xs={12} alignItems='center'>
+                <Grid item container direction="row" xs={12} alignItems='center'>
                   <Grid item xs={3} sm={2} md={3}>
                     <Typography variant="subtitle2" color='text.primary'>Popularity</Typography>
                   </Grid>
@@ -611,7 +636,7 @@ const SongPage = () => {
               </CardContent>
             </Grid>
 
-            <Grid container xs={10} md={6}
+            <Grid item container xs={10} md={6}
               // backgroundColor ='red'
               flexDirection='column'
               alignContent="center"
@@ -622,27 +647,12 @@ const SongPage = () => {
 
               }}>Credits</Typography>
 
-              <SearchId artists={songDetails.artists} song={songDetails.name} onReceiveAlias={handleAlias} />
+              <SearchCredits artists={songDetails.artists} song={songDetails.name} onReceiveAlias={handleAlias} />
 
             </Grid>
           </Grid>
         </Card>
       )}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
   )
 }

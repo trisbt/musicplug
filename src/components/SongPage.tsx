@@ -110,7 +110,7 @@ const SongPage = (props: SongPageProps) => {
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [fetchedData, setFetchedData] = useState<LocationState | null>(null);
-  const { id } = useParams();
+  const { id, name, artist } = useParams();
   const { loggedInUser } = useAuth() as AuthContextValue;
   const dataToUse = state || fetchedData;
   const songDetails = dataToUse?.songDetails;
@@ -131,7 +131,9 @@ const SongPage = (props: SongPageProps) => {
 
     useEffect(() => {
       setPageFav(isFavorite);
-    }, [isFavorite]);
+      document.title = `MusicPlug: ${artist} - ${name}`;
+    }, [isFavorite, name, artist]);
+
 
 
   const playAudio = (event: React.MouseEvent, previewUrl: string | null) => {

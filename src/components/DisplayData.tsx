@@ -109,6 +109,9 @@ const DisplayData: React.FC<DisplayDataProps> = ({ data, audioData, username, on
 
   //needed to show user favorites in search results
   useEffect(() => {
+    if(searchResult){
+      document.title = `MusicPlug: results for ${searchResult} `;
+    }
     if (username && userFav) {
       setFavoriteMap(userFav);
     }

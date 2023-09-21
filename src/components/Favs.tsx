@@ -45,6 +45,7 @@ const Favorites: FC<FavoritesProps> = ({ username }) => {
         });
     };
     fetchFavorites();
+    document.title = 'MusicPlug: User Favorites';
   }, [username, favDeleteRender]);
 
 

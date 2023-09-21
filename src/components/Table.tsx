@@ -1,6 +1,7 @@
 
 import * as React from 'react';
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -27,6 +28,7 @@ import { Container } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { blueGrey } from '@mui/material/colors';
 import { indigo } from '@mui/material/colors';
+// import SearchByIdOrArtistSong from '../utils/SearchByIdOrArtistSong';
 
 interface Row {
   song: string;
@@ -45,17 +47,12 @@ interface SelectedRow {
 type CreateDataType = (song: string, artist: string, album: string, key: string, tempo: number, id: string) => Row;
 
 interface EnhancedTableHeadProps {
-  numSelected: number;
   onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Row) => void;
-  // onSelectAllClick: React.ChangeEventHandler<HTMLInputElement>;
   order: 'asc' | 'desc';
   orderBy: keyof Row;
   rowCount: number;
 };
-interface EnhancedTableToolbarProps {
-  numSelected: number;
-  // handleDelete: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-};
+
 interface EnhancedTableProps {
   favorites: any[];
   initialRenderDone: boolean;
@@ -163,10 +160,7 @@ const headCells: HeadCell[] = [
 ];
 
 const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = (props) => {
-  const { 
-    // onSelectAllClick, 
-    order, orderBy, numSelected, rowCount, onRequestSort } =
-    props;
+  const { order, orderBy, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -174,16 +168,7 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = (props) => {
   return (
     <TableHead>
       <TableRow>
-        <StyledTableCell padding="checkbox">
-          {/* <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            // onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all',
-            }}
-          /> */}
+        <StyledTableCell >
         </StyledTableCell>
         {headCells.map((headCell) => (
           <StyledTableCell
@@ -212,84 +197,11 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = (props) => {
 }
 
 EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
+  // numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  // onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf<'asc' | 'desc'>(['asc', 'desc']).isRequired,
   orderBy: PropTypes.oneOf<keyof Row>(['song', 'artist', 'album', 'key', 'tempo', 'id']).isRequired,
   rowCount: PropTypes.number.isRequired,
-};
-
-
-const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
-  const { numSelected, 
-    // handleDelete 
-  } = props;
-
-  return (
-    <Toolbar
-      sx={{
-        backgroundColor: indigo[700],
-        color: 'white',
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-          color: 'black',
-        }),
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: '1 1 100%', }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{
-            flex: '1 1 100%',
-            // color:'black'
-
-          }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Your Favorites
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton 
-          // onClick={handleDelete}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list"
-          sx={{
-            color: 'white'
-          }}
-        >
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-    </Toolbar>
-  );
-}
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
 };
 
 const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderDone, activeSlice, username, setFavDeleteRender, favDeleteRender }) => {
@@ -298,6 +210,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
   const [selected, setSelected] = useState<SelectedRow[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
+  const navigate = useNavigate();
 
   let rows: Row[] = favorites.map(favorite => createData(
     favorite.song,
@@ -312,75 +225,25 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
     rows = rows.filter(row => row.key === activeSlice);
   }
 
-  // const handleDelete = (event) => {
-  //   const idsToDelete = selected.map(item => item.id);
-  //   fetch('/removefavs', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({ username, idsToDelete }),
-  //     credentials: 'include',
-  //   })
-  //     .then(res => res.json())
-  //     .then(res => {
-  //       setSelected([]);
-  //       setFavDeleteRender(true);
-  //       setTimeout(() => {
-  //         setFavDeleteRender(false);
-  //       }, 2000);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // };
-
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
-  // const handleSelectAllClick = (event) => {
-  //   if (event.target.checked) {
-  //     const newSelected = rows.map((n) => ({ 
-  //       song: n.song, 
-  //       artist: n.artist, 
-  //       album: n.album, 
-  //       key: n.key, 
-  //       tempo: n.tempo, 
-  //       id: n.id 
-  //     }));
-  //     setSelected(newSelected);
-  //     return;
-  //   }
-  //   setSelected([]);
-  // };
-  
-
-
-  const handleClick = (event, name, id) => {
+  const handleClick = (event, name, id, artist) => {
     const selectedIndex = selected.findIndex(item => item.song === name);
     let newSelected: SelectedRow[] = [];
-  
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, { song: name, id: id });
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
+      newSelected = [{ name: name, artist: artist, id: id }];
     }
     setSelected(newSelected);
+    console.log(newSelected[0].artist)
+    navigate(`/${newSelected[0].name}/${newSelected[0].artist}/${newSelected[0].id}`);
+
   };
+  // console.log(selected)
   
-
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -390,7 +253,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
     setPage(0);
   };
 
-  const isSelected = (name, id) => selected.some(item => item.song === name && item.id === id);
+  const isSelected = (name, artist, id) => selected.some(item => item.song === name && item.id === id && item.artist === artist);
 
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -413,7 +276,6 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
         width: '100vw',
       }
     }}>
-
       <Box sx={{
         width: '100%',
       }}>
@@ -423,7 +285,6 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
           border: "1px solid black",
 
         }}>
-         
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}
@@ -431,22 +292,20 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
               size='medium'
             >
               <EnhancedTableHead
-                // numSelected={selected.length}
                 order={order}
                 orderBy={orderBy}
-                // onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
                 rowCount={rows.length}
               />
               <TableBody>
                 {visibleRows.map((row, index) => {
-                  const isItemSelected = isSelected(row.song, row.id);
+                  const isItemSelected = isSelected(row.song, row.id, row.artist);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.song, row.id)}
+                      onClick={(event) => handleClick(event, row.song, row.id, row.artist)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -454,14 +313,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
                       selected={isItemSelected}
                       sx={{ cursor: 'pointer' }}
                     >
-                      <TableCell padding="checkbox">
-                        {/* <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId,
-                          }}
-                        /> */}
+                      <TableCell padding= '2'>
                       </TableCell>
                       <TableCell
                         component="th"
@@ -476,6 +328,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
                       <TableCell align="left">{row.album}</TableCell>
                       <TableCell align="left">{row.key}</TableCell>
                       <TableCell align="right">{row.tempo}</TableCell>
+                      
                     </TableRow>
                   );
                 })}

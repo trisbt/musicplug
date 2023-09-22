@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "main": "server/server.js",
-
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -49,7 +48,9 @@
     "start-express": "nodemon --watch src --exec ts-node -r tsconfig-paths/register ./server/server.ts",
     "start-vite": "vite",
     "start": "concurrently \"npm run start-vite\" \"npm run start-express\"",
-    "build": "tsc && vite build",
+    "build:server": "tsc --project tsconfig.server.json",
+    "build:client": "tsc --project tsconfig.client.json",
+    "build": "npm run build:server && npm run build:client",
     "serve": "vite preview"
   },
   "eslintConfig": {

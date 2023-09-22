@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.react
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      REACT_APP_CLIENT_ID: ${client_id}
+      REACT_APP_CLIENT_SECRET: ${client_secret}
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.express
+    ports:
+      - "4000:4000"
+    environment:
+      CLIENT_ID: ${client_id}
+      CLIENT_SECRET: ${client_secret}
+      MONGO_URI: ${mongoURI}
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DATABASE}
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+
+volumes:
+  postgresdata:

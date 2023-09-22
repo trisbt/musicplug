@@ -18,7 +18,7 @@
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,
         "isolatedModules": true,
-        "noEmit": true,
+        "noEmit": false,
         "noFallthroughCasesInSwitch": true,
         "jsx": "react-jsx",
         "types": [

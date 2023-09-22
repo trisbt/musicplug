@@ -1,0 +1,21 @@
+FROM node:16.13
+WORKDIR /usr/src/app
+COPY package*.json ./
+
+# Install Node.js dependencies
+RUN npm install
+
+# Copy the rest of your application files to the container
+COPY . .
+
+# Build the React app for production
+RUN npm run build
+
+# Use a lightweight web server to serve the built React app
+RUN npm install -g serve
+
+# Expose the port the web server will run on
+EXPOSE 80
+
+# Start the web server to serve the React app
+CMD ["serve", "-s", "build", "-l", "80"]

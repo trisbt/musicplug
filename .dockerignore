@@ -1,0 +1,27 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Package
+package-lock.json
+
+# Testing
+/coverage
+
+# Production
+/dist
+
+# Miscellaneous
+.DS_Store
+*.log
+*.lock
+*.local
+.env*
+
+# Specific files (If they're not necessary for the application inside the container)
+dnu.ts
+NavSearchBar.tsx
+discogsController.ts
+TopTracks.tsx
+

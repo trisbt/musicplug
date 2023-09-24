@@ -231,10 +231,10 @@ const SongPage = (props: SongPageProps) => {
               padding: '0',
 
             }}>
-            <SearchData username={username} customStyles={{
+            <SearchData username={username} showLoadingCircle={true} customStyles={{
               color: 'black',
               backgroundColor: '#f5f5f5',
-
+              
             }}
               pStyles={{
                 fontSize: '20px',

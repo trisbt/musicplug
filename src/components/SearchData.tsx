@@ -6,6 +6,8 @@ import Input from '@mui/material/Input';
 import { FormControl } from '@mui/material';
 import { createTheme, ThemeProvider, styled, Theme } from '@mui/material/styles';
 import { Artist, DataItem, AudioDataItem, SearchDataProps } from '@appTypes/dataTypes';
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 
 const theme: Theme = createTheme({
@@ -39,7 +41,7 @@ const StyledInput = styled(Input)(({ theme }) => ({
 }));
 
 //main search to spotify
-const SearchData: React.FC<SearchDataProps> = ({ username, customStyles, pStyles }) => {
+const SearchData: React.FC<SearchDataProps> = ({ username, customStyles, pStyles, showLoadingCircle = false }) => {
   const [response, setResponse] = useState<DataItem[]>([]);
   const [audioInfo, setAudioInfo] = useState<AudioDataItem[]>([]);
   const [userFav, setUserFav] = useState<Record<string, boolean>>({});
@@ -128,7 +130,7 @@ const SearchData: React.FC<SearchDataProps> = ({ username, customStyles, pStyles
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const searchValue = searchInputRef.current?.value || '';
-    setInputField(searchValue);    
+    setInputField(searchValue);
     setResponse([]);
     setAudioInfo([]);
     fetchData(1, searchValue);
@@ -166,11 +168,13 @@ const SearchData: React.FC<SearchDataProps> = ({ username, customStyles, pStyles
           </div>
         ) : null}
         {loading ? (
-          <p style={{ ...pStyles }}>Plugging Results</p>
-
+          showLoadingCircle ?
+            <CircularProgress /> :
+            <p style={{ ...pStyles }}>Plugging Results</p>
         ) : (
           <DisplayData data={response} audioData={audioInfo} userFav={userFav} username={username} theme={theme} onLoadMore={handleLoadMore} searchResult={searchResult} />
         )}
+
       </div>
     </ThemeProvider>
   );

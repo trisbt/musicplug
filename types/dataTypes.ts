@@ -98,7 +98,8 @@ export interface SongDetails {
     key?: string;
     username?: string;
     customStyles?: React.CSSProperties;
-    pStyles?: React.CSSProperties;          
+    pStyles?: React.CSSProperties;    
+    showLoadingCircle?: boolean;      
 }
 
 

@@ -3,14 +3,8 @@
 /.pnp
 .pnp.js
 
-# Package
-package-lock.json
-
 # Testing
 /coverage
-
-# Production
-/dist
 
 # Miscellaneous
 .DS_Store

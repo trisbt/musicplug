@@ -43,7 +43,7 @@ const MainContent: FC = () => {
   const { isLoggedIn, loggedInUser } = useAuth() as AuthContextValue;
   const location = useLocation();
   const isHomePage = location.pathname === '/' && !location.search;
-
+console.log('testing prod')
   // Use this value to set the showSplash state directly
   const [showSplash, setShowSplash] = useState(isHomePage);
   useEffect(() => {

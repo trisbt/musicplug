@@ -26,9 +26,11 @@ dotenv.config();
 const mongoURI: string = process.env.mongoURI!;
 mongoose.connect(mongoURI);
 
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.resolve(__dirname, '..')));
+
 
 
 //spotify searches
@@ -128,9 +130,13 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   });
 
 //route handler
-app.get('*', (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, '../build', 'index.html'));
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '..', 'index.html'));
+
 });
+
+
+
 
 const port: number = 4000;
 app.listen(port, () => {

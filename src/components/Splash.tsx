@@ -11,16 +11,17 @@ const Splash = () => {
                 justifyContent: 'center',
                 textAlign: 'center',
                 width: '60vw',
-                height: '30vh',
+                // height: '30vh',
+                alignContent:'center',
                 borderRadius:'.5em',
                 backgroundColor: 'rgb(200,200,200,.5)',
                 // mask: 'linear-gradient(to bottom, transparent, black, black)',
 
                 // backdropFilter: 'blur(2px)',
                 boxShadow: 0,
-                '@media (max-width: 600px)': {
-                    width: '80vw',
-                }
+                // '@media (max-width: 600px)': {
+                //     width: '80vw',
+                // }
             }}>
                 <Typography variant='h2' component="h2" sx={{
                     display:'flex',
@@ -40,16 +41,17 @@ const Splash = () => {
                         fontSize: '44px'
                     },
                     '@media (max-width: 600px)': {
-                        fontSize: '34px'
-                    },
-                    '@media (max-width: 300px)': {
                         fontSize: '24px'
                     },
+                    // '@media (max-width: 300px)': {
+                    //     fontSize: '14px'
+                    // },
                     '@media (max-width: 900px), and (orientation: landscape)': {
                         // fontSize: '34px'
                     },
                 }}>
                     Find A Song's Key, Tempo, and Credits
+                    
                 </Typography>
             </Card>
         </div>

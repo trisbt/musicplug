@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect, FC } from 'react';
+import { Grid } from '@mui/material';
 import SearchData from './components/SearchData';
 import { useAuth } from './components/Auth';
 import ResponsiveAppBar from './components/Navbar';
@@ -10,6 +11,7 @@ import backgroundImg from './assets/Musicplugbg.jpg';
 import Footer from './components/Footer';
 import { AuthContextValue } from '@appTypes/authTypes';
 import { SearchDataProps } from '@appTypes/dataTypes'
+import TopTracks from './components/TopTracks';
 
 const SignUp = React.lazy(() => import('./components/Signup'));
 const SignIn = React.lazy(() => import('./components/Login'));
@@ -43,7 +45,7 @@ const MainContent: FC = () => {
   const { isLoggedIn, loggedInUser } = useAuth() as AuthContextValue;
   const location = useLocation();
   const isHomePage = location.pathname === '/' && !location.search;
-console.log('testing prod')
+
   // Use this value to set the showSplash state directly
   const [showSplash, setShowSplash] = useState(isHomePage);
   useEffect(() => {
@@ -53,9 +55,10 @@ console.log('testing prod')
   const getBackgroundStyle = (path) => {
     if (showSplash && location.pathname !== '/favs') {
       return {
-        backgroundImage: `linear-gradient(rgb(40, 60, 80, 0.7), rgb(5,12,24, 0.7)), url(${backgroundImg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center 26%',
+        backgroundImage: `linear-gradient(to bottom, rgb(40, 60, 80, 0.5) 0%, #282c34 20%, rgb(80, 108, 185) 90%), url(${backgroundImg})`,
+        backgroundSize: 'contain',
+        // backgroundPosition: 'center 2%',
+
 
       };
     } else {
@@ -64,32 +67,58 @@ console.log('testing prod')
       };
     }
   };
-
   const backgroundStyle = getBackgroundStyle(location.pathname);
   return (
     <>
       <div style={backgroundStyle}>
-        {showSplash && location.pathname === '/' && (
-          <div className='splash'>
-            <Splash />
-          </div>
-        )}
 
         <div className="App">
-          <div className="App-search">
-            <Routes>
-              <Route path="/" element={<SearchData key={location.search} username={loggedInUser} />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/:name/:artist/:id/" element={<SongPage username={loggedInUser} />} />
-              {!isLoggedIn && <Route path="/login" element={<SignIn />} />}
-              {isLoggedIn && <Route path="/favs" element={<Favorites username={loggedInUser} />} />}
-              {isLoggedIn && <Route path="/account" element={<AccountSettings />} />}
-            </Routes>
-          </div>
+          <Grid
+            className="App-search"
+            justifyContent="center"
+            alignItems="center"
+            spacing={2}
+            mt={2}
+          >
+
+            {/* Splash Grid item */}
+            {showSplash && location.pathname === '/' && (
+              <Grid item xs={12} style={{
+                display: 'flex', justifyContent: 'center',
+              }}>
+                <Splash />
+              </Grid>
+
+            )}
+            {/* SearchData Grid item */}
+            <Grid mt={2} item xs={12} style={{
+              display: 'flex',
+              justifyContent: 'center',
+
+            }}>
+              <Routes>
+                <Route path="/" element={<SearchData key={location.search} username={loggedInUser} />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/:name/:artist/:id/" element={<SongPage username={loggedInUser} />} />
+                {!isLoggedIn && <Route path="/login" element={<SignIn />} />}
+                {isLoggedIn && <Route path="/favs" element={<Favorites username={loggedInUser} />} />}
+                {isLoggedIn && <Route path="/account" element={<AccountSettings />} />}
+              </Routes>
+            </Grid>
+
+            {/* TopTracks Grid item */}
+            {showSplash && (
+              <Grid mt={4} item xs={12} className="TopTracksClass">
+                <TopTracks username={loggedInUser} />
+              </Grid>
+            )}
+          </Grid>
         </div>
       </div>
     </>
   );
+
+
 }
 
 function App() {

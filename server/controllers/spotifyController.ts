@@ -128,7 +128,7 @@ const spotifyController: SpotifyControllerInterface = {
 
       const audioData = await audioResponse.json();
       res.locals.data = { trackData: trackData, audioData: audioData.audio_features };
-      next();
+      return next();
     } catch (error) {
       next(error);
     }

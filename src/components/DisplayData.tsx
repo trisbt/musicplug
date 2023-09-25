@@ -241,7 +241,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ data, audioData, username, on
             {/* search result text row */}
             <Grid item xs={12}>
               <h4
-                style={{ textAlign: 'center', fontSize: '20px' }}>
+                style={{ textAlign: 'center', fontSize: '20px', color:'white' }}>
                 Search Results for {searchResult}:</h4>
             </Grid>
 

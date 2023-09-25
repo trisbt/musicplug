@@ -168,9 +168,13 @@ const SearchData: React.FC<SearchDataProps> = ({ username, customStyles, pStyles
           </div>
         ) : null}
         {loading ? (
-          showLoadingCircle ?
-            <CircularProgress /> :
-            <p style={{ ...pStyles }}>Plugging Results</p>
+          // showLoadingCircle ?
+            <CircularProgress sx ={{
+              // justifyContent:'center',
+              // display:'flex',
+              // backgroundColor:'red',
+            }}/> 
+            //  <p style={{ ...pStyles, color:'white', textAlign:'center', fontSize:'1.5em' }}>Plugging Results</p>
         ) : (
           <DisplayData data={response} audioData={audioInfo} userFav={userFav} username={username} theme={theme} onLoadMore={handleLoadMore} searchResult={searchResult} />
         )}

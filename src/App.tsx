@@ -1,7 +1,8 @@
-import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import React, { useState, useEffect, FC } from 'react';
+import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect, FC, useRef } from 'react';
 import { Grid } from '@mui/material';
 import SearchData from './components/SearchData';
+import DisplayData from './components/DisplayData';
 import { useAuth } from './components/Auth';
 import ResponsiveAppBar from './components/Navbar';
 import './App.css';
@@ -12,6 +13,8 @@ import Footer from './components/Footer';
 import { AuthContextValue } from '@appTypes/authTypes';
 import { SearchDataProps } from '@appTypes/dataTypes'
 import TopTracks from './components/TopTracks';
+
+
 
 const SignUp = React.lazy(() => import('./components/Signup'));
 const SignIn = React.lazy(() => import('./components/Login'));
@@ -41,7 +44,7 @@ const theme = createTheme({
   },
 });
 
-const MainContent: FC = () => {
+const MainContent: FC = ({ handleLoadMoreRef, setOffset, offset, setResponse, response, setAudioInfo, audioInfo, setUserFav, userFav, setLoading, loading, setSearchResult, searchResult }) => {
   const { isLoggedIn, loggedInUser } = useAuth() as AuthContextValue;
   const location = useLocation();
   const isHomePage = location.pathname === '/' && !location.search;
@@ -52,14 +55,13 @@ const MainContent: FC = () => {
     setShowSplash(isHomePage);
   }, [location.pathname, location.search]);
 
+
   const getBackgroundStyle = (path) => {
     if (showSplash && location.pathname !== '/favs') {
       return {
         backgroundImage: `linear-gradient(to bottom, rgb(40, 60, 80, 0.5) 0%, #282c34 20%, rgb(80, 108, 185) 90%), url(${backgroundImg})`,
         backgroundSize: 'contain',
         // backgroundPosition: 'center 2%',
-
-
       };
     } else {
       return {
@@ -73,11 +75,11 @@ const MainContent: FC = () => {
       <div style={backgroundStyle}>
 
         <div className="App">
-          <Grid
+          <Grid item
             className="App-search"
             justifyContent="center"
             alignItems="center"
-            spacing={2}
+
             mt={2}
           >
 
@@ -91,13 +93,25 @@ const MainContent: FC = () => {
 
             )}
             {/* SearchData Grid item */}
-            <Grid mt={2} item xs={12} style={{
+            <Grid item mt={2} item xs={12} style={{
               display: 'flex',
               justifyContent: 'center',
 
             }}>
               <Routes>
-                <Route path="/" element={<SearchData key={location.search} username={loggedInUser} />} />
+                {/* <Route path="/" element={<SearchData key={location.search} username={loggedInUser} />} /> */}
+                <Route path="/" element={<DisplayData
+                  data={response}
+                  audioData={audioInfo}
+                  userFav={userFav}
+                  username={loggedInUser}
+                  theme={theme}
+                  setOffset={setOffset}
+                  offset={offset}
+                  handleLoadMoreRef={handleLoadMoreRef}
+                  searchResult={searchResult}
+                />
+                } />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/:name/:artist/:id/" element={<SongPage username={loggedInUser} />} />
                 {!isLoggedIn && <Route path="/login" element={<SignIn />} />}
@@ -108,7 +122,7 @@ const MainContent: FC = () => {
 
             {/* TopTracks Grid item */}
             {showSplash && (
-              <Grid mt={4} item xs={12} className="TopTracksClass">
+              <Grid item mt={4} item xs={12} className="TopTracksClass">
                 <TopTracks username={loggedInUser} />
               </Grid>
             )}
@@ -122,12 +136,50 @@ const MainContent: FC = () => {
 }
 
 function App() {
+  //searchdata and displaydata props
+  const [response, setResponse] = useState<DataItem[]>([]);
+  const [audioInfo, setAudioInfo] = useState<AudioDataItem[]>([]);
+  const [userFav, setUserFav] = useState<Record<string, boolean>>({});
+  const [loading, setLoading] = useState<boolean>(false);
+  const [offset, setOffset] = useState<number>(1);
+  const handleLoadMoreRef = useRef(null);
+  //to display text for user search
+  const [searchResult, setSearchResult] = useState<string>('');
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <ResponsiveAppBar />
+        <ResponsiveAppBar
+          setResponse={setResponse}
+          response={response}
+          setAudioInfo={setAudioInfo}
+          audioInfo={audioInfo}
+          setUserFav={setUserFav}
+          userFav={userFav}
+          setLoading={setLoading}
+          loading={loading}
+          setSearchResult={setSearchResult}
+          searchResult={searchResult}
+          setOffset={setOffset}
+          offset={offset}
+          handleLoadMoreRef={handleLoadMoreRef}
+
+        />
         <React.Suspense fallback={<div>Loading...</div>}>
-          <MainContent />
+          <MainContent
+            setResponse={setResponse}
+            response={response}
+            setAudioInfo={setAudioInfo}
+            audioInfo={audioInfo}
+            setUserFav={setUserFav}
+            userFav={userFav}
+            setLoading={setLoading}
+            loading={loading}
+            setSearchResult={setSearchResult}
+            searchResult={searchResult}
+            setOffset={setOffset}
+            offset={offset}
+            handleLoadMoreRef={handleLoadMoreRef}
+          />
         </React.Suspense>
         <Footer />
       </Router>

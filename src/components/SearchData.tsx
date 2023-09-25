@@ -8,8 +8,6 @@ import { createTheme, ThemeProvider, styled, Theme } from '@mui/material/styles'
 import { Artist, DataItem, AudioDataItem, SearchDataProps } from '@appTypes/dataTypes';
 import CircularProgress from '@mui/material/CircularProgress';
 
-
-
 const theme: Theme = createTheme({
   palette: {
     primary: {
@@ -41,19 +39,31 @@ const StyledInput = styled(Input)(({ theme }) => ({
 }));
 
 //main search to spotify
-const SearchData: React.FC<SearchDataProps> = ({ username, customStyles, pStyles, showLoadingCircle = false }) => {
-  const [response, setResponse] = useState<DataItem[]>([]);
-  const [audioInfo, setAudioInfo] = useState<AudioDataItem[]>([]);
-  const [userFav, setUserFav] = useState<Record<string, boolean>>({});
-  const [offset, setOffset] = useState<number>(1);
-  const [loading, setLoading] = useState<boolean>(false);
+const SearchData = ({
+  handleLoadMoreRef,
+  setOffset,
+  offset,
+  setResponse,
+  response,
+  setAudioInfo,
+  audioInfo,
+  setUserFav,
+  userFav,
+  setLoading,
+  loading,
+  setSearchResult,
+  searchResult,
+  username,
+  customStyles,
+  pStyles,
+  showLoadingCircle = false
+}) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const initialSearchQuery = searchParams.get('q') || '';
   const [inputField, setInputField] = useState<string>('');
-  //to display text for user search
-  const [searchResult, setSearchResult] = useState<string>('');
   const searchInputRef = useRef<HTMLInputElement>(null);
+  
 
   useEffect(() => {
     if (initialSearchQuery) {
@@ -61,6 +71,15 @@ const SearchData: React.FC<SearchDataProps> = ({ username, customStyles, pStyles
       fetchData(1, initialSearchQuery);
     }
   }, []);
+
+  useEffect(() => {
+    handleLoadMoreRef.current = handleLoadMore;
+    // Cleanup to avoid any unexpected behavior when component unmounts
+    return () => {
+        handleLoadMoreRef.current = null;
+    };
+}, [offset]);
+
 
   const fetchData = (newOffset = 1, query = inputField) => {
     const idCache: string[] = [];
@@ -124,9 +143,6 @@ const SearchData: React.FC<SearchDataProps> = ({ username, customStyles, pStyles
     }
   };
 
-
-
-
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const searchValue = searchInputRef.current?.value || '';
@@ -138,8 +154,10 @@ const SearchData: React.FC<SearchDataProps> = ({ username, customStyles, pStyles
 
   const handleLoadMore = () => {
     const nextOffset = offset + 25;
+    console.log(nextOffset)
     fetchData(nextOffset);
   }
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -157,8 +175,6 @@ const SearchData: React.FC<SearchDataProps> = ({ username, customStyles, pStyles
                   type='text'
                   inputRef={searchInputRef}
                   style={{ ...customStyles }}
-                // value={inputField}
-                // onChange={handleInputChange}
                 />
               </FormControl>
               <ColorButton type='submit' variant='outlined'>
@@ -167,18 +183,9 @@ const SearchData: React.FC<SearchDataProps> = ({ username, customStyles, pStyles
             </form>
           </div>
         ) : null}
-        {loading ? (
-          // showLoadingCircle ?
-            <CircularProgress sx ={{
-              // justifyContent:'center',
-              // display:'flex',
-              // backgroundColor:'red',
-            }}/> 
-            //  <p style={{ ...pStyles, color:'white', textAlign:'center', fontSize:'1.5em' }}>Plugging Results</p>
-        ) : (
-          <DisplayData data={response} audioData={audioInfo} userFav={userFav} username={username} theme={theme} onLoadMore={handleLoadMore} searchResult={searchResult} />
+        {loading && (     
+          <CircularProgress />
         )}
-
       </div>
     </ThemeProvider>
   );

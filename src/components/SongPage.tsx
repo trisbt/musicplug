@@ -231,7 +231,7 @@ const SongPage = (props: SongPageProps) => {
               padding: '0',
 
             }}>
-            <SearchData username={username} showLoadingCircle={true} customStyles={{
+            {/* <SearchData username={username} showLoadingCircle={true} customStyles={{
               color: 'black',
               backgroundColor: '#f5f5f5',
               
@@ -241,7 +241,7 @@ const SongPage = (props: SongPageProps) => {
                 fontStyle: 'italic',
                 fontWeight: 'bold',
               }}
-            />
+            /> */}
           </Grid>
 
           {/* top row */}

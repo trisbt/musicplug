@@ -19,7 +19,7 @@ interface DisplayDataProps {
   data: DataItem[];
   audioData: AudioDataItem[];
   username?: string | null;
-  onLoadMore: () => void;
+  // onLoadMore: () => void;
   userFav?: Record<string, boolean>;
   searchResult: string;
   customStyles?: React.CSSProperties;
@@ -102,7 +102,7 @@ function tempoRound(num: number): number {
   return Math.round(num * 2) / 2;
 }
 
-const DisplayData: React.FC<DisplayDataProps> = ({ data, audioData, username, onLoadMore, userFav, searchResult, customStyles }) => {
+const DisplayData: React.FC<DisplayDataProps> = ({  handleLoadMoreRef, data, audioData, username, userFav, searchResult, customStyles }) => {
   const [favoriteMap, setFavoriteMap] = useState<Record<string, boolean>>({});
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -482,7 +482,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ data, audioData, username, on
             }}>
               <div className='loadmore'>
                 <LoadButton
-                  onClick={onLoadMore}
+                  onClick={() => handleLoadMoreRef.current && handleLoadMoreRef.current()}
                   variant='outlined'
                   size='large'
                   sx={{

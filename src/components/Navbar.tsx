@@ -15,6 +15,8 @@ import { Card } from '@mui/material';
 import musicpluglogow from '../assets/musicpluglogow.png';
 import { useAuth } from './Auth';
 import { AuthContextValue } from '@appTypes/authTypes';
+import SearchData from './SearchData';
+
 
 interface MenuState {
   anchorElNav: null | HTMLElement;
@@ -23,12 +25,13 @@ interface MenuState {
 // const pages = [];
 const settings = ['Favorites', 'Account', 'Logout'];
 
-function ResponsiveAppBar() {
+function ResponsiveAppBar({handleLoadMoreRef, setOffset, offset, setResponse, response, setAudioInfo, audioInfo, setUserFav, userFav, setLoading, loading, setSearchResult, searchResult }) {
   const { loggedInUser, isLoggedIn, handleLogout } = useAuth() as AuthContextValue;
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+
 
 
   const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
@@ -54,7 +57,7 @@ function ResponsiveAppBar() {
       <AppBar position="static"
         sx={{
           backgroundColor: '#0047d4',
-          
+
         }}
       >
         <Container maxWidth="xl"
@@ -93,8 +96,24 @@ function ResponsiveAppBar() {
                 </Card>
               </Box>
 
-              <Box display='flex' justifyContent='center' alignItems='center'>
+              <SearchData
+                setResponse={setResponse}
+                response={response}
+                setAudioInfo={setAudioInfo}
+                audioInfo={audioInfo}
+                setUserFav={setUserFav}
+                userFav={userFav}
+                setLoading={setLoading}
+                loading={loading}
+                setSearchResult={setSearchResult}
+                searchResult={searchResult}
+                setOffset={setOffset}
+                offset={offset}
+                username={loggedInUser}
+                handleLoadMoreRef={handleLoadMoreRef}
+              />
 
+              <Box display='flex' justifyContent='center' alignItems='center'>
                 {isLoggedIn ? (
                   <Box>
                     <Tooltip title="Open settings">

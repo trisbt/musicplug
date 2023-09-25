@@ -120,7 +120,7 @@ const CircleOfFifths = ({ activeSlice, setActiveSlice }) => {
     <div className='pie-container'>
       <Grid container spacing={0} sx={{
         height: '300px',
-        borderRadius: '5px',
+        // borderRadius: '5px',
         paddingLeft: 0,
         paddingTop: 0
       }}>
@@ -140,7 +140,7 @@ const CircleOfFifths = ({ activeSlice, setActiveSlice }) => {
               fontSize: '12px'
             }
           }}>
-            <Typography className='song-sub-info' variant="h4" color="white" component="div" sx={{
+            {/* <Typography className='song-sub-info' variant="h4" color="white" component="div" sx={{
               fontSize: '25px',
               display: 'flex',
               textAlign: 'center',
@@ -151,14 +151,14 @@ const CircleOfFifths = ({ activeSlice, setActiveSlice }) => {
             }}
             >
               FILTER YOUR FAVORTIES BY KEY
-            </Typography>
+            </Typography> */}
           </Box>
         </Grid>
 
         <Grid item xs={4} sx={{
           height: '270px',
           paddingLeft: 0, paddingTop: 0,
-          marginTop: '10px',
+          // marginTop: '10px',
 
         }}>
           <Pie

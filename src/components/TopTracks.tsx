@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLoaderData } from 'react-router-dom';
 import { createTheme, Box, Button, Card, CardContent, CardMedia, Grid, IconButton, styled, Typography, Theme } from '@mui/material';
 import DisplayData from './DisplayData';
 import { Link } from 'react-router-dom';
@@ -105,128 +105,131 @@ function tempoRound(num: number): number {
 }
 
 const TopTracks = ({ username }) => {
+  // const topTracksLoaded = useLoaderData();
   const [combinedTracks, setCombinedTracks] = useState([]);
   const [topUserFav, setTopUserFav] = useState([]);
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const navigate = useNavigate();
+  // console.log('top', topTracksLoaded)
+
   useEffect(() => {
     async function fetchData() {
-        try {
-            const [topTracksResponse, favsResponse] = await Promise.all([
-                fetch('/api/toptracks'),
-                username ? fetch('/api/favs', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ username }),
-                    credentials: 'include',
-                }) : Promise.resolve(null)
-            ]);
+      try {
+        const [topTracksResponse, favsResponse] = await Promise.all([
+          fetch('/api/toptracks'),
+          username ? fetch('/api/favs', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username }),
+            credentials: 'include',
+          }) : Promise.resolve(null)
+        ]);
 
-            const rawCombinedData = await topTracksResponse.json();
-            
-            const processedData = rawCombinedData.map(item => {
-                const { name, preview_url, explicit, popularity, artists, id } = item;
-                const images = item.album.images[0].url;
-                const release_date = item.album.release_date;
-                const albums = item.album.name;
-                const key = keyConvert(item.key, item.mode);
-                const tempo = tempoRound(item.tempo);
-                const { loudness, energy, acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence } = item;
+        const rawCombinedData = await topTracksResponse.json();
 
-                return {
-                    name, images, id, preview_url, release_date, artists, albums, explicit, popularity,
-                    key, tempo, loudness, energy, acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence
-                };
-            });
-            console.log(processedData);
-            setCombinedTracks(processedData);
+        const processedData = rawCombinedData.map(item => {
+          const { name, preview_url, explicit, popularity, artists, id } = item;
+          const images = item.album.images[0].url;
+          const release_date = item.album.release_date;
+          const albums = item.album.name;
+          const key = keyConvert(item.key, item.mode);
+          const tempo = tempoRound(item.tempo);
+          const { loudness, energy, acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence } = item;
 
-            if (username) {
-                const favData = await favsResponse?.json();
-                const favArray = favData.favorites.map(el => el.id);
-                const obj = {};
-                for (const el of favArray) {
-                    if (!obj[el]) {
-                        obj[el] = true;
-                    }
-                }
-                setTopUserFav(obj);
+          return {
+            name, images, id, preview_url, release_date, artists, albums, explicit, popularity,
+            key, tempo, loudness, energy, acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence
+          };
+        });
+        // console.log(processedData);
+        setCombinedTracks(processedData);
+
+        if (username) {
+          const favData = await favsResponse?.json();
+          const favArray = favData.favorites.map(el => el.id);
+          const obj = {};
+          for (const el of favArray) {
+            if (!obj[el]) {
+              obj[el] = true;
             }
-
-        } catch (err) {
-            console.log(err);
+          }
+          setTopUserFav(obj);
         }
+
+      } catch (err) {
+        console.log(err);
+      }
     }
 
     fetchData();
-}, []);
+  }, []);
 
-    const playAudio = (event: React.MouseEvent, previewUrl: string | null) => {
-      event.stopPropagation();
-      event.preventDefault();
-      if (audioRef.current && previewUrl) {
-        audioRef.current.volume = .3;
+  const playAudio = (event: React.MouseEvent, previewUrl: string | null) => {
+    event.stopPropagation();
+    event.preventDefault();
+    if (audioRef.current && previewUrl) {
+      audioRef.current.volume = .3;
 
-        if (audioRef.current.src === previewUrl && !audioRef.current.paused) {
+      if (audioRef.current.src === previewUrl && !audioRef.current.paused) {
+        audioRef.current.pause();
+        setCurrentlyPlayingUrl(null);
+      } else {
+        if (!audioRef.current.paused) {
+          // Stop currently playing audio if there is any
           audioRef.current.pause();
-          setCurrentlyPlayingUrl(null);
-        } else {
-          if (!audioRef.current.paused) {
-            // Stop currently playing audio if there is any
-            audioRef.current.pause();
-          }
-          audioRef.current.src = previewUrl;
-          audioRef.current.play();
-          setCurrentlyPlayingUrl(previewUrl);
         }
+        audioRef.current.src = previewUrl;
+        audioRef.current.play();
+        setCurrentlyPlayingUrl(previewUrl);
       }
-    };
-
-    interface HandleFavoriteItem {
-      id: string;
-      name: string;
-      artists: string[];
-      albums: string;
-      images: string;
-      key: string;
-      tempo: number;
-      loudness: number;
     }
+  };
 
-    const handleFavorite = async (event: React.MouseEvent, item, username: string) => {
-      event.stopPropagation();
-      event.preventDefault();
-      const { id, name, artists, albums, images, key, tempo, loudness } = item;
-      try {
-        const response = await fetch('/api/addFavs', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username, id, name, artists, albums, images, key, tempo, loudness, }),
-          credentials: 'include',
-        });
-        const data = await response.json();
-        //add like
-        if (data.isFavorite === 'added') {
-          setTopUserFav((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-          }));
-          // remove like
-        } else {
-          setTopUserFav((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-          }));
-        }
-      } catch (error) {
-        console.error('Error adding track to favorites:', error);
+  interface HandleFavoriteItem {
+    id: string;
+    name: string;
+    artists: string[];
+    albums: string;
+    images: string;
+    key: string;
+    tempo: number;
+    loudness: number;
+  }
+
+  const handleFavorite = async (event: React.MouseEvent, item, username: string) => {
+    event.stopPropagation();
+    event.preventDefault();
+    const { id, name, artists, albums, images, key, tempo, loudness } = item;
+    try {
+      const response = await fetch('/api/addFavs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, id, name, artists, albums, images, key, tempo, loudness, }),
+        credentials: 'include',
+      });
+      const data = await response.json();
+      //add like
+      if (data.isFavorite === 'added') {
+        setTopUserFav((prevMap) => ({
+          ...prevMap,
+          [id]: true,
+        }));
+        // remove like
+      } else {
+        setTopUserFav((prevMap) => ({
+          ...prevMap,
+          [id]: false,
+        }));
       }
-    };
+    } catch (error) {
+      console.error('Error adding track to favorites:', error);
+    }
+  };
 
   return (
     <div>
@@ -243,14 +246,14 @@ const TopTracks = ({ username }) => {
                     flexDirection: 'row',
                     margin: '10px 10px 0',
                     boxShadow: 3,
-                    justifyContent:'center',
-                    backgroundColor:'rgb(0, 71, 212, .6)',
-                   
+                    justifyContent: 'center',
+                    backgroundColor: 'rgb(0, 71, 212, .6)',
+
                   }}
                 >
                   <Typography variant='h4' sx={{
                     display: 'flex',
-           
+
                     alignItems: 'center',
                     color: '#e8eaf6',
                     fontWeight: 'bold',
@@ -262,7 +265,7 @@ const TopTracks = ({ username }) => {
                     textTransform: 'uppercase',
                     '@media (max-width: 600px)': {
                       fontSize: '24px'
-                  },
+                    },
                   }}>
                     Daily Top Tracks
                   </Typography>
@@ -433,59 +436,59 @@ const TopTracks = ({ username }) => {
 
                             {/* fav button */}
                             <Grid item xs={2.5} sm={6} sx={{
-                            display: 'flex',
-                            justifyContent: 'center'
-                          }}>
-                            {username && (
-                              <SmallFavButton
-                                size='small'
-                                className='small-fav-icon-button'
-                                onClick={(event) => handleFavorite(event, item, username)}
-                                sx={{
-                                  boxShadow: 3,
-                                }}
-                              >
-                                {topUserFav[item.id] ? <FavSolid /> : <FavOutlined />}
-                              </SmallFavButton>
-                            )}
-                          </Grid>
+                              display: 'flex',
+                              justifyContent: 'center'
+                            }}>
+                              {username && (
+                                <SmallFavButton
+                                  size='small'
+                                  className='small-fav-icon-button'
+                                  onClick={(event) => handleFavorite(event, item, username)}
+                                  sx={{
+                                    boxShadow: 3,
+                                  }}
+                                >
+                                  {topUserFav[item.id] ? <FavSolid /> : <FavOutlined />}
+                                </SmallFavButton>
+                              )}
+                            </Grid>
 
                             {/* preview button */}
                             <Grid item xs={2.5} sm={6} sx={{
-                            display: 'flex',
-                            justifyContent: 'center'
-                          }} >
-                            {item.preview_url && (
-                              <SmallPlayButton className='preview-button' sx={{
-                                boxShadow: 3,
-                                borderRadius: '50px',
-                                // display: { xs: 'flex', sm: 'none', md: 'none' },
-                              }}
-                                onClick={(event) => playAudio(event, item.preview_url || null)}
-                              >
-                                {currentlyPlayingUrl === item.preview_url ? (
-                                  <>
-                                    <StopIcon aria-label="stop"
-                                      sx={{
-                                        height: 36,
-                                        width: 36,
-                                      }}
-                                    />
-                                  </>
-                                ) : (
-                                  <>
-                                    <PlayArrowIcon aria-label="play/pause"
-                                      sx={{
-                                        height: 35,
-                                        width: 35,
-                                      }}
-                                    />
-                                  </>
-                                )}
-                              </SmallPlayButton>
-                            )}
-                            <audio ref={audioRef}></audio>
-                          </Grid>
+                              display: 'flex',
+                              justifyContent: 'center'
+                            }} >
+                              {item.preview_url && (
+                                <SmallPlayButton className='preview-button' sx={{
+                                  boxShadow: 3,
+                                  borderRadius: '50px',
+                                  // display: { xs: 'flex', sm: 'none', md: 'none' },
+                                }}
+                                  onClick={(event) => playAudio(event, item.preview_url || null)}
+                                >
+                                  {currentlyPlayingUrl === item.preview_url ? (
+                                    <>
+                                      <StopIcon aria-label="stop"
+                                        sx={{
+                                          height: 36,
+                                          width: 36,
+                                        }}
+                                      />
+                                    </>
+                                  ) : (
+                                    <>
+                                      <PlayArrowIcon aria-label="play/pause"
+                                        sx={{
+                                          height: 35,
+                                          width: 35,
+                                        }}
+                                      />
+                                    </>
+                                  )}
+                                </SmallPlayButton>
+                              )}
+                              <audio ref={audioRef}></audio>
+                            </Grid>
 
                             {/* </Grid> */}
                           </Grid>
@@ -508,5 +511,78 @@ const TopTracks = ({ username }) => {
 
 }
 export default TopTracks;
+
+// export const topTracksLoader = async () => {
+//   const res = await fetch('/api/toptracks');
+
+//   if (!res.ok) {
+//     throw new Error('Network response was not ok');
+//   }
+
+//   const data = await res.json();
+
+//   const processedData = data.map(item => {
+//     const {
+//       name,
+//       preview_url,
+//       explicit,
+//       popularity,
+//       artists,
+//       id,
+//       album: {
+//         images,
+//         release_date,
+//         name: albums
+//       },
+//       key: itemKey,
+//       mode: itemMode,
+//       tempo: itemTempo,
+//       loudness,
+//       energy,
+//       acousticness,
+//       analysis_url,
+//       danceability,
+//       duration_ms,
+//       instrumentalness,
+//       liveness,
+//       time_signature,
+//       track_href,
+//       uri,
+//       valence
+//     } = item;
+
+//     const key = keyConvert(itemKey, itemMode);
+//     const tempo = tempoRound(itemTempo);
+
+//     return {
+//       name,
+//       images: images[0].url,
+//       id,
+//       preview_url,
+//       release_date,
+//       artists,
+//       albums,
+//       explicit,
+//       popularity,
+//       key,
+//       tempo,
+//       loudness,
+//       energy,
+//       acousticness,
+//       analysis_url,
+//       danceability,
+//       duration_ms,
+//       instrumentalness,
+//       liveness,
+//       time_signature,
+//       track_href,
+//       uri,
+//       valence
+//     };
+//   });
+
+//   return processedData;
+// }
+
 
 

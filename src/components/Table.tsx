@@ -206,8 +206,8 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderDone, activeSlice, username, setFavDeleteRender, favDeleteRender }) => {
-  const [order, setOrder] = useState<"desc" | "asc">("asc");
-  const [orderBy, setOrderBy] = useState<keyof Row>('song');
+  const [order, setOrder] = useState<"desc" | "asc">("desc");
+  const [orderBy, setOrderBy] = useState<keyof Row | null>(null);
   const [selected, setSelected] = useState<SelectedRow[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
@@ -221,6 +221,9 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
     favorite.tempo,
     favorite.id
   ));
+  if (order === 'desc' && orderBy === null) {
+    rows = rows.reverse();
+  }
 
   if (activeSlice) {
     rows = rows.filter(row => row.key === activeSlice);

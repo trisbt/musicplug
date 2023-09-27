@@ -5,12 +5,12 @@ export default defineConfig({
   base: '/',
   plugins: [react()],
   build: {
-    outDir: 'dist', // Ensure this directory aligns with what Express serves
+    outDir: 'dist',
   },
   server: {
     proxy: {
       host: '0.0.0.0',
-      '/api': 'http://localhost:4000' // adjust this according to your API routes
+      '/api': 'http://localhost:4000' 
     }
   }
 })

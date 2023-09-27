@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate, useSearchParams, } from 'react-router-dom';
 import React, { useState, useEffect, FC, useRef } from 'react';
 import { Grid } from '@mui/material';
 import SearchData from './components/SearchData';
@@ -14,14 +14,11 @@ import { AuthContextValue } from '@appTypes/authTypes';
 import { SearchDataProps } from '@appTypes/dataTypes'
 import TopTracks from './components/TopTracks';
 
-
-
-const SignUp = React.lazy(() => import('./components/Signup'));
-const SignIn = React.lazy(() => import('./components/Login'));
-const SongPage = React.lazy(() => import('./components/SongPage'));
-const Favorites = React.lazy(() => import('./components/Favs'));
-const AccountSettings = React.lazy(() => import('./components/AccountSettings'));
-
+import SignUp from './components/Signup';
+import SignIn from './components/Login';
+import SongPage from './components/SongPage';
+import Favorites from './components/Favs';
+import AccountSettings from './components/AccountSettings';
 
 
 const theme = createTheme({
@@ -48,7 +45,6 @@ const MainContent: FC = ({ handleLoadMoreRef, setOffset, offset, setResponse, re
   const { isLoggedIn, loggedInUser } = useAuth() as AuthContextValue;
   const location = useLocation();
   const isHomePage = location.pathname === '/' && !location.search;
-
   // Use this value to set the showSplash state directly
   const [showSplash, setShowSplash] = useState(isHomePage);
   useEffect(() => {
@@ -93,13 +89,14 @@ const MainContent: FC = ({ handleLoadMoreRef, setOffset, offset, setResponse, re
 
             )}
             {/* SearchData Grid item */}
-            <Grid item mt={2} item xs={12} style={{
+            <Grid mt={2} item xs={12} style={{
               display: 'flex',
               justifyContent: 'center',
 
             }}>
               <Routes>
                 {/* <Route path="/" element={<SearchData key={location.search} username={loggedInUser} />} /> */}
+                {location.search &&(
                 <Route path="/" element={<DisplayData
                   data={response}
                   audioData={audioInfo}
@@ -112,6 +109,8 @@ const MainContent: FC = ({ handleLoadMoreRef, setOffset, offset, setResponse, re
                   searchResult={searchResult}
                 />
                 } />
+                )}
+                
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/:name/:artist/:id/" element={<SongPage username={loggedInUser} />} />
                 {!isLoggedIn && <Route path="/login" element={<SignIn />} />}
@@ -122,8 +121,8 @@ const MainContent: FC = ({ handleLoadMoreRef, setOffset, offset, setResponse, re
 
             {/* TopTracks Grid item */}
             {showSplash && (
-              <Grid item mt={4} item xs={12} className="TopTracksClass">
-                <TopTracks username={loggedInUser} />
+              <Grid mt={4} item xs={12} className="TopTracksClass">
+                <TopTracks username = {loggedInUser}/>
               </Grid>
             )}
           </Grid>
@@ -164,7 +163,7 @@ function App() {
           handleLoadMoreRef={handleLoadMoreRef}
 
         />
-        <React.Suspense fallback={<div>Loading...</div>}>
+        {/* <React.Suspense fallback={<div>Loading...</div>}> */}
           <MainContent
             setResponse={setResponse}
             response={response}
@@ -180,7 +179,7 @@ function App() {
             offset={offset}
             handleLoadMoreRef={handleLoadMoreRef}
           />
-        </React.Suspense>
+        {/* </React.Suspense> */}
         <Footer />
       </Router>
     </ThemeProvider>

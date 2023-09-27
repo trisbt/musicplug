@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { createTheme, Box, Button, Card, CardContent, CardMedia, Grid, IconButton, styled, Typography, Theme } from '@mui/material';
 import DisplayData from './DisplayData';
@@ -105,107 +105,64 @@ function tempoRound(num: number): number {
 }
 
 const TopTracks = ({ username }) => {
-  const [topTracks, setTopTracks] = useState([]);
-  const [topAudioFeatures, setTopAudioFeatures] = useState([]);
+  const [combinedTracks, setCombinedTracks] = useState([]);
   const [topUserFav, setTopUserFav] = useState([]);
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
-    //gets top tracks from spotify global playlist
-    if (!TopTracks.cachedTracks || !TopTracks.cachedAudioFeatures) {
-      fetch('/api/toptracks')
-        .then(res => res.json())
-        .then(data => {
-          setTopTracks(data.trackData);
-          setTopAudioFeatures(data.audioData);
+    async function fetchData() {
+        try {
+            const [topTracksResponse, favsResponse] = await Promise.all([
+                fetch('/api/toptracks'),
+                username ? fetch('/api/favs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username }),
+                    credentials: 'include',
+                }) : Promise.resolve(null)
+            ]);
 
-          // Cache data in static variables
-          TopTracks.cachedTracks = data.trackData;
-          TopTracks.cachedAudioFeatures = data.audioData;
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    } else {
-      // Use cached data
-      setTopTracks(TopTracks.cachedTracks);
-      setTopAudioFeatures(TopTracks.cachedAudioFeatures);
-    }
+            const rawCombinedData = await topTracksResponse.json();
+            
+            const processedData = rawCombinedData.map(item => {
+                const { name, preview_url, explicit, popularity, artists, id } = item;
+                const images = item.album.images[0].url;
+                const release_date = item.album.release_date;
+                const albums = item.album.name;
+                const key = keyConvert(item.key, item.mode);
+                const tempo = tempoRound(item.tempo);
+                const { loudness, energy, acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence } = item;
 
-    //use favorite fetch
-    if (username) {
-      fetch('/api/favs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username }),
-        credentials: 'include',
-      })
-        .then(res => res.json())
-        .then(res => {
-          const favArray = res.favorites.map(el => el.id);
-          const obj = {};
-          for (const el of favArray) {
-            if (!obj[el]) {
-              obj[el] = true;
+                return {
+                    name, images, id, preview_url, release_date, artists, albums, explicit, popularity,
+                    key, tempo, loudness, energy, acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence
+                };
+            });
+            console.log(processedData);
+            setCombinedTracks(processedData);
+
+            if (username) {
+                const favData = await favsResponse?.json();
+                const favArray = favData.favorites.map(el => el.id);
+                const obj = {};
+                for (const el of favArray) {
+                    if (!obj[el]) {
+                        obj[el] = true;
+                    }
+                }
+                setTopUserFav(obj);
             }
-          }
-          setTopUserFav(obj);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+
+        } catch (err) {
+            console.log(err);
+        }
     }
-  }, [username]);
 
-  const basicData = topTracks.map((item) => {
-    const { name, album, preview_url, explicit, popularity } = item;
-    const artists = item.artists
-    const images = album.images[0].url;
-    const id = item.id;
-    const release_date = item.album.release_date;
-    const albums = item.album.name;
-    return { name, images, id, preview_url, release_date, artists, albums, explicit, popularity };
-  });
-
-  const audioFeatures = topAudioFeatures.map((item) => {
-    if (item) {
-      const key = keyConvert(item.key, item.mode);
-      const tempo = tempoRound(item.tempo);
-      const { loudness, energy, acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence } = item
-      return {
-        key,
-        tempo,
-        loudness,
-        energy,
-        acousticness,
-        analysis_url,
-        danceability,
-        duration_ms,
-        instrumentalness,
-        liveness,
-        time_signature,
-        track_href,
-        uri,
-        valence,
-      };
-    } else {
-      return {};
-    }
-  });
-
-  const results: ResultItem[] = [];
-
-  for (let i = 0; i < basicData.length; i++) {
-    const combinedObject = {
-      ...basicData[i],
-      ...audioFeatures[i]
-    };
-    results.push(combinedObject);
-  }
-
+    fetchData();
+}, []);
 
     const playAudio = (event: React.MouseEvent, previewUrl: string | null) => {
       event.stopPropagation();
@@ -273,9 +230,10 @@ const TopTracks = ({ username }) => {
 
   return (
     <div>
+
       <Box>
         <Grid container item xs={12} justifyContent='center' alignItems='center' >
-          {results.length > 0 && (
+          {combinedTracks.length > 0 && (
             <>
               {/* text row */}
               <Grid item xs={11} md={8}>
@@ -312,7 +270,7 @@ const TopTracks = ({ username }) => {
               </Grid>
 
               {/* main search */}
-              {results.map((item: ResultItem, index: number) => (
+              {combinedTracks.map((item: ResultItem, index: number) => (
 
                 <Grid item xs={11} md={8} key={index}>
                   {/* each card */}
@@ -540,14 +498,6 @@ const TopTracks = ({ username }) => {
                   </Link>
                 </Grid>
               ))}
-
-
-              <Grid item xs={12} sx={{
-                paddingTop: '1em',
-                paddingBottom: '1em',
-              }}>
-
-              </Grid>
             </>
           )
           }
@@ -557,8 +507,6 @@ const TopTracks = ({ username }) => {
   );
 
 }
-TopTracks.cachedTracks = null;
-TopTracks.cachedAudioFeatures = null;
 export default TopTracks;
-// export {};
+
 

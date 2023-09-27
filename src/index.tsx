@@ -1,5 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import './index.css';
 import App from './App';
 import { AuthProvider } from './components/Auth';
@@ -11,11 +12,14 @@ if (!container) {
 }
 
 const root = createRoot(container);
+const queryClient = new QueryClient();  // Create a new instance of QueryClient
 
 root.render(
   <React.StrictMode>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>  {/* Wrap your app with the QueryClientProvider */}
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );

@@ -500,7 +500,8 @@ const TopTracks = ({ username }) => {
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const navigate = useNavigate();
-console.log(username)
+
+//old fetch for top tracks
   // useEffect(() => {
   //   async function fetchData() {
   //     try {
@@ -567,11 +568,8 @@ console.log(username)
                 body: JSON.stringify({ username }),
                 credentials: 'include',
             });
-
             const favData = await response.json();
-            console.log('favs',favData);
-            const favArray = favData.favorites.map(el => el.id);
-
+            const favArray = favData.map(el => el.id);
             const obj = {};
             for (const el of favArray) {
                 if (!obj[el]) {
@@ -586,7 +584,6 @@ console.log(username)
     }
     fetchFavs();
 }, [username]);  
-
 
   const playAudio = (event: React.MouseEvent, previewUrl: string | null) => {
     event.stopPropagation();

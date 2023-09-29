@@ -34,13 +34,15 @@ const ColorButton = styled(Button)(({ theme }) => ({
   '&:hover': {
     backgroundColor: theme.palette.primary.dark,
   },
+  minWidth: '45px',
+  padding:0
 }));
 const SmallColorButton = styled(Button)(({ theme }) => ({
   color: theme.palette.secondary.light,
   border: 'none',
   margin: 0,
   padding: 0,
-  minWidth: '30px'
+  minWidth: '20px'
 }));
 
 const CloseButton = styled(CloseIcon)(({ theme }) => ({
@@ -60,7 +62,6 @@ const StyledInput = styled(Input)(({ theme }) => ({
 
 //main search to spotify
 const SearchData = ({
-  handleLoadMoreRef,
   setOffset,
   offset,
   setResponse,
@@ -93,15 +94,9 @@ const SearchData = ({
   }, []);
 
   useEffect(() => {
-    handleLoadMoreRef.current = handleLoadMore;
-    // console.log(handleLoadMore);
-    // Cleanup to avoid any unexpected behavior when component unmounts
-    return () => {
-      handleLoadMoreRef.current = null;
-    };
+    fetchData(offset);
   }, [offset]);
 
-console.log(response.length)
   const fetchData = (newOffset = 1, query = inputField) => {
     const idCache: string[] = [];
     if (query.trim() !== '') {
@@ -174,13 +169,6 @@ console.log(response.length)
     setShowInput(false);
   };
 
-  const handleLoadMore = () => {
-    const nextOffset = offset + 25;
-    // console.log(nextOffset)
-    fetchData(nextOffset);
-  }
-
-
   return (
     <ThemeProvider theme={theme}>
       <div >
@@ -188,16 +176,20 @@ console.log(response.length)
           <div className='searchform-container'>
             <Hidden smDown>
               <form className='searchform' onSubmit={handleFormSubmit}>
-                <FormControl>
+                <FormControl sx = {{
+                  width:'280px'
+                }}>
                   <StyledInput
                     className='searchbox'
-                    placeholder='find songs...'
+                    
+                    placeholder='Search for songs, artists, albums...'
                     type='text'
                     inputRef={searchInputRef}
                   />
                 </FormControl>
                 <ColorButton type='submit' variant='outlined'>
-                  Search
+                <SearchIcon sx={{ fontSize: '28px' }} />
+                  {/* Search */}
                 </ColorButton>
               </form>
             </Hidden>
@@ -205,7 +197,9 @@ console.log(response.length)
             <Hidden smUp>
               {!showInput ? (
                 <SmallColorButton onClick={() => setShowInput(true)} variant='outlined'>
-                  <SearchIcon />
+               <SearchIcon sx={{ fontSize: '28px' }} />
+
+
                 </SmallColorButton>
               ) : (
                 <form className='testttt' onSubmit={handleFormSubmit}
@@ -226,7 +220,7 @@ console.log(response.length)
                   <FormControl style={{ width: '100%' }}>
                     <StyledInput
                       className='searchbox'
-                      placeholder='find songs...'
+                      placeholder='Search for songs, artists, albums...'
                       type='text'
                       inputRef={searchInputRef}
                       autoFocus

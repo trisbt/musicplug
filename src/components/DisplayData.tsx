@@ -101,11 +101,10 @@ function tempoRound(num: number): number {
   return Math.round(num * 2) / 2;
 }
 
-const DisplayData: React.FC<DisplayDataProps> = ({  handleLoadMoreRef, data, audioData, username, userFav, searchResult, }) => {
+const DisplayData: React.FC<DisplayDataProps> = ({  handleLoadMore, data, audioData, username, userFav, searchResult, }) => {
   const [favoriteMap, setFavoriteMap] = useState<Record<string, boolean>>({});
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-// console.log('d', handleLoadMoreRef)
   //needed to show user favorites in search results
   useEffect(() => {
     if(searchResult){
@@ -115,6 +114,8 @@ const DisplayData: React.FC<DisplayDataProps> = ({  handleLoadMoreRef, data, aud
       setFavoriteMap(userFav);
     }
   }, [userFav, username]);
+
+  
 
   if (!data && !audioData) {
     return null;
@@ -486,7 +487,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({  handleLoadMoreRef, data, aud
             }}>
               <div className='loadmore'>
                 <LoadButton
-                  onClick={() => handleLoadMoreRef.current && handleLoadMoreRef.current()}
+                  onClick={() => handleLoadMore()}
                   variant='outlined'
                   size='large'
                   sx={{

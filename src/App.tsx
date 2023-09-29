@@ -25,7 +25,7 @@ const DisplayData = lazy(() => import('./components/DisplayData'));
 
 const theme = createTheme({
   typography: {
-    fontFamily: '"Montserrat", sans-serif',
+    // fontFamily: '"Montserrat", sans-serif',
   },
   palette: {
     primary: {
@@ -55,7 +55,7 @@ function Root() {
   const [userFav, setUserFav] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [offset, setOffset] = useState<number>(1);
-  const handleLoadMoreRef = useRef(null);
+
   //to display text for user search
   const [searchResult, setSearchResult] = useState<string>('');
   const { isLoggedIn, loggedInUser } = useAuth() as AuthContextValue;
@@ -63,6 +63,10 @@ function Root() {
   const isHomePage = location.pathname === '/' && !location.search;
   // Use this value to set the showSplash state directly
   const [showSplash, setShowSplash] = useState(isHomePage);
+  const handleLoadMore = () => {
+    const nextOffset = offset + 25;
+    setOffset(nextOffset);
+  };
   useEffect(() => {
     setShowSplash(isHomePage);
   }, [location.pathname, location.search]);
@@ -97,7 +101,7 @@ function Root() {
           searchResult={searchResult}
           setOffset={setOffset}
           offset={offset}
-          handleLoadMoreRef={handleLoadMoreRef}
+
         />
         <div style={backgroundStyle}>
           <div className="App">
@@ -131,7 +135,7 @@ function Root() {
                       theme={theme}
                       setOffset={setOffset}
                       offset={offset}
-                      handleLoadMoreRef={handleLoadMoreRef}
+                      handleLoadMore = {handleLoadMore}
                       searchResult={searchResult}
                     />
                     } />

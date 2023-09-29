@@ -1,4 +1,4 @@
-import { useState, MouseEvent } from 'react';
+import { useState, MouseEvent, useEffect } from 'react';
 import { useNavigation, useSearchParams, useNavigate, Link } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -10,7 +10,9 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import MenuIcon from '@mui/icons-material/Menu';
 import { Card, Hidden } from '@mui/material';
+import Popper from '@mui/material/Popper';
 import musicpluglogow from '../assets/musicpluglogow.png';
 import { useAuth } from './Auth';
 import { AuthContextValue } from '@appTypes/authTypes';
@@ -22,15 +24,14 @@ interface MenuState {
   anchorElUser: null | HTMLElement;
 }
 // const pages = [];
-const settings = ['Favorites', 'Account', 'Logout'];
+const settings = ['Favorites', 'Account', 'Logout', 'Login', 'Sign Up'];
 
-function ResponsiveAppBar({ handleLoadMoreRef, setOffset, offset, setResponse, response, setAudioInfo, audioInfo, setUserFav, userFav, setLoading, loading, setSearchResult, searchResult }) {
+function ResponsiveAppBar({ setOffset, offset, setResponse, response, setAudioInfo, audioInfo, setUserFav, userFav, setLoading, loading, setSearchResult, searchResult }) {
   const { loggedInUser, isLoggedIn, handleLogout } = useAuth() as AuthContextValue;
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-
 
 
   const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
@@ -111,13 +112,24 @@ function ResponsiveAppBar({ handleLoadMoreRef, setOffset, offset, setResponse, r
                     setOffset={setOffset}
                     offset={offset}
                     username={loggedInUser}
-                    handleLoadMoreRef={handleLoadMoreRef}
                   />
                 </Box>
               </Hidden>
 
+              <Hidden only={['sm','md', 'lg', 'xl']}>
+                <Box display='flex' flexGrow={3.2} justifyContent='flex-end'>
+                  <Typography variant='subtitle2' color = '#f5f5f5' fontWeight={800}>
+                    Search
+                  </Typography>
+                </Box>
+              </Hidden>
+            
+
               <Hidden smUp>
-                <Box display='flex' flexGrow={1} justifyContent='flex-end'>
+                <Box display='flex' flexGrow={1} justifyContent='flex-end' sx={{
+                  margin: 0,
+                  width: '0px',
+                }}>
                   <SearchData
                     setResponse={setResponse}
                     response={response}
@@ -132,7 +144,6 @@ function ResponsiveAppBar({ handleLoadMoreRef, setOffset, offset, setResponse, r
                     setOffset={setOffset}
                     offset={offset}
                     username={loggedInUser}
-                    handleLoadMoreRef={handleLoadMoreRef}
                   />
                 </Box>
               </Hidden>
@@ -148,12 +159,12 @@ function ResponsiveAppBar({ handleLoadMoreRef, setOffset, offset, setResponse, r
                     <Menu
                       disableScrollLock={true}
                       sx={{
-                        mt: '45px',
+                        mt: '12px',
                       }}
                       id="menu-appbar"
                       anchorEl={anchorElUser}
                       anchorOrigin={{
-                        vertical: 'top',
+                        vertical: 'bottom',
                         horizontal: 'right',
                       }}
                       keepMounted
@@ -188,35 +199,85 @@ function ResponsiveAppBar({ handleLoadMoreRef, setOffset, offset, setResponse, r
                                 </Link>
                               </MenuItem>
                             );
-                          default:
-                            return (
-                              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                <Typography textAlign="center" color="black">{setting}</Typography>
-                              </MenuItem>
-                            );
                         }
                       })}
 
                     </Menu>
                   </Box>
                 ) : (
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      '& > a': {
-                        textDecoration: 'none',
-                        color: 'white',
-                        margin: '0 10px',
-                        fontWeight: 'bold',
-                      },
-                    }}
-                  >
-                    <Link to="/login">Login</Link>
-                    <Hidden only={['xs']}>
-                      or
+                  <Box>
+                    <Hidden only={[ 'md', 'lg', 'xl']}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          '& > a': {
+                            textDecoration: 'none',
+                            color: 'white',
+                            margin: '0 10px',
+                            fontWeight: 'bold',
+                          },
+                        }}
+                      >
+                        <Box>
+                          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                            <MenuIcon sx={{
+                              color: 'white',
+                              fontSize: '28px',
+                            }} />
+                          </IconButton>
+                          <Menu
+                            disableScrollLock={true}
+                            sx={{
+                              mt: '20px',
+                              // ml:'20px',
+                            }}
+                            id="menu-appbar"
+                            anchorEl={anchorElUser}
+                            anchorOrigin={{
+                              vertical: 'bottom',
+                              horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                              vertical: 'top',
+                              horizontal: 'right',
+                            }}
+                            open={Boolean(anchorElUser)}
+                            onClose={handleCloseUserMenu}
+                          >
+                            {settings.map((setting) => {
+                              switch (setting) {
+                                case 'Login':
+                                  return (
+                                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                                      <Link to="/login">
+                                        <Typography textAlign="center" color="black">{setting}</Typography>
+                                      </Link>
+                                    </MenuItem>
+                                  );
+                                case 'Sign Up':
+                                  return (
+                                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                                      <Link to="/signup">
+                                        <Typography textAlign="center" color="black">{setting}</Typography>
+                                      </Link>
+                                    </MenuItem>
+                                  );
+                              }
+                            })}
+                          </Menu>
+                        </Box>
+                      </Box>
+                    </Hidden>
+
+                    <Hidden only={['xs', 'sm']}>
+                      <Link to="/login">Login</Link>
+                      <span> or </span>
                       <Link to="/signup">Join</Link>
                     </Hidden>
+                    
                   </Box>
+
                 )}
               </Box>
 
@@ -224,7 +285,7 @@ function ResponsiveAppBar({ handleLoadMoreRef, setOffset, offset, setResponse, r
           </Toolbar>
         </Container>
       </AppBar >
-    </div>
+    </div >
   );
 }
 export default ResponsiveAppBar;

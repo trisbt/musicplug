@@ -105,7 +105,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({  handleLoadMoreRef, data, aud
   const [favoriteMap, setFavoriteMap] = useState<Record<string, boolean>>({});
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
+// console.log('d', handleLoadMoreRef)
   //needed to show user favorites in search results
   useEffect(() => {
     if(searchResult){
@@ -238,10 +238,15 @@ const DisplayData: React.FC<DisplayDataProps> = ({  handleLoadMoreRef, data, aud
         {results.length > 0 && (
           <>
             {/* search result text row */}
-            <Grid item xs={12}>
-              <h4
-                style={{ textAlign: 'center', fontSize: '20px', color:'white' }}>
-                Search Results for {searchResult}:</h4>
+            <Grid item xs={12} sx = {{
+              display:'flex',
+              justifyContent:'center',
+              alignContent:'center',
+              textAlign:'center',
+              fontSize: '20px', 
+              color:'white',
+            }}>
+                Search Results for {searchResult}:
             </Grid>
 
             {/* main search */}

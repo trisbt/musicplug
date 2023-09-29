@@ -94,13 +94,14 @@ const SearchData = ({
 
   useEffect(() => {
     handleLoadMoreRef.current = handleLoadMore;
+    // console.log(handleLoadMore);
     // Cleanup to avoid any unexpected behavior when component unmounts
     return () => {
       handleLoadMoreRef.current = null;
     };
   }, [offset]);
 
-
+console.log(response.length)
   const fetchData = (newOffset = 1, query = inputField) => {
     const idCache: string[] = [];
     if (query.trim() !== '') {
@@ -175,7 +176,7 @@ const SearchData = ({
 
   const handleLoadMore = () => {
     const nextOffset = offset + 25;
-    console.log(nextOffset)
+    // console.log(nextOffset)
     fetchData(nextOffset);
   }
 

@@ -22,7 +22,6 @@ interface DisplayDataProps {
   // onLoadMore: () => void;
   userFav?: Record<string, boolean>;
   searchResult: string;
-  customStyles?: React.CSSProperties;
   theme?: Theme;
 }
 
@@ -102,7 +101,7 @@ function tempoRound(num: number): number {
   return Math.round(num * 2) / 2;
 }
 
-const DisplayData: React.FC<DisplayDataProps> = ({  handleLoadMoreRef, data, audioData, username, userFav, searchResult, customStyles }) => {
+const DisplayData: React.FC<DisplayDataProps> = ({  handleLoadMoreRef, data, audioData, username, userFav, searchResult, }) => {
   const [favoriteMap, setFavoriteMap] = useState<Record<string, boolean>>({});
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);

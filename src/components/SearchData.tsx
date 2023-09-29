@@ -7,6 +7,9 @@ import { FormControl } from '@mui/material';
 import { createTheme, ThemeProvider, styled, Theme } from '@mui/material/styles';
 import { Artist, DataItem, AudioDataItem, SearchDataProps } from '@appTypes/dataTypes';
 import CircularProgress from '@mui/material/CircularProgress';
+import SearchIcon from '@mui/icons-material/Search';
+import { Hidden } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const theme: Theme = createTheme({
   palette: {
@@ -32,6 +35,23 @@ const ColorButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.primary.dark,
   },
 }));
+const SmallColorButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.secondary.light,
+  border: 'none',
+  margin: 0,
+  padding: 0,
+  minWidth: '30px'
+}));
+
+const CloseButton = styled(CloseIcon)(({ theme }) => ({
+  color: theme.palette.text.primary,
+  backgroundColor: 'transparent',
+  position: 'absolute',
+  borderColor: 'none',
+  right: '5px',
+  top: '5px'
+}));
+
 const StyledInput = styled(Input)(({ theme }) => ({
   color: theme.palette.text.primary,
   backgroundColor: theme.palette.background.paper,
@@ -54,8 +74,6 @@ const SearchData = ({
   setSearchResult,
   searchResult,
   username,
-  customStyles,
-  pStyles,
   showLoadingCircle = false
 }) => {
   const navigate = useNavigate();
@@ -63,7 +81,9 @@ const SearchData = ({
   const initialSearchQuery = searchParams.get('q') || '';
   const [inputField, setInputField] = useState<string>('');
   const searchInputRef = useRef<HTMLInputElement>(null);
-  
+  const [showInput, setShowInput] = useState(false);
+
+
 
   useEffect(() => {
     if (initialSearchQuery) {
@@ -76,9 +96,9 @@ const SearchData = ({
     handleLoadMoreRef.current = handleLoadMore;
     // Cleanup to avoid any unexpected behavior when component unmounts
     return () => {
-        handleLoadMoreRef.current = null;
+      handleLoadMoreRef.current = null;
     };
-}, [offset]);
+  }, [offset]);
 
 
   const fetchData = (newOffset = 1, query = inputField) => {
@@ -150,6 +170,7 @@ const SearchData = ({
     setResponse([]);
     setAudioInfo([]);
     fetchData(1, searchValue);
+    setShowInput(false);
   };
 
   const handleLoadMore = () => {
@@ -161,34 +182,71 @@ const SearchData = ({
 
   return (
     <ThemeProvider theme={theme}>
-      <div style={{
-        marginTop: loading || response.length ? '10px' : '0'
-
-      }}>
+      <div >
         {!loading ? (
           <div className='searchform-container'>
-            <form className='searchform' onSubmit={handleFormSubmit}>
-              <FormControl>
-                <StyledInput
-                  className='searchbox'
-                  placeholder='find songs...'
-                  type='text'
-                  inputRef={searchInputRef}
-                  style={{ ...customStyles }}
-                />
-              </FormControl>
-              <ColorButton type='submit' variant='outlined'>
-                Search
-              </ColorButton>
-            </form>
+            <Hidden smDown>
+              <form className='searchform' onSubmit={handleFormSubmit}>
+                <FormControl>
+                  <StyledInput
+                    className='searchbox'
+                    placeholder='find songs...'
+                    type='text'
+                    inputRef={searchInputRef}
+                  />
+                </FormControl>
+                <ColorButton type='submit' variant='outlined'>
+                  Search
+                </ColorButton>
+              </form>
+            </Hidden>
+
+            <Hidden smUp>
+              {!showInput ? (
+                <SmallColorButton onClick={() => setShowInput(true)} variant='outlined'>
+                  <SearchIcon />
+                </SmallColorButton>
+              ) : (
+                <form className='testttt' onSubmit={handleFormSubmit}
+                  style={{
+                    display: 'flex',
+                    position: 'absolute',
+                    margin: 0,
+                    padding: 0,
+                    top: 0,
+                    left: 0,
+
+                    width: '100vw',
+                    zIndex: 2,
+                    background: 'white',
+                    boxSizing: 'border-box', // or any other color or gradient to make the input discernible
+                  }}
+                >
+                  <FormControl style={{ width: '100%' }}>
+                    <StyledInput
+                      className='searchbox'
+                      placeholder='find songs...'
+                      type='text'
+                      inputRef={searchInputRef}
+                      autoFocus
+                    />
+                  </FormControl>
+                  <SmallColorButton onClick={() => setShowInput(false)} variant='outlined' style={{ marginLeft: '10px' }}>
+                    <CloseIcon sx={{
+                      border: 'none',
+                      color: 'black',
+                    }} />
+                  </SmallColorButton>
+                </form>
+              )}
+            </Hidden>
           </div>
         ) : null}
-        {loading && (     
-          <CircularProgress />
-        )}
+        {loading && <CircularProgress />}
       </div>
     </ThemeProvider>
   );
+
 }
 
 

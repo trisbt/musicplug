@@ -1,5 +1,5 @@
 import { useState, MouseEvent } from 'react';
-import { useNavigation, useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigation, useSearchParams, useNavigate, Link } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -10,8 +10,7 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { Link } from 'react-router-dom';
-import { Card } from '@mui/material';
+import { Card, Hidden } from '@mui/material';
 import musicpluglogow from '../assets/musicpluglogow.png';
 import { useAuth } from './Auth';
 import { AuthContextValue } from '@appTypes/authTypes';
@@ -25,7 +24,7 @@ interface MenuState {
 // const pages = [];
 const settings = ['Favorites', 'Account', 'Logout'];
 
-function ResponsiveAppBar({handleLoadMoreRef, setOffset, offset, setResponse, response, setAudioInfo, audioInfo, setUserFav, userFav, setLoading, loading, setSearchResult, searchResult }) {
+function ResponsiveAppBar({ handleLoadMoreRef, setOffset, offset, setResponse, response, setAudioInfo, audioInfo, setUserFav, userFav, setLoading, loading, setSearchResult, searchResult }) {
   const { loggedInUser, isLoggedIn, handleLogout } = useAuth() as AuthContextValue;
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
@@ -95,23 +94,48 @@ function ResponsiveAppBar({handleLoadMoreRef, setOffset, offset, setResponse, re
                   </Link>
                 </Card>
               </Box>
+              {/* desktop and mobile search bar*/}
+              <Hidden smDown>
+                <Box>
+                  <SearchData
+                    setResponse={setResponse}
+                    response={response}
+                    setAudioInfo={setAudioInfo}
+                    audioInfo={audioInfo}
+                    setUserFav={setUserFav}
+                    userFav={userFav}
+                    setLoading={setLoading}
+                    loading={loading}
+                    setSearchResult={setSearchResult}
+                    searchResult={searchResult}
+                    setOffset={setOffset}
+                    offset={offset}
+                    username={loggedInUser}
+                    handleLoadMoreRef={handleLoadMoreRef}
+                  />
+                </Box>
+              </Hidden>
 
-              <SearchData
-                setResponse={setResponse}
-                response={response}
-                setAudioInfo={setAudioInfo}
-                audioInfo={audioInfo}
-                setUserFav={setUserFav}
-                userFav={userFav}
-                setLoading={setLoading}
-                loading={loading}
-                setSearchResult={setSearchResult}
-                searchResult={searchResult}
-                setOffset={setOffset}
-                offset={offset}
-                username={loggedInUser}
-                handleLoadMoreRef={handleLoadMoreRef}
-              />
+              <Hidden smUp>
+                <Box display='flex' flexGrow={1} justifyContent='flex-end'>
+                  <SearchData
+                    setResponse={setResponse}
+                    response={response}
+                    setAudioInfo={setAudioInfo}
+                    audioInfo={audioInfo}
+                    setUserFav={setUserFav}
+                    userFav={userFav}
+                    setLoading={setLoading}
+                    loading={loading}
+                    setSearchResult={setSearchResult}
+                    searchResult={searchResult}
+                    setOffset={setOffset}
+                    offset={offset}
+                    username={loggedInUser}
+                    handleLoadMoreRef={handleLoadMoreRef}
+                  />
+                </Box>
+              </Hidden>
 
               <Box display='flex' justifyContent='center' alignItems='center'>
                 {isLoggedIn ? (
@@ -188,11 +212,14 @@ function ResponsiveAppBar({handleLoadMoreRef, setOffset, offset, setResponse, re
                     }}
                   >
                     <Link to="/login">Login</Link>
-                    or
-                    <Link to="/signup">Join</Link>
+                    <Hidden only={['xs']}>
+                      or
+                      <Link to="/signup">Join</Link>
+                    </Hidden>
                   </Box>
                 )}
               </Box>
+
             </Box>
           </Toolbar>
         </Container>

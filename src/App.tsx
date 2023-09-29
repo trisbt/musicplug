@@ -82,7 +82,7 @@ function Root() {
   };
   const backgroundStyle = getBackgroundStyle(location.pathname);
   return (
-    <React.Suspense fallback={<div>Loading...</div>}>
+    <React.Suspense fallback={<div></div>}>
       <ThemeProvider theme={theme}>
         <ResponsiveAppBar
           setResponse={setResponse}

@@ -96,9 +96,7 @@ export interface SongDetails {
 
   export interface SearchDataProps {
     key?: string;
-    username?: string;
-    customStyles?: React.CSSProperties;
-    pStyles?: React.CSSProperties;    
+    username?: string; 
     showLoadingCircle?: boolean;      
 }
 

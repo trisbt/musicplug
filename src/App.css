@@ -130,18 +130,6 @@ hr {
 
 }
 
-
-
-
-/* @media (max-width: 900px) {
-  .splash {
-    position: absolute;
-    top: 10%;
-    right: 0;
-    bottom: 0;
-  }
-} */
-
 @media (max-width: 600px) {
   .card-buttons {
     display: flex;
@@ -155,14 +143,6 @@ hr {
     width: 700px;
     /* height: 200px; */
   }
-  /* .splash {
-    position: absolute;
-    top: 10%;
-    left: 10%;
-    right: 0;
-    bottom: 0;
-  } */
-
 }
 /* @media (orientation: landscape) and (max-width: 900px) {
   .splash {

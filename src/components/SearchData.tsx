@@ -35,7 +35,7 @@ const ColorButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.primary.dark,
   },
   minWidth: '45px',
-  padding:0
+  padding: 0
 }));
 const SmallColorButton = styled(Button)(({ theme }) => ({
   color: theme.palette.secondary.light,
@@ -70,37 +70,44 @@ const SearchData = ({
   audioInfo,
   setUserFav,
   userFav,
-  setLoading,
-  loading,
+  // setLoading,
+  // loading,
   setSearchResult,
   searchResult,
   username,
-  showLoadingCircle = false
+  // showLoadingCircle = false
 }) => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const initialSearchQuery = searchParams.get('q') || '';
   const [inputField, setInputField] = useState<string>('');
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [showInput, setShowInput] = useState(false);
+  const [searchParams] = useSearchParams();
+  const initialSearchQuery = searchParams.get('q') || '';
+  const query = searchParams.get('q') || '';
 
-
+  const hasFetchedForQueryRef = useRef(false);  // <-- Step 1
 
   useEffect(() => {
-    if (initialSearchQuery) {
-      setInputField(initialSearchQuery);
-      fetchData(1, initialSearchQuery);
+    if (query && !hasFetchedForQueryRef.current) {  // <-- Step 3
+      setInputField(query);
+      fetchData(1, query);
+      console.log('hey')
+      hasFetchedForQueryRef.current = true;  // <-- Step 2
     }
-  }, []);
+  }, [query]);
+
 
   useEffect(() => {
-    fetchData(offset);
+    if (offset > 1) {
+      console.log('g')
+      fetchData(offset);
+    }
   }, [offset]);
 
   const fetchData = (newOffset = 1, query = inputField) => {
+    console.log("Fetch Data called with offset:", newOffset, "and query:", query);
     const idCache: string[] = [];
     if (query.trim() !== '') {
-      setLoading(true);
       const searchQuery = encodeURIComponent(query);
       fetch(`/api/search?query=${searchQuery}&offset=${newOffset}`)
         .then(res => res.json())
@@ -147,13 +154,11 @@ const SearchData = ({
                 console.log(err);
               });
           }
-
-          setLoading(false);
           //need a fetch to favorites to check if already fav and pass prop to display    
           setOffset(newOffset);
         })
         .catch(error => {
-          setLoading(false);
+
           console.error('Error:', error);
         });
     }
@@ -171,73 +176,72 @@ const SearchData = ({
 
   return (
     <ThemeProvider theme={theme}>
-      <div >
-        {!loading ? (
-          <div className='searchform-container'>
-            <Hidden smDown>
-              <form className='searchform' onSubmit={handleFormSubmit}>
-                <FormControl sx = {{
-                  width:'280px'
-                }}>
-                  <StyledInput
-                    className='searchbox'
-                    
-                    placeholder='Search for songs, artists, albums...'
-                    type='text'
-                    inputRef={searchInputRef}
-                  />
-                </FormControl>
-                <ColorButton type='submit' variant='outlined'>
-                <SearchIcon sx={{ fontSize: '28px' }} />
-                  {/* Search */}
-                </ColorButton>
-              </form>
-            </Hidden>
+      <div className='searchform-container'>
+        <Hidden smDown>
+          <form className='searchform' onSubmit={handleFormSubmit} style={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}>
+            <FormControl sx={{
 
-            <Hidden smUp>
-              {!showInput ? (
-                <SmallColorButton onClick={() => setShowInput(true)} variant='outlined'>
-               <SearchIcon sx={{ fontSize: '28px' }} />
+              width: '280px'
+            }}>
+              <StyledInput
+                className='searchbox'
+
+                placeholder='Search for songs, artists, albums...'
+                type='text'
+                inputRef={searchInputRef}
+              />
+            </FormControl>
+            <ColorButton type='submit' variant='outlined'>
+              <SearchIcon sx={{ fontSize: '28px' }} />
+              {/* Search */}
+            </ColorButton>
+          </form>
+        </Hidden>
+
+        <Hidden smUp>
+          {!showInput ? (
+            <SmallColorButton onClick={() => setShowInput(true)} variant='outlined'>
+              <SearchIcon sx={{ fontSize: '28px' }} />
 
 
-                </SmallColorButton>
-              ) : (
-                <form className='testttt' onSubmit={handleFormSubmit}
-                  style={{
-                    display: 'flex',
-                    position: 'absolute',
-                    margin: 0,
-                    padding: 0,
-                    top: 0,
-                    left: 0,
-
-                    width: '100vw',
-                    zIndex: 2,
-                    background: 'white',
-                    boxSizing: 'border-box', // or any other color or gradient to make the input discernible
-                  }}
-                >
-                  <FormControl style={{ width: '100%' }}>
-                    <StyledInput
-                      className='searchbox'
-                      placeholder='Search for songs, artists, albums...'
-                      type='text'
-                      inputRef={searchInputRef}
-                      autoFocus
-                    />
-                  </FormControl>
-                  <SmallColorButton onClick={() => setShowInput(false)} variant='outlined' style={{ marginLeft: '10px' }}>
-                    <CloseIcon sx={{
-                      border: 'none',
-                      color: 'black',
-                    }} />
-                  </SmallColorButton>
-                </form>
-              )}
-            </Hidden>
-          </div>
-        ) : null}
-        {loading && <CircularProgress />}
+            </SmallColorButton>
+          ) : (
+            <form className='sm-searchform' onSubmit={handleFormSubmit}
+              style={{
+                display: 'flex',
+                position: 'absolute',
+                margin: 0,
+                padding: 0,
+                top: 5,
+                left: -6,
+                // border: '2px solid black',
+                width: '95vw',
+                zIndex: 2,
+                background: 'white',
+                boxSizing: 'border-box', 
+              }}
+            >
+              <FormControl style={{ width: '100%' }}>
+                <StyledInput
+                  className='searchbox'
+                  placeholder='Search for songs, artists, albums...'
+                  type='text'
+                  inputRef={searchInputRef}
+                  autoFocus
+                />
+              </FormControl>
+              <SmallColorButton onClick={() => setShowInput(false)} variant='outlined' style={{ marginLeft: '10px' }}>
+                <CloseIcon sx={{
+                  border: 'none',
+                  color: 'black',
+                }} />
+              </SmallColorButton>
+            </form>
+          )}
+        </Hidden>
       </div>
     </ThemeProvider>
   );

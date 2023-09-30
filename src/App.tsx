@@ -2,7 +2,7 @@ import {
   createBrowserRouter, Outlet,
   Route, RouterProvider, Routes, useLocation, useNavigate, useSearchParams,
 } from 'react-router-dom';
-import React, { lazy,useState, useEffect, FC, useRef } from 'react';
+import React, { lazy, useState, useEffect, FC, useRef } from 'react';
 import { Grid } from '@mui/material';
 import SearchData from './components/SearchData';
 import { useAuth } from './components/Auth';
@@ -53,8 +53,6 @@ function Root() {
   const [response, setResponse] = useState<DataItem[]>([]);
   const [audioInfo, setAudioInfo] = useState<AudioDataItem[]>([]);
   const [userFav, setUserFav] = useState<Record<string, boolean>>({});
-  const [loading, setLoading] = useState<boolean>(false);
-  const [offset, setOffset] = useState<number>(1);
 
   //to display text for user search
   const [searchResult, setSearchResult] = useState<string>('');
@@ -63,10 +61,13 @@ function Root() {
   const isHomePage = location.pathname === '/' && !location.search;
   // Use this value to set the showSplash state directly
   const [showSplash, setShowSplash] = useState(isHomePage);
+  const [offset, setOffset] = useState<number>(1);
+
   const handleLoadMore = () => {
     const nextOffset = offset + 25;
     setOffset(nextOffset);
   };
+  
   useEffect(() => {
     setShowSplash(isHomePage);
   }, [location.pathname, location.search]);
@@ -95,8 +96,6 @@ function Root() {
           audioInfo={audioInfo}
           setUserFav={setUserFav}
           userFav={userFav}
-          setLoading={setLoading}
-          loading={loading}
           setSearchResult={setSearchResult}
           searchResult={searchResult}
           setOffset={setOffset}
@@ -126,36 +125,31 @@ function Root() {
               }}>
                 <Routes>
 
-                  {location.search && (
-                    <Route path="/" element={<DisplayData
-                      data={response}
-                      audioData={audioInfo}
-                      userFav={userFav}
-                      username={loggedInUser}
-                      theme={theme}
-                      setOffset={setOffset}
-                      offset={offset}
-                      handleLoadMore = {handleLoadMore}
-                      searchResult={searchResult}
-                    />
-                    } />
-                  )}
-                  <Route path="/signup" element={<SignUp />} />
-                  <Route path="/:name/:artist/:id/" element={<SongPage username={loggedInUser} />} />
-                  {!isLoggedIn && <Route path="/login" element={<SignIn />} />}
-                  {isLoggedIn && <Route path="/favs" element={<Favorites username={loggedInUser} />} />}
-                  {isLoggedIn && <Route path="/account" element={<AccountSettings />} />}
-                  {showSplash && (
-                    <Route
-                      path='/'
-                      element={
+                  <Route path="/" element={
+                    <>
+                      {location.search ? (
+                        <DisplayData
+                          data={response}
+                          audioData={audioInfo}
+                          userFav={userFav}
+                          username={loggedInUser}
+                          theme={theme}
+                          handleLoadMore={handleLoadMore}
+                          searchResult={searchResult}
+                        />
+                      ) : (
                         <Grid mt={8} item xs={12} className="TopTracksClass">
                           <TopTracks username={loggedInUser} />
                         </Grid>
-                      }
-                    // loader = {topTracksLoader}
-                    />
-                  )}
+                      )}
+                    </>
+                  } />
+
+                  <Route path="/signup" element={<SignUp />} />
+                  <Route path="/:name/:artist/:id/" element={<SongPage username={loggedInUser} />} />
+                  {<Route path="/login" element={<SignIn />} />}
+                  {isLoggedIn && <Route path="/favs" element={<Favorites username={loggedInUser} />} />}
+                  {isLoggedIn && <Route path="/account" element={<AccountSettings />} />}
                 </Routes>
               </Grid>
             </Grid>

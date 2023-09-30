@@ -97,7 +97,7 @@ export interface SongDetails {
   export interface SearchDataProps {
     key?: string;
     username?: string; 
-    showLoadingCircle?: boolean;      
+    // showLoadingCircle?: boolean;      
 }
 
 

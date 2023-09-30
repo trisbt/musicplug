@@ -22,40 +22,35 @@ body {
   height: 200px;
 }
 
-/* .splash {
-  position: absolute;
-  top: 13%;
-  left: 20%;
-  right: 0;
-  bottom: 0;
-} */
+.searchform-container {
+  display: flex;
+  justify-content: center;
+  padding-right: 5em
+}
 
 .searchform {
+  background-color: 'purple';
+  width: '1000px'
+}
+.sm-searchform{
+  /* display: flex;
+  position: absolute; */
+  /* margin: 0;
+  padding: 0;
+  top: 1;
+  left: -16; */
+  /* border: 2px, scrollbarWidth, black; */
+  /* width: 100vw; */
+  /* z-index: 2;
+  box-sizing: border-box; */
+  /* background: white; */
+  /* box: 'border-box' */
+}
+
+.App {
   display: flex;
   justify-content: center;
 }
-.App{
-  display: flex;
-  justify-content: center;
-}
-/* .App-search {
-  background-repeat: repeat-y;
-  min-height: 100vh;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center; 
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.TopTracksClass {    
-  display: flex;
-  margin-top: auto;
-  width: 100%;
-} */
-
 
 li {
   list-style: none;
@@ -68,7 +63,7 @@ li {
 .even-credit {
   font-size: small;
   font-weight: bold;
-  
+
 }
 
 .odd-credit {
@@ -142,6 +137,11 @@ hr {
     display: flex;
     width: 700px;
     /* height: 200px; */
+  }
+}
+@media (max-width: 700px){
+  .searchform-container{
+    padding-right: 0;
   }
 }
 /* @media (orientation: landscape) and (max-width: 900px) {

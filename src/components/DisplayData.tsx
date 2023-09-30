@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import React, { useState, useRef, useEffect, } from 'react';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
@@ -105,6 +105,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({  handleLoadMore, data, audioD
   const [favoriteMap, setFavoriteMap] = useState<Record<string, boolean>>({});
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const location = useLocation();
   //needed to show user favorites in search results
   useEffect(() => {
     if(searchResult){
@@ -113,9 +114,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({  handleLoadMore, data, audioD
     if (username && userFav) {
       setFavoriteMap(userFav);
     }
-  }, [userFav, username]);
-
-  
+  }, [userFav, username, searchResult]);
 
   if (!data && !audioData) {
     return null;
@@ -166,7 +165,6 @@ const DisplayData: React.FC<DisplayDataProps> = ({  handleLoadMore, data, audioD
     };
     results.push(combinedObject);
   }
-
 
   const playAudio = (event: React.MouseEvent, previewUrl: string | null) => {
     event.stopPropagation();
@@ -236,7 +234,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({  handleLoadMore, data, audioD
   return (
     <div>
       <Grid container item xs={12} justifyContent='center' >
-        {results.length > 0 && (
+        {location.search && results.length > 0 && (
           <>
             {/* search result text row */}
             <Grid item xs={12} sx = {{
@@ -502,8 +500,6 @@ const DisplayData: React.FC<DisplayDataProps> = ({  handleLoadMore, data, audioD
         }
       </Grid >
     </div >
-
-
   );
 };
 

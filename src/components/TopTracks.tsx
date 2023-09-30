@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { createTheme, Box, Button, Card, CardContent, CardMedia, Grid, IconButton, styled, Typography, Theme } from '@mui/material';
-import DisplayData from './DisplayData';
+// import DisplayData from './DisplayData';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -15,17 +15,6 @@ interface KeyMapping {
 type KeyConvertFunction = (num: number, mode: number) => string;
 
 type CombinedDataType = DataItem & AudioDataItem;
-
-interface DisplayDataProps {
-  data: DataItem[];
-  audioData: AudioDataItem[];
-  username?: string | null;
-  onLoadMore: () => void;
-  userFav?: Record<string, boolean>;
-  searchResult: string;
-  customStyles?: React.CSSProperties;
-  theme?: Theme;
-}
 
 //styled buttons
 const SmallPlayButton = styled(IconButton)(({ theme }) => ({

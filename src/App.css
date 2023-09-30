@@ -73,10 +73,10 @@ hr {
   justify-content: center;
 }
 
-/* #tableTitle {
+.pie-container {
   display: flex;
-  justify-content: center;
-} */
+  margin-bottom: 1em;
+}
 
 
 .fader-container {
@@ -119,11 +119,7 @@ hr {
     justify-content: flex-end;
   }
 
-  .pie-container {
-    display: flex;
-    width: 700px;
-    /* height: 200px; */
-  }
+
 }
 @media (max-width: 700px){
   .searchform-container{

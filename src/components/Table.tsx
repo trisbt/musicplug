@@ -70,18 +70,33 @@ interface HeadCell {
   label: string;
 };
 
-
-const StyledTableCell = styled(TableCell)(({ theme, isFirstColumn }) => ({
+const CustomTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: indigo[300],
     color: theme.palette.common.white,
-    paddingLeft: isFirstColumn ? '10px' : undefined, 
+    padding: "8px 10px",
+
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: "8px 10px",
+  },
+  "&.column-key": {
+    width: "5px",
+  },
+  "&.column-tempo": {
+    width: "5px",
+  },
+  "&.column-song": {
+    width: "50px",
+  },
+  "&.column-artist": {
+    width: "50px",
+  },
+  "&.column-album": {
+    width: "50px",
   },
 }));
-
 
 const createData: CreateDataType = (song, artist, album, key, tempo, id) => {
   return {
@@ -131,6 +146,18 @@ const stableSort = (array: Row[], comparator: (a: Row, b: Row) => number): Row[]
 
 const headCells: HeadCell[] = [
   {
+    id: 'key',
+    numeric: false,
+    disablePadding: false,
+    label: 'Key',
+  },
+  {
+    id: 'tempo',
+    numeric: true,
+    disablePadding: false,
+    label: 'BPM',
+  },
+  {
     id: 'song',
     numeric: false,
     disablePadding: true,
@@ -148,18 +175,7 @@ const headCells: HeadCell[] = [
     disablePadding: false,
     label: 'Album',
   },
-  {
-    id: 'key',
-    numeric: false,
-    disablePadding: false,
-    label: 'Key',
-  },
-  {
-    id: 'tempo',
-    numeric: true,
-    disablePadding: false,
-    label: 'Tempo',
-  },
+
 ];
 
 const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = (props) => {
@@ -171,17 +187,16 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = (props) => {
   return (
     <TableHead>
       <TableRow>
-        {/* <StyledTableCell >
-        </StyledTableCell> */}
         {headCells.map((headCell, index) => (
-          <StyledTableCell
+          <CustomTableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            className={`column-${headCell.id}`}
+            align={'left'}
+            // width='20'
+            padding={'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
             isFirstColumn={index === 0}
           >
-
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
@@ -194,7 +209,7 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = (props) => {
                 </Box>
               ) : null}
             </TableSortLabel>
-          </StyledTableCell>
+          </CustomTableCell>
         ))}
       </TableRow>
     </TableHead>
@@ -202,7 +217,6 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = (props) => {
 }
 
 EnhancedTableHead.propTypes = {
-  // numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   order: PropTypes.oneOf<'asc' | 'desc'>(['asc', 'desc']).isRequired,
   orderBy: PropTypes.oneOf<keyof Row>(['song', 'artist', 'album', 'key', 'tempo', 'id']).isRequired,
@@ -249,7 +263,6 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
     navigate(`/${newSelected[0].name}/${newSelected[0].artist}/${newSelected[0].id}`);
 
   };
-  // console.log(selected)
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -261,7 +274,6 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
   };
 
   const isSelected = (name, artist, id) => selected.some(item => item.name === name && item.id === id && item.artist === artist);
-
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -296,10 +308,9 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
         }}>
           <TableContainer>
             <Table
-              sx={{ minWidth: 750 }}
+              sx={{ minWidth: 750, tableLayout: 'fixed' }}
               aria-labelledby="tableTitle"
               size='medium'
-
             >
               <EnhancedTableHead
                 order={order}
@@ -310,36 +321,21 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
               <TableBody>
                 {visibleRows.map((row, index) => {
                   const isItemSelected = isSelected(row.song, row.id, row.artist);
-                  const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
                       onClick={(event) => handleClick(event, row.song, row.id, row.artist)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.song}
                       selected={isItemSelected}
                       sx={{ cursor: 'pointer' }}
                     >
-                      {/* <TableCell padding= 'none'>
-                      </TableCell> */}
-                      <TableCell
-                        sx={{ padding: 1 }}
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                      >
-                        {row.song}
-                      </TableCell>
-
-                      <TableCell align="left">{row.artist}</TableCell>
-                      <TableCell align="left">{row.album}</TableCell>
-                      <TableCell align="left">{row.key}</TableCell>
-                      <TableCell align="right">{row.tempo}</TableCell>
-
+                      <CustomTableCell className="column-key" align="left">{row.key}</CustomTableCell>
+                      <CustomTableCell className="column-tempo" align="left">{row.tempo}</CustomTableCell>
+                      <CustomTableCell className="column-song" align="left">{row.song}</CustomTableCell>
+                      <CustomTableCell className="column-artist" align="left">{row.artist}</CustomTableCell>
+                      <CustomTableCell className="column-album" align="left">{row.album}</CustomTableCell>
                     </TableRow>
                   );
                 })}

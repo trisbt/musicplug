@@ -32,20 +32,6 @@ body {
   background-color: 'purple';
   width: '1000px'
 }
-.sm-searchform{
-  /* display: flex;
-  position: absolute; */
-  /* margin: 0;
-  padding: 0;
-  top: 1;
-  left: -16; */
-  /* border: 2px, scrollbarWidth, black; */
-  /* width: 100vw; */
-  /* z-index: 2;
-  box-sizing: border-box; */
-  /* background: white; */
-  /* box: 'border-box' */
-}
 
 .App {
   display: flex;

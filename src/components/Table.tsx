@@ -42,7 +42,7 @@ interface Row {
 interface SelectedRow {
   name: string;
   id: string;
-  artist:string;
+  artist: string;
 };
 
 type CreateDataType = (song: string, artist: string, album: string, key: string, tempo: number, id: string) => Row;
@@ -71,15 +71,17 @@ interface HeadCell {
 };
 
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(({ theme, isFirstColumn }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: indigo[300],
     color: theme.palette.common.white,
+    paddingLeft: isFirstColumn ? '10px' : undefined, 
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
   },
 }));
+
 
 const createData: CreateDataType = (song, artist, album, key, tempo, id) => {
   return {
@@ -87,7 +89,7 @@ const createData: CreateDataType = (song, artist, album, key, tempo, id) => {
   };
 }
 
-const descendingComparator = (a: Row, b:Row, orderBy: keyof Row): number=>{
+const descendingComparator = (a: Row, b: Row, orderBy: keyof Row): number => {
   if (typeof a[orderBy] === 'string' && typeof b[orderBy] === 'string') {
     const lowerA = (a[orderBy] as string).toLowerCase();
     const lowerB = (b[orderBy] as string).toLowerCase();
@@ -109,7 +111,7 @@ const descendingComparator = (a: Row, b:Row, orderBy: keyof Row): number=>{
   return 0;
 }
 
-const getComparator = (order: 'asc' | 'desc', orderBy: keyof Row) =>  {
+const getComparator = (order: 'asc' | 'desc', orderBy: keyof Row) => {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
@@ -169,15 +171,17 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = (props) => {
   return (
     <TableHead>
       <TableRow>
-        <StyledTableCell >
-        </StyledTableCell>
-        {headCells.map((headCell) => (
+        {/* <StyledTableCell >
+        </StyledTableCell> */}
+        {headCells.map((headCell, index) => (
           <StyledTableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            isFirstColumn={index === 0}
           >
+
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
@@ -246,7 +250,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
 
   };
   // console.log(selected)
-  
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -277,10 +281,12 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
       "@media (max-width: 900px)": {
         display: 'flex',
         width: '100vw',
+
       }
     }}>
       <Box sx={{
         width: '100%',
+
       }}>
         <Paper variant="outlined" square sx={{
           width: '100%',
@@ -293,6 +299,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
               sx={{ minWidth: 750 }}
               aria-labelledby="tableTitle"
               size='medium'
+
             >
               <EnhancedTableHead
                 order={order}
@@ -316,9 +323,10 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
                       selected={isItemSelected}
                       sx={{ cursor: 'pointer' }}
                     >
-                      <TableCell padding= 'none'>
-                      </TableCell>
+                      {/* <TableCell padding= 'none'>
+                      </TableCell> */}
                       <TableCell
+                        sx={{ padding: 1 }}
                         component="th"
                         id={labelId}
                         scope="row"
@@ -331,7 +339,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
                       <TableCell align="left">{row.album}</TableCell>
                       <TableCell align="left">{row.key}</TableCell>
                       <TableCell align="right">{row.tempo}</TableCell>
-                      
+
                     </TableRow>
                   );
                 })}

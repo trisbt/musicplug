@@ -171,9 +171,8 @@ function ResponsiveAppBar({ setOffset, offset, setResponse, response, setAudioIn
                                 to="/account"
                                 onClick={(e) => {
                                   handleCloseUserMenu();
-                                  e.preventDefault();  // Prevent the default link navigation
-
-                                  setTimeout(() => {
+                                  e.preventDefault();  
+                                  setTimeout(() => { // needed or user has to click menu item again to close
                                     navigate("/account");
                                   }, 100);
                                 }}
@@ -185,7 +184,6 @@ function ResponsiveAppBar({ setOffset, offset, setResponse, response, setAudioIn
                           );
                       }
                     })}
-
                   </Menu>
                 </Box>
               ) : (
@@ -210,7 +208,7 @@ function ResponsiveAppBar({ setOffset, offset, setResponse, response, setAudioIn
                           }} />
                         </IconButton>
                         <Menu
-                          // disableScrollLock={true}
+                          disableScrollLock={true}
                           sx={{
                             mt: '20px',
                             // ml:'20px',
@@ -238,7 +236,7 @@ function ResponsiveAppBar({ setOffset, offset, setResponse, response, setAudioIn
                                       to="/login"
                                       onClick={(e) => {
                                         handleCloseUserMenu();
-                                        e.preventDefault();  // Prevent the default link navigation
+                                        e.preventDefault();  
                                         setTimeout(() => {
                                           navigate("/login");
                                         }, 100);
@@ -255,8 +253,7 @@ function ResponsiveAppBar({ setOffset, offset, setResponse, response, setAudioIn
                                       to="/signup"
                                       onClick={(e) => {
                                         handleCloseUserMenu();
-                                        e.preventDefault();  // Prevent the default link navigation
-
+                                        e.preventDefault(); 
                                         setTimeout(() => {
                                           navigate("/signup");
                                         }, 100);

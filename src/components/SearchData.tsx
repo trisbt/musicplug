@@ -85,17 +85,15 @@ const SearchData = ({
   const initialSearchQuery = searchParams.get('q') || '';
   const query = searchParams.get('q') || '';
 
-  const hasFetchedForQueryRef = useRef(false);  // <-- Step 1
+  const hasFetchedForQueryRef = useRef(false);  
 
   useEffect(() => {
-    if (query && !hasFetchedForQueryRef.current) {  // <-- Step 3
+    if (query && !hasFetchedForQueryRef.current) {  
       setInputField(query);
       fetchData(1, query);
-      console.log('hey')
-      hasFetchedForQueryRef.current = true;  // <-- Step 2
+      hasFetchedForQueryRef.current = true;  
     }
   }, [query]);
-
 
   useEffect(() => {
     if (offset > 1) {

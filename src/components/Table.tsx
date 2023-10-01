@@ -228,7 +228,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
   const [orderBy, setOrderBy] = useState<keyof Row | null>(null);
   const [selected, setSelected] = useState<SelectedRow[]>([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [rowsPerPage, setRowsPerPage] = useState(50);
   const navigate = useNavigate();
 
   let rows: Row[] = favorites.map(favorite => createData(
@@ -269,9 +269,11 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    const newRowsPerPage = parseInt(event.target.value, 10);
+    setRowsPerPage(newRowsPerPage === -1 ? rows.length : newRowsPerPage);
     setPage(0);
   };
+
 
   const isSelected = (name, artist, id) => selected.some(item => item.name === name && item.id === id && item.artist === artist);
 
@@ -352,7 +354,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[25, 50, 100]}
+            rowsPerPageOptions={[50, 100, { value: -1, label: 'All' }]}
             component="div"
             count={rows.length}
             rowsPerPage={rowsPerPage}

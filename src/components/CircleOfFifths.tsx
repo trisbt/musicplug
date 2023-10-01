@@ -51,18 +51,18 @@ const hoverColors: string[] = ['#b71c1c', '#ff5722', '#ff9800', '#ffeb3b', '#8bc
 
 const CircleOfFifths = ({ activeSlice, setActiveSlice }) => {
 
-const handleChartInteraction = (evt, elements) => {
+  const handleChartInteraction = (evt, elements) => {
     if (elements && elements.length) {
-        const clickedElement = elements[0];
-        let label;
-        if (clickedElement.datasetIndex === 0) {
-            label = data[clickedElement.index].label;
-        } else if (clickedElement.datasetIndex === 1) {
-            label = minorKeys[clickedElement.index].label;
-        }
-        setActiveSlice(prev => prev === label ? null : label);
+      const clickedElement = elements[0];
+      let label;
+      if (clickedElement.datasetIndex === 0) {
+        label = data[clickedElement.index].label;
+      } else if (clickedElement.datasetIndex === 1) {
+        label = minorKeys[clickedElement.index].label;
+      }
+      setActiveSlice(prev => prev === label ? null : label);
     }
-};
+  };
 
   const chartData = {
     labels: [...data.map(d => d.label), ...minorKeys.map(d => d.label)],
@@ -86,6 +86,7 @@ const handleChartInteraction = (evt, elements) => {
   };
 
   const options = {
+    cutout: '20%', 
     plugins: {
       tooltip: {
         enabled: false
@@ -104,9 +105,9 @@ const handleChartInteraction = (evt, elements) => {
         align: 'end' as const,
         offset: (context) => {
           if (context.datasetIndex === 0) {
-            return -11;  // offset for major labels
+            return -12;  // offset for major labels
           } else {
-            return 3;  // default offset for minor labels
+            return 0;  // default offset for minor labels
           }
         },
 
@@ -134,12 +135,12 @@ const handleChartInteraction = (evt, elements) => {
   return (
     <div className='pie-container'>
       <Grid container spacing={0} sx={{
-        height: '350px',
+        height: '300px',
       }}>
         <Grid item xs={12} sx={{
-          height: '350px',
+          height: '300px',
         }}>
-          <Pie
+          <Doughnut
             data={chartData}
             plugins={[ChartDataLabels as any]}
             height={340}

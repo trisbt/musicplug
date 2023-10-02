@@ -71,7 +71,7 @@ function ResponsiveAppBar({ setOffset, offset, setResponse, response, setAudioIn
                 // ml:'30em',
                 //  mr: 1,
                 display: 'flex',
-                height: '200px',
+                height: '100px',
                 width: '175px',
                 alignItems: 'center',
                 justifyContent: 'center',

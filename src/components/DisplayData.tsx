@@ -2,13 +2,14 @@ import { Link, useLocation } from 'react-router-dom';
 import React, { useState, useRef, useEffect, } from 'react';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
-import { Button, Card, CardContent, CardMedia, Checkbox, FormGroup, FormControlLabel, Grid, IconButton, styled, Typography, Theme } from '@mui/material';
+import { Box, Button, Card, CardContent, CardMedia, Checkbox, FormGroup, FormControlLabel, Grid, IconButton, styled, Typography, Theme } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Slider from '@mui/material/Slider';
 import { grey } from '@mui/material/colors';
 import { Artist, DataItem, AudioDataItem, ResultItem } from '@appTypes/dataTypes';
 import CircleOfFifths from './CircleOfFifths';
@@ -77,48 +78,52 @@ const LoadButton = styled(Button)(({ theme }) => ({
   // padding: theme.spacing(1.2),
 }));
 const CustomAccordion = styled(Accordion)(({ theme }) => ({
-  '& .MuiAccordionSummary-root': {
-    padding: theme.spacing(0, 1),
-    minHeight: '24px',
-    '& .MuiAccordionSummary-content': {
-      margin: theme.spacing(0.5, 0),
-    },
-  },
-  '& .MuiAccordionDetails-root': {
-    padding: theme.spacing(1),
-  },
+  // '& .MuiAccordionSummary-root': {
+  //   padding: theme.spacing(0, 1),
+  //   minHeight: '24px',
+  //   '& .MuiAccordionSummary-content': {
+  //     margin: theme.spacing(0.5, 0),
+  //   },
+  // },
+  // '& .MuiAccordionDetails-root': {
+  //   padding: theme.spacing(1),
+  // },
 }));
-const OverlayAccordionDetails = styled(AccordionDetails)({
-  position: 'absolute',
-  zIndex: 2,
-  left: '100%',
-  transform: 'translateX(-50%)', // Shift it back by half of its width
-  width: '300px',
-  background: 'transparent',
-  // boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-});
+
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
+  minHeight: '4px',
+  padding: '0px 10px',
   '&.Mui-expanded': {
-    minHeight: 'initial',  // Or a specific height value if desired.
+    minHeight: '4px',
+    padding: '0px 10px',
   },
   '& > .MuiAccordionSummary-content': {
-    margin: '0px',
+    margin: '0', // Default value
     '&.Mui-expanded': {
-      margin: '0px',
+      margin: '0',
     }
   }
 }));
 
 
-const Overlay = styled('div')({
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  width: '100vw',
-  height: '100vh',
-  backdropFilter: 'blur(5px)', // This applies the blur effect
-  pointerEvents: 'none',  // Ensure it doesn't block any user interactions
-  zIndex: 1,  // Ensure it stays below the accordion details
+const KeyAccordionDetails = styled(AccordionDetails)({
+  position: 'absolute',
+  zIndex: 2,
+  left: '100%',  
+  transform: 'translateX(-50%)',  
+  width:'90vw',
+  backdropFilter: 'blur(10px)',
+  borderRadius: '1em',
+});
+
+const TempoAccordionDetails = styled(AccordionDetails)({
+  position: 'absolute',
+  zIndex: 2,
+  left: '100%',  
+  transform: 'translateX(-75%)',  
+  width:'60vw',
+  backdropFilter: 'blur(10px)',
+  borderRadius: '1em',
 });
 
 //bpm and key helper conversions
@@ -149,14 +154,18 @@ const keyConvert: KeyConvertFunction = (num: number, mode: number): string => {
 function tempoRound(num: number): number {
   return Math.round(num * 2) / 2;
 }
-
+const valuetext = (value) => {
+  return `${value} bpm`;
+}
 const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioData, username, userFav, searchResult, }) => {
   const [favoriteMap, setFavoriteMap] = useState<Record<string, boolean>>({});
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const location = useLocation();
-  const [isAnyAccordionActive, setIsAnyAccordionActive] = useState(false);
   const [activeSlice, setActiveSlice] = useState<string | null>(null);
+  const [tempoSelect, setTempoSelect] = React.useState([80, 140]);
+  const [sliderValue, setSliderValue] = useState([80, 140]);
+  const [openAccordion, setOpenAccordion] = useState<string | null>(null);
 
   //needed to show user favorites in search results
   useEffect(() => {
@@ -282,8 +291,13 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
     }
   };
 
-  const handleAccordionToggle = (event, expanded) => {
-    setIsAnyAccordionActive(expanded);
+  const handleTempoSelect = (event, tempo) => {
+    setSliderValue(tempo);
+  };
+
+  const handleTempoSubmit = (event) => {
+    event.preventDefault();
+    setTempoSelect(sliderValue);
   };
 
   return (
@@ -305,32 +319,65 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
             {/* filters row */}
             <Grid container justifyContent='center' xs={12}>
               <Grid item xs={2}>
-                <CustomAccordion >
+                <CustomAccordion
+                  expanded={openAccordion === 'keyAccordion'}
+                  onChange={() => setOpenAccordion(prev => prev === 'keyAccordion' ? null : 'keyAccordion')}
+                >
                   <StyledAccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                   >
                     <Typography fontSize='0.8rem' >Key</Typography>
                   </StyledAccordionSummary>
-                  <OverlayAccordionDetails sx={{
-                    width: '300px'
-                  }}>
-                    <CircleOfFifths activeSlice={activeSlice} setActiveSlice={setActiveSlice} />
-                  </OverlayAccordionDetails>
+
+                  <KeyAccordionDetails>
+                    <Box sx={{
+                      // backgroundColor: 'black',
+                      // width: '100vw',
+                      // display: 'flex',
+                      // justifyContent: 'center'  // Center its children horizontally
+                    }}>
+                      <CircleOfFifths activeSlice={activeSlice} setActiveSlice={setActiveSlice} />
+                    </Box>
+
+                  </KeyAccordionDetails>
+
                 </CustomAccordion>
               </Grid>
+
               <Grid item xs={2}>
-                <CustomAccordion>
-                  <AccordionSummary
+                <CustomAccordion
+                  expanded={openAccordion === 'bpmAccordion'}
+                  onChange={() => setOpenAccordion(prev => prev === 'bpmAccordion' ? null : 'bpmAccordion')}
+                >
+                  <StyledAccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                   >
                     <Typography fontSize='0.8rem' >BPM</Typography>
-                  </AccordionSummary>
-                  <OverlayAccordionDetails>
-                    <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                      malesuada lacus ex, sit amet blandit leo lobortis eget.
-                    </Typography>
-                  </OverlayAccordionDetails>
+                  </StyledAccordionSummary>
+                  <TempoAccordionDetails>
+                    <form onSubmit={handleTempoSubmit}>
+                      <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                      }}>
+                        <Slider
+                          min={0}
+                          max={200}
+                          getAriaLabel={() => 'Tempo'}
+                          value={sliderValue}
+                          onChange={handleTempoSelect}
+                          valueLabelDisplay="auto"
+                          getAriaValueText={valuetext}
+                        />
+
+                        <Button type="submit" variant="contained" color="primary">
+                          Filter Tempo
+                        </Button>
+                      </Box>
+                    </form>
+
+                  </TempoAccordionDetails>
                 </CustomAccordion>
               </Grid>
 
@@ -338,7 +385,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
 
             {/* main search */}
             {results
-              .filter(item => !activeSlice || item.key === activeSlice)
+              .filter(item => (!activeSlice || item.key === activeSlice) && item.tempo >= tempoSelect[0] && item.tempo <= tempoSelect[1])
               .map((item: ResultItem, index: number) => (
                 <Grid className='results' item xs={11} md={8} key={index}>
                   {/* each card */}

@@ -66,17 +66,18 @@ function ResponsiveAppBar({ setOffset, offset, setResponse, response, setAudioIn
               height: '40px',
               alignItems: 'center',
               justifyContent: 'center',
+              overflow: 'hidden' 
             }}>
               <Card sx={{
-                // ml:'30em',
-                //  mr: 1,
+
                 display: 'flex',
                 height: '100px',
                 width: '175px',
                 alignItems: 'center',
                 justifyContent: 'center',
                 backgroundColor: 'transparent',
-                boxShadow: '0'
+                boxShadow: '0',
+                overflow: 'hidden' 
               }}>
                 <Link to="/" onClick={handleHomeClick}>
                   <img src={musicpluglogow} alt="Plug Logo" className='plug-logo' />

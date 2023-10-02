@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import React, { useState, useRef, useEffect, } from 'react';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
-import { Box, Button, Card, CardContent, CardMedia, Checkbox, FormGroup, FormControlLabel, Grid, IconButton, styled, Typography, Theme } from '@mui/material';
+import { Box, Button, Card, CardContent, CardMedia, Checkbox, FormGroup, FormControlLabel, Grid, IconButton, styled, TextField, Typography, Theme } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import Accordion from '@mui/material/Accordion';
@@ -75,19 +75,9 @@ const LoadButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.secondary.light,
     color: theme.palette.secondary.contrastText,
   },
-  // padding: theme.spacing(1.2),
 }));
 const CustomAccordion = styled(Accordion)(({ theme }) => ({
-  // '& .MuiAccordionSummary-root': {
-  //   padding: theme.spacing(0, 1),
-  //   minHeight: '24px',
-  //   '& .MuiAccordionSummary-content': {
-  //     margin: theme.spacing(0.5, 0),
-  //   },
-  // },
-  // '& .MuiAccordionDetails-root': {
-  //   padding: theme.spacing(1),
-  // },
+
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
@@ -98,31 +88,30 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     padding: '0px 10px',
   },
   '& > .MuiAccordionSummary-content': {
-    margin: '0', // Default value
+    margin: '0',
     '&.Mui-expanded': {
       margin: '0',
     }
   }
 }));
 
-
 const KeyAccordionDetails = styled(AccordionDetails)({
   position: 'absolute',
   zIndex: 2,
-  left: '100%',  
-  transform: 'translateX(-50%)',  
-  width:'90vw',
-  backdropFilter: 'blur(10px)',
+  left: '100%',
+  transform: 'translateX(-50%)',
+  width: '90vw',
+  backdropFilter: 'blur(15px)',
   borderRadius: '1em',
 });
 
 const TempoAccordionDetails = styled(AccordionDetails)({
   position: 'absolute',
   zIndex: 2,
-  left: '100%',  
-  transform: 'translateX(-75%)',  
-  width:'60vw',
-  backdropFilter: 'blur(10px)',
+  left: '100%',
+  transform: 'translateX(-71%)',
+  width: '70vw',
+  backdropFilter: 'blur(15px)',
   borderRadius: '1em',
 });
 
@@ -165,7 +154,11 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
   const [activeSlice, setActiveSlice] = useState<string | null>(null);
   const [tempoSelect, setTempoSelect] = React.useState([80, 140]);
   const [sliderValue, setSliderValue] = useState([80, 140]);
+  const [textFieldTempo, setTextFieldTempo] = useState('');
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
+  const keyAccordionRef = useRef(null);
+  const bpmAccordionRef = useRef(null);
+
 
   //needed to show user favorites in search results
   useEffect(() => {
@@ -176,6 +169,19 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
       setFavoriteMap(userFav);
     }
   }, [userFav, username, searchResult]);
+  //reset filters
+  useEffect(() => {
+    setActiveSlice(null);
+    setTempoSelect([80, 140]);
+  }, [data]);
+  //close accordion
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [openAccordion]);
 
   if (!data && !audioData) {
     return null;
@@ -291,14 +297,43 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
     }
   };
 
+  //tempo filter
   const handleTempoSelect = (event, tempo) => {
     setSliderValue(tempo);
   };
 
   const handleTempoSubmit = (event) => {
     event.preventDefault();
-    setTempoSelect(sliderValue);
+
+    if (textFieldTempo) {
+      setTempoSelect([parseFloat(textFieldTempo), parseFloat(textFieldTempo)]);
+    } else {
+      setTempoSelect(sliderValue);
+    }
   };
+
+  const handleTextFieldChange = (event) => {
+    const value = event.target.value.replace(/[^0-9]/g, '');  // Only allow digits
+    setTextFieldTempo(value);
+  };
+  //reset filter
+  const handleReset = (event) => {
+    event.preventDefault();  // To prevent the default behavior
+    setTempoSelect([80, 140]);
+    setSliderValue([80, 140]);
+    setTextFieldTempo('');  // Clear the textfield
+  };
+  const handleOutsideClick = (event) => {
+    if (keyAccordionRef.current && !keyAccordionRef.current.contains(event.target) && openAccordion === 'keyAccordion') {
+      setOpenAccordion(null);
+    }
+
+    if (bpmAccordionRef.current && !bpmAccordionRef.current.contains(event.target) && openAccordion === 'bpmAccordion') {
+      setOpenAccordion(null);
+    }
+  };
+
+
 
   return (
     <div>
@@ -320,6 +355,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
             <Grid container justifyContent='center' xs={12}>
               <Grid item xs={2}>
                 <CustomAccordion
+                  ref={keyAccordionRef}
                   expanded={openAccordion === 'keyAccordion'}
                   onChange={() => setOpenAccordion(prev => prev === 'keyAccordion' ? null : 'keyAccordion')}
                 >
@@ -330,12 +366,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
                   </StyledAccordionSummary>
 
                   <KeyAccordionDetails>
-                    <Box sx={{
-                      // backgroundColor: 'black',
-                      // width: '100vw',
-                      // display: 'flex',
-                      // justifyContent: 'center'  // Center its children horizontally
-                    }}>
+                    <Box>
                       <CircleOfFifths activeSlice={activeSlice} setActiveSlice={setActiveSlice} />
                     </Box>
 
@@ -346,6 +377,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
 
               <Grid item xs={2}>
                 <CustomAccordion
+                  ref={bpmAccordionRef}
                   expanded={openAccordion === 'bpmAccordion'}
                   onChange={() => setOpenAccordion(prev => prev === 'bpmAccordion' ? null : 'bpmAccordion')}
                 >
@@ -358,6 +390,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
                     <form onSubmit={handleTempoSubmit}>
                       <Box sx={{
                         display: 'flex',
+                        height: '220px',
                         flexDirection: 'column',
                         justifyContent: 'center',
                       }}>
@@ -367,13 +400,32 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
                           getAriaLabel={() => 'Tempo'}
                           value={sliderValue}
                           onChange={handleTempoSelect}
-                          valueLabelDisplay="auto"
+                          valueLabelDisplay="on"
                           getAriaValueText={valuetext}
                         />
-
+                        <TextField
+                          value={textFieldTempo}
+                          onChange={handleTextFieldChange}
+                          id="filled-basic"
+                          label="select a range or enter a bpm"
+                          variant="filled"
+                          InputProps={{
+                            style: {
+                              backgroundColor: '#eceff1',
+                            }
+                          }}
+                        />
                         <Button type="submit" variant="contained" color="primary">
                           Filter Tempo
                         </Button>
+                        <Button
+                          onClick={handleReset}
+                          variant="contained"
+                          color="secondary"
+                        >
+                          Reset
+                        </Button>
+
                       </Box>
                     </form>
 

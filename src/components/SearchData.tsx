@@ -97,7 +97,6 @@ const SearchData = ({
 
   useEffect(() => {
     if (offset > 1) {
-      console.log('g')
       fetchData(offset);
     }
   }, [offset]);

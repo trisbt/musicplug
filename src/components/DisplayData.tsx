@@ -333,6 +333,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
                           id="filled-basic"
                           label="select a range or enter a bpm"
                           variant="filled"
+                          autoComplete="off" 
                           InputProps={{
                             style: {
                               backgroundColor: '#eceff1',

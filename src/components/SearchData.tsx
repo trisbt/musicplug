@@ -144,8 +144,10 @@ const SearchData = ({
             justifyContent: 'center',
           }}>
             <FormControl sx={{
-
-              width: '280px'
+              width: '450px',
+              "@media (max-width: 800px)": {
+                width: '300px',
+              }
             }}>
               <StyledInput
                 className='searchbox'

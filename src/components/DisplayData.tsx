@@ -24,9 +24,6 @@ type CombinedDataType = DataItem & AudioDataItem;
 interface DisplayDataProps {
   data: DataItem[];
   audioData: AudioDataItem[];
-  username?: string | null;
-  // onLoadMore: () => void;
-  userFav?: Record<string, boolean>;
   searchResult: string;
   theme?: Theme;
 }
@@ -43,31 +40,7 @@ const SmallPlayButton = styled(IconButton)(({ theme }) => ({
   width: '40px',
   height: '40px',
 }));
-const SmallFavButton = styled(IconButton)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
-  backgroundColor: grey[900],
-  '&:hover': {
-    color: 'white',
-    backgroundColor: '#00e676'
-  },
-  fontSize: '15px',
-  width: '40px',
-  height: '40px',
-}));
-const FavSolid = styled(GradeIcon)(({ theme }) => ({
-  color: theme.palette.secondary.main,
-  '&:hover': {
-    color: theme.palette.secondary.dark,
-    backgroundColor: 'none',
-  },
-}));
-const FavOutlined = styled(GradeOutlinedIcon)(({ theme }) => ({
-  color: theme.palette.secondary.main,
-  '&:hover': {
-    backgroundColor: 'none',
-    color: theme.palette.secondary.dark,
-  },
-}));
+
 const LoadButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
   backgroundColor: theme.palette.secondary.dark,
@@ -146,8 +119,8 @@ function tempoRound(num: number): number {
 const valuetext = (value) => {
   return `${value} bpm`;
 }
-const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioData, username, userFav, searchResult, }) => {
-  const [favoriteMap, setFavoriteMap] = useState<Record<string, boolean>>({});
+const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioData, searchResult, }) => {
+
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const location = useLocation();
@@ -159,17 +132,6 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
   const keyAccordionRef = useRef(null);
   const bpmAccordionRef = useRef(null);
 
-
-  //needed to show user favorites in search results
-  useEffect(() => {
-    if (searchResult) {
-      document.title = `MusicPlug: results for ${searchResult} `;
-    }
-    if (username && userFav) {
-      setFavoriteMap(userFav);
-    }
-  }, [userFav, username, searchResult]);
-  //reset filters
   useEffect(() => {
     setActiveSlice(null);
     setTempoSelect([80, 140]);
@@ -254,49 +216,6 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
     }
   };
 
-  interface HandleFavoriteItem {
-    id: string;
-    name: string;
-    artists: string[];
-    albums: string;
-    images: string;
-    key: string;
-    tempo: number;
-    loudness: number;
-  }
-
-  const handleFavorite = async (event: React.MouseEvent, item, username: string) => {
-    event.stopPropagation();
-    event.preventDefault();
-    const { id, name, artists, albums, images, key, tempo, loudness } = item;
-    try {
-      const response = await fetch('/api/addFavs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, id, name, artists, albums, images, key, tempo, loudness, }),
-        credentials: 'include',
-      });
-      const data = await response.json();
-      //add like
-      if (data.isFavorite === 'added') {
-        setFavoriteMap((prevMap) => ({
-          ...prevMap,
-          [id]: true,
-        }));
-        // remove like
-      } else {
-        setFavoriteMap((prevMap) => ({
-          ...prevMap,
-          [id]: false,
-        }));
-      }
-    } catch (error) {
-      console.error('Error adding track to favorites:', error);
-    }
-  };
-
   //tempo filter
   const handleTempoSelect = (event, tempo) => {
     setSliderValue(tempo);
@@ -352,7 +271,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
               Search Results for {searchResult}:
             </Grid>
             {/* filters row */}
-            <Grid container justifyContent='center' xs={12}>
+            <Grid item container justifyContent='center' xs={12}>
               <Grid item xs={2}>
                 <CustomAccordion
                   ref={keyAccordionRef}
@@ -471,13 +390,10 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
                         explicit: item.explicit,
                         popularity: item.popularity,
                       },
-                      username: username,
-                      isFavorite: favoriteMap[item.id] || false,
                     }}
                     key={index}
                   >
 
-                    {/* <div key={index} > */}
                     <Card
                       sx={{
                         display: 'flex',
@@ -500,13 +416,6 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
                           <Grid item xs={3} sm={2} >
                             <CardMedia
                               component="img"
-                              sx={{
-                                // width: '80%',
-                                "@media (max-width: 600px)": {
-                                  // width: '100%',
-                                  // height:'60%'
-                                }
-                              }}
                               image={item.images}
                               alt={item.name}
                             />
@@ -596,25 +505,6 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
                                 </Typography>
                               </Typography>
                               {/* </Card> */}
-                            </Grid>
-
-                            {/* fav button */}
-                            <Grid item xs={2.5} sm={6} sx={{
-                              display: 'flex',
-                              justifyContent: 'center'
-                            }}>
-                              {username && (
-                                <SmallFavButton
-                                  size='small'
-                                  className='small-fav-icon-button'
-                                  onClick={(event) => handleFavorite(event, item, username)}
-                                  sx={{
-                                    boxShadow: 3,
-                                  }}
-                                >
-                                  {favoriteMap[item.id] ? <FavSolid /> : <FavOutlined />}
-                                </SmallFavButton>
-                              )}
                             </Grid>
 
                             {/* preview button */}

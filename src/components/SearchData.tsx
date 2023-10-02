@@ -68,14 +68,8 @@ const SearchData = ({
   response,
   setAudioInfo,
   audioInfo,
-  setUserFav,
-  userFav,
-  // setLoading,
-  // loading,
   setSearchResult,
   searchResult,
-  username,
-  // showLoadingCircle = false
 }) => {
   const navigate = useNavigate();
   const [inputField, setInputField] = useState<string>('');
@@ -84,7 +78,6 @@ const SearchData = ({
   const [searchParams] = useSearchParams();
   const initialSearchQuery = searchParams.get('q') || '';
   const query = searchParams.get('q') || '';
-
   const hasFetchedForQueryRef = useRef(false);  
 
   useEffect(() => {
@@ -102,7 +95,6 @@ const SearchData = ({
   }, [offset]);
 
   const fetchData = (newOffset = 1, query = inputField) => {
-    console.log("Fetch Data called with offset:", newOffset, "and query:", query);
     const idCache: string[] = [];
     if (query.trim() !== '') {
       const searchQuery = encodeURIComponent(query);
@@ -124,38 +116,10 @@ const SearchData = ({
             })
             .catch(error => {
               console.error('Error in advanced search:', error);
-            });
-
-          // Only fetch favorites if username exists
-          if (username) {
-            fetch('/api/favs', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ username }),
-              credentials: 'include',
-            })
-              .then(res => res.json())
-              .then(res => {
-                const favArray = res.map(el => el.id);
-                const obj = {};
-                for (const el of favArray) {
-                  if (!obj[el]) {
-                    obj[el] = true;
-                  }
-                }
-                setUserFav(obj);
-              })
-              .catch(err => {
-                console.log(err);
-              });
-          }
-          //need a fetch to favorites to check if already fav and pass prop to display    
+            }); 
           setOffset(newOffset);
         })
         .catch(error => {
-
           console.error('Error:', error);
         });
     }
@@ -202,7 +166,6 @@ const SearchData = ({
           {!showInput ? (
             <SmallColorButton onClick={() => setShowInput(true)} variant='outlined'>
               <SearchIcon sx={{ fontSize: '28px' }} />
-
 
             </SmallColorButton>
           ) : (

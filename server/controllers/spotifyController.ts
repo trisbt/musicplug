@@ -53,7 +53,6 @@ const spotifyController: SpotifyControllerInterface = {
       const query = req.query.query;
       const limit = 25;
       const offset = req.query.offset;
-
       const response = await fetch(`https://api.spotify.com/v1/search?q=${query}&type=artist%2Ctrack&limit=${limit}&offset=${offset}`, {
         headers: {
           'Authorization': 'Bearer ' + token

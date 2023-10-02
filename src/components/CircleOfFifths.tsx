@@ -8,13 +8,7 @@ import Typography from '@mui/material/Typography';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { grey } from '@mui/material/colors';
 
-
 Chart.register(ArcElement)
-
-// interface CircleOfFifthsProps {
-//   activeSlice: string | null;
-//   setActiveSlice: React.Dispatch<React.SetStateAction<string | null>>;
-// }
 
 const data = [
   { id: 1, value: 10, label: 'C' },

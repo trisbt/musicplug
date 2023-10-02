@@ -27,10 +27,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # files
-dnu.ts
-NavSearchBar.tsx
-discogsController.ts
-TopTracks.tsx
 
 #db
 

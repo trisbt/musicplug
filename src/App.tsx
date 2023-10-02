@@ -5,21 +5,15 @@ import {
 import React, { lazy, useState, useEffect, FC, useRef } from 'react';
 import { Grid } from '@mui/material';
 import SearchData from './components/SearchData';
-import { useAuth } from './components/Auth';
 import ResponsiveAppBar from './components/Navbar';
 import './App.css';
 import Splash from './components/Splash';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import backgroundImg from './assets/Musicplugbg.jpg';
 import Footer from './components/Footer';
-import { AuthContextValue } from '@appTypes/authTypes';
 import { SearchDataProps } from '@appTypes/dataTypes'
 import TopTracks, { topTracksLoader } from './components/TopTracks';
-const SignUp = lazy(() => import('./components/Signup'));
-const SignIn = lazy(() => import('./components/Login'));
 const SongPage = lazy(() => import('./components/SongPage'));
-import Favorites from './components/Favs';
-const AccountSettings = lazy(() => import('./components/AccountSettings'));
 const DisplayData = lazy(() => import('./components/DisplayData'));
 
 
@@ -52,11 +46,7 @@ function Root() {
   //searchdata and displaydata props
   const [response, setResponse] = useState<DataItem[]>([]);
   const [audioInfo, setAudioInfo] = useState<AudioDataItem[]>([]);
-  const [userFav, setUserFav] = useState<Record<string, boolean>>({});
-
-  //to display text for user search
   const [searchResult, setSearchResult] = useState<string>('');
-  const { isLoggedIn, loggedInUser } = useAuth() as AuthContextValue;
   const location = useLocation();
   const isHomePage = location.pathname === '/' && !location.search;
   // Use this value to set the showSplash state directly
@@ -73,11 +63,10 @@ function Root() {
   }, [location.pathname, location.search]);
 
   const getBackgroundStyle = (path) => {
-    if (showSplash && location.pathname !== '/favs') {
+    if (showSplash) {
       return {
         backgroundImage: `linear-gradient(to bottom, rgb(40, 60, 80, 0.5) 0%, #282c34 20%, rgb(80, 108, 185) 90%), url(${backgroundImg})`,
         backgroundSize: 'contain',
-        // backgroundPosition: 'center 2%',
       };
     } else {
       return {
@@ -94,8 +83,6 @@ function Root() {
           response={response}
           setAudioInfo={setAudioInfo}
           audioInfo={audioInfo}
-          setUserFav={setUserFav}
-          userFav={userFav}
           setSearchResult={setSearchResult}
           searchResult={searchResult}
           setOffset={setOffset}
@@ -131,25 +118,19 @@ function Root() {
                         <DisplayData
                           data={response}
                           audioData={audioInfo}
-                          userFav={userFav}
-                          username={loggedInUser}
                           theme={theme}
                           handleLoadMore={handleLoadMore}
                           searchResult={searchResult}
                         />
                       ) : (
                         <Grid mt={8} item xs={12} className="TopTracksClass">
-                          <TopTracks username={loggedInUser} />
+                          <TopTracks/>
                         </Grid>
                       )}
                     </>
                   } />
+                  <Route path="/:name/:artist/:id/" element={<SongPage/>} />
 
-                  <Route path="/signup" element={<SignUp />} />
-                  <Route path="/:name/:artist/:id/" element={<SongPage username={loggedInUser} />} />
-                  {<Route path="/login" element={<SignIn />} />}
-                  {isLoggedIn && <Route path="/favs" element={<Favorites username={loggedInUser} />} />}
-                  {isLoggedIn && <Route path="/account" element={<AccountSettings />} />}
                 </Routes>
               </Grid>
             </Grid>

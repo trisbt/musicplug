@@ -79,38 +79,6 @@ hr {
 }
 
 
-.fader-container {
-  display: flex;
-  align-items: flex-end;
-  height: 150px;
-}
-
-.fader-scale {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-end;
-  font-size: 12px;
-  height: 80%;
-  margin-right: 5px;
-  font-size: 10px;
-}
-
-.fader-slider-container {
-  width: 20px;
-  height: 80%;
-  background-color: #ccc;
-  position: relative;
-}
-
-.fader-slider {
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  background: linear-gradient(to top, rgb(1, 167, 1), rgb(47, 255, 0), rgb(238, 255, 0));
-
-}
-
 @media (max-width: 600px) {
   .card-buttons {
     display: flex;
@@ -126,12 +94,3 @@ hr {
     padding-right: 0;
   }
 }
-/* @media (orientation: landscape) and (max-width: 900px) {
-  .splash {
-    position: absolute;
-    top: 20%;
-    right: 0;
-    bottom: 0;
-    font-size: 12px;
-  }
-} */

@@ -1,5 +1,9 @@
-import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import React, { useState, useEffect, FC } from 'react';
+import {
+  createBrowserRouter, Outlet,
+  Route, RouterProvider, Routes, useLocation, useNavigate, useSearchParams,
+} from 'react-router-dom';
+import React, { lazy, useState, useEffect, FC, useRef } from 'react';
+import { Grid } from '@mui/material';
 import SearchData from './components/SearchData';
 import { useAuth } from './components/Auth';
 import ResponsiveAppBar from './components/Navbar';
@@ -10,18 +14,18 @@ import backgroundImg from './assets/Musicplugbg.jpg';
 import Footer from './components/Footer';
 import { AuthContextValue } from '@appTypes/authTypes';
 import { SearchDataProps } from '@appTypes/dataTypes'
-
-const SignUp = React.lazy(() => import('./components/Signup'));
-const SignIn = React.lazy(() => import('./components/Login'));
-const SongPage = React.lazy(() => import('./components/SongPage'));
-const Favorites = React.lazy(() => import('./components/Favs'));
-const AccountSettings = React.lazy(() => import('./components/AccountSettings'));
-
+import TopTracks, { topTracksLoader } from './components/TopTracks';
+const SignUp = lazy(() => import('./components/Signup'));
+const SignIn = lazy(() => import('./components/Login'));
+const SongPage = lazy(() => import('./components/SongPage'));
+import Favorites from './components/Favs';
+const AccountSettings = lazy(() => import('./components/AccountSettings'));
+const DisplayData = lazy(() => import('./components/DisplayData'));
 
 
 const theme = createTheme({
   typography: {
-    fontFamily: '"Montserrat", sans-serif',
+    // fontFamily: '"Montserrat", sans-serif',
   },
   palette: {
     primary: {
@@ -39,13 +43,31 @@ const theme = createTheme({
   },
 });
 
-const MainContent: FC = () => {
+const router = createBrowserRouter([
+  { path: "*", Component: Root, },
+  // { path:'/signup', Component: SignUp }
+]);
+
+function Root() {
+  //searchdata and displaydata props
+  const [response, setResponse] = useState<DataItem[]>([]);
+  const [audioInfo, setAudioInfo] = useState<AudioDataItem[]>([]);
+  const [userFav, setUserFav] = useState<Record<string, boolean>>({});
+
+  //to display text for user search
+  const [searchResult, setSearchResult] = useState<string>('');
   const { isLoggedIn, loggedInUser } = useAuth() as AuthContextValue;
   const location = useLocation();
   const isHomePage = location.pathname === '/' && !location.search;
-console.log('testing prod')
   // Use this value to set the showSplash state directly
   const [showSplash, setShowSplash] = useState(isHomePage);
+  const [offset, setOffset] = useState<number>(1);
+
+  const handleLoadMore = () => {
+    const nextOffset = offset + 25;
+    setOffset(nextOffset);
+  };
+  
   useEffect(() => {
     setShowSplash(isHomePage);
   }, [location.pathname, location.search]);
@@ -53,10 +75,9 @@ console.log('testing prod')
   const getBackgroundStyle = (path) => {
     if (showSplash && location.pathname !== '/favs') {
       return {
-        backgroundImage: `linear-gradient(rgb(40, 60, 80, 0.7), rgb(5,12,24, 0.7)), url(${backgroundImg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center 26%',
-
+        backgroundImage: `linear-gradient(to bottom, rgb(40, 60, 80, 0.5) 0%, #282c34 20%, rgb(80, 108, 185) 90%), url(${backgroundImg})`,
+        backgroundSize: 'contain',
+        // backgroundPosition: 'center 2%',
       };
     } else {
       return {
@@ -64,47 +85,84 @@ console.log('testing prod')
       };
     }
   };
-
   const backgroundStyle = getBackgroundStyle(location.pathname);
   return (
-    <>
-      <div style={backgroundStyle}>
-        {showSplash && location.pathname === '/' && (
-          <div className='splash'>
-            <Splash />
-          </div>
-        )}
+    <React.Suspense fallback={<div></div>}>
+      <ThemeProvider theme={theme}>
+        <ResponsiveAppBar
+          setResponse={setResponse}
+          response={response}
+          setAudioInfo={setAudioInfo}
+          audioInfo={audioInfo}
+          setUserFav={setUserFav}
+          userFav={userFav}
+          setSearchResult={setSearchResult}
+          searchResult={searchResult}
+          setOffset={setOffset}
+          offset={offset}
 
-        <div className="App">
-          <div className="App-search">
-            <Routes>
-              <Route path="/" element={<SearchData key={location.search} username={loggedInUser} />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/:name/:artist/:id/" element={<SongPage username={loggedInUser} />} />
-              {!isLoggedIn && <Route path="/login" element={<SignIn />} />}
-              {isLoggedIn && <Route path="/favs" element={<Favorites username={loggedInUser} />} />}
-              {isLoggedIn && <Route path="/account" element={<AccountSettings />} />}
-            </Routes>
+        />
+        <div style={backgroundStyle}>
+          <div className="App">
+            <Grid item
+              className="App-search"
+              justifyContent="center"
+              alignItems="center"
+              mt={2}
+            >
+              {/* Splash Grid item */}
+              {showSplash && location.pathname === '/' && (
+                <Grid item xs={12} style={{
+                  display: 'flex', justifyContent: 'center',
+                }}>
+                  <Splash />
+                </Grid>
+              )}
+              {/* SearchData Grid item */}
+              <Grid mt={2} item xs={12} style={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}>
+                <Routes>
+
+                  <Route path="/" element={
+                    <>
+                      {location.search ? (
+                        <DisplayData
+                          data={response}
+                          audioData={audioInfo}
+                          userFav={userFav}
+                          username={loggedInUser}
+                          theme={theme}
+                          handleLoadMore={handleLoadMore}
+                          searchResult={searchResult}
+                        />
+                      ) : (
+                        <Grid mt={8} item xs={12} className="TopTracksClass">
+                          <TopTracks username={loggedInUser} />
+                        </Grid>
+                      )}
+                    </>
+                  } />
+
+                  <Route path="/signup" element={<SignUp />} />
+                  <Route path="/:name/:artist/:id/" element={<SongPage username={loggedInUser} />} />
+                  {<Route path="/login" element={<SignIn />} />}
+                  {isLoggedIn && <Route path="/favs" element={<Favorites username={loggedInUser} />} />}
+                  {isLoggedIn && <Route path="/account" element={<AccountSettings />} />}
+                </Routes>
+              </Grid>
+            </Grid>
           </div>
         </div>
-      </div>
-    </>
-  );
-}
-
-function App() {
-  return (
-    <ThemeProvider theme={theme}>
-      <Router>
-        <ResponsiveAppBar />
-        <React.Suspense fallback={<div>Loading...</div>}>
-          <MainContent />
-        </React.Suspense>
         <Footer />
-      </Router>
-    </ThemeProvider>
+      </ThemeProvider>
+    </React.Suspense>
+
   );
 }
 
+export default function App() {
+  return <RouterProvider router={router} />;
+}
 
-export default App;

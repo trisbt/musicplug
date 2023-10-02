@@ -127,12 +127,21 @@ const spotifyController: SpotifyControllerInterface = {
       });
 
       const audioData = await audioResponse.json();
-      res.locals.data = { trackData: trackData, audioData: audioData.audio_features };
-      next();
+      
+      const combinedResults = trackData.map((track, index) => {
+        return {
+          ...track,
+          ...audioData.audio_features[index]
+        }
+      });
+
+      res.locals.data = combinedResults;
+      return next();
     } catch (error) {
       next(error);
     }
   },
+
 
   getSpotifyDataById: async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
     try {

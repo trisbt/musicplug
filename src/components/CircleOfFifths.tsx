@@ -48,7 +48,22 @@ const minorKeys = [
 const defaultColors: string[] = Array(data.length).fill(grey[500]);
 const hoverColors: string[] = ['#b71c1c', '#ff5722', '#ff9800', '#ffeb3b', '#8bc34a', '#4caf50', '#26a69a', '#00bcd4', '#03a9f4', '#3f51b5', '#673ab7', '#9c27b0'];
 
+
 const CircleOfFifths = ({ activeSlice, setActiveSlice }) => {
+
+  const handleChartInteraction = (evt, elements) => {
+    if (elements && elements.length) {
+      const clickedElement = elements[0];
+      let label;
+      if (clickedElement.datasetIndex === 0) {
+        label = data[clickedElement.index].label;
+      } else if (clickedElement.datasetIndex === 1) {
+        label = minorKeys[clickedElement.index].label;
+      }
+      setActiveSlice(prev => prev === label ? null : label);
+    }
+  };
+
   const chartData = {
     labels: [...data.map(d => d.label), ...minorKeys.map(d => d.label)],
     datasets: [
@@ -71,6 +86,7 @@ const CircleOfFifths = ({ activeSlice, setActiveSlice }) => {
   };
 
   const options = {
+    cutout: '20%', 
     plugins: {
       tooltip: {
         enabled: false
@@ -82,16 +98,16 @@ const CircleOfFifths = ({ activeSlice, setActiveSlice }) => {
         display: true,
         color: '#fff',
         font: {
-          size: 12,
+          size: 15,
           weight: 700,
         },
         anchor: 'center' as 'center',
         align: 'end' as const,
         offset: (context) => {
           if (context.datasetIndex === 0) {
-            return -11;  // offset for major labels
+            return -12;  // offset for major labels
           } else {
-            return 3;  // default offset for minor labels
+            return 0;  // default offset for minor labels
           }
         },
 
@@ -120,68 +136,22 @@ const CircleOfFifths = ({ activeSlice, setActiveSlice }) => {
     <div className='pie-container'>
       <Grid container spacing={0} sx={{
         height: '300px',
-        borderRadius: '5px',
-        paddingLeft: 0,
-        paddingTop: 0
       }}>
-        <Grid item xs={4} sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          paddingLeft: 0, paddingTop: 0
+        <Grid item xs={12} sx={{
+          height: '300px',
         }}>
-          <Box sx={{
-            display: 'flex',
-            height: '200px',
-            alignItems: 'center',
-            width: '300px',
-            "@media (max-width: 600px)": {
-              display: 'flex',
-              width: '100px',
-              fontSize: '12px'
-            }
-          }}>
-            <Typography className='song-sub-info' variant="h4" color="white" component="div" sx={{
-              fontSize: '25px',
-              display: 'flex',
-              textAlign: 'center',
-              // textShadow:'5px 8px 5px rgba(0, 0, 0, 0.9)',
-              "@media (max-width: 600px)": {
-                fontSize: '12px'
-              }
-            }}
-            >
-              FILTER YOUR FAVORTIES BY KEY
-            </Typography>
-          </Box>
-        </Grid>
-
-        <Grid item xs={4} sx={{
-          height: '270px',
-          paddingLeft: 0, paddingTop: 0,
-          marginTop: '10px',
-
-        }}>
-          <Pie
+          <Doughnut
             data={chartData}
             plugins={[ChartDataLabels as any]}
-            height={350}
-            width={350}
+            height={340}
+            width={340}
             options={{
               ...options,
-              onClick: (evt, elements) => {
-                if (elements.length) {
-                  const clickedElement = elements[0];
-                  let label;
-                  if (clickedElement.datasetIndex === 0) {
-                    label = data[clickedElement.index].label;
-                  } else if (clickedElement.datasetIndex === 1) {
-                    label = minorKeys[clickedElement.index].label;
-                  }
-                  setActiveSlice(prev => prev === label ? null : label);
-                }
-              }
+              onClick: handleChartInteraction,  // for desktop clicks
             }}
+            onTouchEnd={handleChartInteraction}  // for mobile touches
           />
+
         </Grid>
       </Grid>
 

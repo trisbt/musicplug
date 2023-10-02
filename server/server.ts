@@ -43,9 +43,9 @@ apiRouter.get('/advancedSearch', spotifyController.getAccessToken, spotifyContro
 apiRouter.get('/getTracks', spotifyController.getAccessToken, spotifyController.getSpotifyTracks, (req, res) => {
     return res.status(200).json(res.locals.data);
 });
-// apiRouter.get('/toptracks', spotifyController.getAccessToken,spotifyController.getSpotifyTopTracks, (req, res) => {
-//     return res.status(200).json(res.locals.data);
-// })
+apiRouter.get('/toptracks', spotifyController.getAccessToken,spotifyController.getSpotifyTopTracks, (req, res) => {
+    return res.status(200).json(res.locals.data);
+})
 apiRouter.get('/getById', spotifyController.getAccessToken,spotifyController.getSpotifyDataById, (req, res) => {
     return res.status(200).json(res.locals.data);
 })

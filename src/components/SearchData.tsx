@@ -6,7 +6,10 @@ import Input from '@mui/material/Input';
 import { FormControl } from '@mui/material';
 import { createTheme, ThemeProvider, styled, Theme } from '@mui/material/styles';
 import { Artist, DataItem, AudioDataItem, SearchDataProps } from '@appTypes/dataTypes';
-
+import CircularProgress from '@mui/material/CircularProgress';
+import SearchIcon from '@mui/icons-material/Search';
+import { Hidden } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const theme: Theme = createTheme({
   palette: {
@@ -31,7 +34,26 @@ const ColorButton = styled(Button)(({ theme }) => ({
   '&:hover': {
     backgroundColor: theme.palette.primary.dark,
   },
+  minWidth: '45px',
+  padding: 0
 }));
+const SmallColorButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.secondary.light,
+  border: 'none',
+  margin: 0,
+  padding: 0,
+  minWidth: '20px'
+}));
+
+const CloseButton = styled(CloseIcon)(({ theme }) => ({
+  color: theme.palette.text.primary,
+  backgroundColor: 'transparent',
+  position: 'absolute',
+  borderColor: 'none',
+  right: '5px',
+  top: '5px'
+}));
+
 const StyledInput = styled(Input)(({ theme }) => ({
   color: theme.palette.text.primary,
   backgroundColor: theme.palette.background.paper,
@@ -39,31 +61,50 @@ const StyledInput = styled(Input)(({ theme }) => ({
 }));
 
 //main search to spotify
-const SearchData: React.FC<SearchDataProps> = ({ username, customStyles, pStyles }) => {
-  const [response, setResponse] = useState<DataItem[]>([]);
-  const [audioInfo, setAudioInfo] = useState<AudioDataItem[]>([]);
-  const [userFav, setUserFav] = useState<Record<string, boolean>>({});
-  const [offset, setOffset] = useState<number>(1);
-  const [loading, setLoading] = useState<boolean>(false);
+const SearchData = ({
+  setOffset,
+  offset,
+  setResponse,
+  response,
+  setAudioInfo,
+  audioInfo,
+  setUserFav,
+  userFav,
+  // setLoading,
+  // loading,
+  setSearchResult,
+  searchResult,
+  username,
+  // showLoadingCircle = false
+}) => {
   const navigate = useNavigate();
+  const [inputField, setInputField] = useState<string>('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const [showInput, setShowInput] = useState(false);
   const [searchParams] = useSearchParams();
   const initialSearchQuery = searchParams.get('q') || '';
-  const [inputField, setInputField] = useState<string>('');
-  //to display text for user search
-  const [searchResult, setSearchResult] = useState<string>('');
-  const searchInputRef = useRef<HTMLInputElement>(null);
+  const query = searchParams.get('q') || '';
+
+  const hasFetchedForQueryRef = useRef(false);  
 
   useEffect(() => {
-    if (initialSearchQuery) {
-      setInputField(initialSearchQuery);
-      fetchData(1, initialSearchQuery);
+    if (query && !hasFetchedForQueryRef.current) {  
+      setInputField(query);
+      fetchData(1, query);
+      hasFetchedForQueryRef.current = true;  
     }
-  }, []);
+  }, [query]);
+
+  useEffect(() => {
+    if (offset > 1) {
+      fetchData(offset);
+    }
+  }, [offset]);
 
   const fetchData = (newOffset = 1, query = inputField) => {
+    console.log("Fetch Data called with offset:", newOffset, "and query:", query);
     const idCache: string[] = [];
     if (query.trim() !== '') {
-      setLoading(true);
       const searchQuery = encodeURIComponent(query);
       fetch(`/api/search?query=${searchQuery}&offset=${newOffset}`)
         .then(res => res.json())
@@ -110,70 +151,98 @@ const SearchData: React.FC<SearchDataProps> = ({ username, customStyles, pStyles
                 console.log(err);
               });
           }
-
-          setLoading(false);
           //need a fetch to favorites to check if already fav and pass prop to display    
           setOffset(newOffset);
         })
         .catch(error => {
-          setLoading(false);
+
           console.error('Error:', error);
         });
     }
   };
 
-
-
-
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const searchValue = searchInputRef.current?.value || '';
-    setInputField(searchValue);    
+    setInputField(searchValue);
     setResponse([]);
     setAudioInfo([]);
     fetchData(1, searchValue);
+    setShowInput(false);
   };
-
-  const handleLoadMore = () => {
-    const nextOffset = offset + 25;
-    fetchData(nextOffset);
-  }
 
   return (
     <ThemeProvider theme={theme}>
-      <div style={{
-        marginTop: loading || response.length ? '10px' : '0'
+      <div className='searchform-container'>
+        <Hidden smDown>
+          <form className='searchform' onSubmit={handleFormSubmit} style={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}>
+            <FormControl sx={{
 
-      }}>
-        {!loading ? (
-          <div className='searchform-container'>
-            <form className='searchform' onSubmit={handleFormSubmit}>
-              <FormControl>
+              width: '280px'
+            }}>
+              <StyledInput
+                className='searchbox'
+
+                placeholder='Search for songs, artists, albums...'
+                type='text'
+                inputRef={searchInputRef}
+              />
+            </FormControl>
+            <ColorButton type='submit' variant='outlined'>
+              <SearchIcon sx={{ fontSize: '28px' }} />
+              {/* Search */}
+            </ColorButton>
+          </form>
+        </Hidden>
+
+        <Hidden smUp>
+          {!showInput ? (
+            <SmallColorButton onClick={() => setShowInput(true)} variant='outlined'>
+              <SearchIcon sx={{ fontSize: '28px' }} />
+
+
+            </SmallColorButton>
+          ) : (
+            <form className='sm-searchform' onSubmit={handleFormSubmit}
+              style={{
+                display: 'flex',
+                position: 'absolute',
+                margin: 0,
+                padding: 0,
+                top: 5,
+                left: -6,
+                // border: '2px solid black',
+                width: '95vw',
+                zIndex: 2,
+                background: 'white',
+                boxSizing: 'border-box', 
+              }}
+            >
+              <FormControl style={{ width: '100%' }}>
                 <StyledInput
                   className='searchbox'
-                  placeholder='find songs...'
+                  placeholder='Search for songs, artists, albums...'
                   type='text'
                   inputRef={searchInputRef}
-                  style={{ ...customStyles }}
-                // value={inputField}
-                // onChange={handleInputChange}
+                  autoFocus
                 />
               </FormControl>
-              <ColorButton type='submit' variant='outlined'>
-                Search
-              </ColorButton>
+              <SmallColorButton onClick={() => setShowInput(false)} variant='outlined' style={{ marginLeft: '10px' }}>
+                <CloseIcon sx={{
+                  border: 'none',
+                  color: 'black',
+                }} />
+              </SmallColorButton>
             </form>
-          </div>
-        ) : null}
-        {loading ? (
-          <p style={{ ...pStyles }}>Plugging Results</p>
-
-        ) : (
-          <DisplayData data={response} audioData={audioInfo} userFav={userFav} username={username} theme={theme} onLoadMore={handleLoadMore} searchResult={searchResult} />
-        )}
+          )}
+        </Hidden>
       </div>
     </ThemeProvider>
   );
+
 }
 
 

@@ -186,12 +186,6 @@ const discogsSQLController: DiscogsSearchInterface = {
       console.log(err);
       return next(err);
     }
-
   },
-
 }
-
-
-
-
 export default discogsSQLController;

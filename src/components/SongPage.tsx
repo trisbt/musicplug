@@ -231,17 +231,6 @@ const SongPage = (props: SongPageProps) => {
               padding: '0',
 
             }}>
-            <SearchData username={username} customStyles={{
-              color: 'black',
-              backgroundColor: '#f5f5f5',
-
-            }}
-              pStyles={{
-                fontSize: '20px',
-                fontStyle: 'italic',
-                fontWeight: 'bold',
-              }}
-            />
           </Grid>
 
           {/* top row */}

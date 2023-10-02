@@ -2,6 +2,7 @@ import React, { useState, useEffect, FC } from 'react';
 import CircleOfFifths from './CircleOfFifths';
 import EnhancedTable from './Table';
 import { type } from 'os';
+import { Box, Typography } from '@mui/material';
 
 interface FavoritesProps {
   username: string;
@@ -51,6 +52,24 @@ const Favorites: FC<FavoritesProps> = ({ username }) => {
 
   return (
     <div>
+      {/* <Box sx={{
+        display:'flex',
+        justifyContent:'center',
+        // backgroundColor:'green'
+      }}>
+        <Typography className='song-sub-info' variant="h4" color="white" component="div" sx={{
+          fontSize: '25px',
+          display: 'flex',
+          textAlign: 'center',
+          // textShadow:'5px 8px 5px rgba(0, 0, 0, 0.9)',
+          "@media (max-width: 600px)": {
+            fontSize: '20px'
+          }
+        }}
+        >
+          FILTER YOUR FAVORTIES BY KEY
+        </Typography>
+      </Box> */}
       <CircleOfFifths activeSlice={activeSlice} setActiveSlice={setActiveSlice} />
       <EnhancedTable username={username} favorites={userFavorites} initialRenderDone={initialRenderDone} favDeleteRender={favDeleteRender} setFavDeleteRender={setFavDeleteRender} activeSlice={activeSlice} />
 

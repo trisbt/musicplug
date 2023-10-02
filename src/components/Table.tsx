@@ -42,7 +42,7 @@ interface Row {
 interface SelectedRow {
   name: string;
   id: string;
-  artist:string;
+  artist: string;
 };
 
 type CreateDataType = (song: string, artist: string, album: string, key: string, tempo: number, id: string) => Row;
@@ -70,14 +70,31 @@ interface HeadCell {
   label: string;
 };
 
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const CustomTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: indigo[300],
     color: theme.palette.common.white,
+    padding: "8px 10px",
+
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: "8px 10px",
+  },
+  "&.column-key": {
+    width: "5px",
+  },
+  "&.column-tempo": {
+    width: "5px",
+  },
+  "&.column-song": {
+    width: "50px",
+  },
+  "&.column-artist": {
+    width: "50px",
+  },
+  "&.column-album": {
+    width: "50px",
   },
 }));
 
@@ -87,7 +104,7 @@ const createData: CreateDataType = (song, artist, album, key, tempo, id) => {
   };
 }
 
-const descendingComparator = (a: Row, b:Row, orderBy: keyof Row): number=>{
+const descendingComparator = (a: Row, b: Row, orderBy: keyof Row): number => {
   if (typeof a[orderBy] === 'string' && typeof b[orderBy] === 'string') {
     const lowerA = (a[orderBy] as string).toLowerCase();
     const lowerB = (b[orderBy] as string).toLowerCase();
@@ -109,7 +126,7 @@ const descendingComparator = (a: Row, b:Row, orderBy: keyof Row): number=>{
   return 0;
 }
 
-const getComparator = (order: 'asc' | 'desc', orderBy: keyof Row) =>  {
+const getComparator = (order: 'asc' | 'desc', orderBy: keyof Row) => {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
@@ -129,6 +146,18 @@ const stableSort = (array: Row[], comparator: (a: Row, b: Row) => number): Row[]
 
 const headCells: HeadCell[] = [
   {
+    id: 'key',
+    numeric: false,
+    disablePadding: false,
+    label: 'Key',
+  },
+  {
+    id: 'tempo',
+    numeric: true,
+    disablePadding: false,
+    label: 'BPM',
+  },
+  {
     id: 'song',
     numeric: false,
     disablePadding: true,
@@ -146,18 +175,7 @@ const headCells: HeadCell[] = [
     disablePadding: false,
     label: 'Album',
   },
-  {
-    id: 'key',
-    numeric: false,
-    disablePadding: false,
-    label: 'Key',
-  },
-  {
-    id: 'tempo',
-    numeric: true,
-    disablePadding: false,
-    label: 'Tempo',
-  },
+
 ];
 
 const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = (props) => {
@@ -169,14 +187,15 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = (props) => {
   return (
     <TableHead>
       <TableRow>
-        <StyledTableCell >
-        </StyledTableCell>
-        {headCells.map((headCell) => (
-          <StyledTableCell
+        {headCells.map((headCell, index) => (
+          <CustomTableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            className={`column-${headCell.id}`}
+            align={'left'}
+            // width='20'
+            padding={'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            isFirstColumn={index === 0}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -190,7 +209,7 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = (props) => {
                 </Box>
               ) : null}
             </TableSortLabel>
-          </StyledTableCell>
+          </CustomTableCell>
         ))}
       </TableRow>
     </TableHead>
@@ -198,7 +217,6 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = (props) => {
 }
 
 EnhancedTableHead.propTypes = {
-  // numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   order: PropTypes.oneOf<'asc' | 'desc'>(['asc', 'desc']).isRequired,
   orderBy: PropTypes.oneOf<keyof Row>(['song', 'artist', 'album', 'key', 'tempo', 'id']).isRequired,
@@ -206,11 +224,11 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderDone, activeSlice, username, setFavDeleteRender, favDeleteRender }) => {
-  const [order, setOrder] = useState<"desc" | "asc">("asc");
-  const [orderBy, setOrderBy] = useState<keyof Row>('song');
+  const [order, setOrder] = useState<"desc" | "asc">("desc");
+  const [orderBy, setOrderBy] = useState<keyof Row | null>(null);
   const [selected, setSelected] = useState<SelectedRow[]>([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [rowsPerPage, setRowsPerPage] = useState(50);
   const navigate = useNavigate();
 
   let rows: Row[] = favorites.map(favorite => createData(
@@ -221,6 +239,9 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
     favorite.tempo,
     favorite.id
   ));
+  if (order === 'desc' && orderBy === null) {
+    rows = rows.reverse();
+  }
 
   if (activeSlice) {
     rows = rows.filter(row => row.key === activeSlice);
@@ -242,19 +263,19 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
     navigate(`/${newSelected[0].name}/${newSelected[0].artist}/${newSelected[0].id}`);
 
   };
-  // console.log(selected)
-  
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    const newRowsPerPage = parseInt(event.target.value, 10);
+    setRowsPerPage(newRowsPerPage === -1 ? rows.length : newRowsPerPage);
     setPage(0);
   };
 
-  const isSelected = (name, artist, id) => selected.some(item => item.name === name && item.id === id && item.artist === artist);
 
+  const isSelected = (name, artist, id) => selected.some(item => item.name === name && item.id === id && item.artist === artist);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -274,10 +295,12 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
       "@media (max-width: 900px)": {
         display: 'flex',
         width: '100vw',
+
       }
     }}>
       <Box sx={{
         width: '100%',
+
       }}>
         <Paper variant="outlined" square sx={{
           width: '100%',
@@ -287,7 +310,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
         }}>
           <TableContainer>
             <Table
-              sx={{ minWidth: 750 }}
+              sx={{ minWidth: 750, tableLayout: 'fixed' }}
               aria-labelledby="tableTitle"
               size='medium'
             >
@@ -300,35 +323,21 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
               <TableBody>
                 {visibleRows.map((row, index) => {
                   const isItemSelected = isSelected(row.song, row.id, row.artist);
-                  const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
                       onClick={(event) => handleClick(event, row.song, row.id, row.artist)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.song}
                       selected={isItemSelected}
                       sx={{ cursor: 'pointer' }}
                     >
-                      <TableCell padding= 'none'>
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                      >
-                        {row.song}
-                      </TableCell>
-
-                      <TableCell align="left">{row.artist}</TableCell>
-                      <TableCell align="left">{row.album}</TableCell>
-                      <TableCell align="left">{row.key}</TableCell>
-                      <TableCell align="right">{row.tempo}</TableCell>
-                      
+                      <CustomTableCell className="column-key" align="left">{row.key}</CustomTableCell>
+                      <CustomTableCell className="column-tempo" align="left">{row.tempo}</CustomTableCell>
+                      <CustomTableCell className="column-song" align="left">{row.song}</CustomTableCell>
+                      <CustomTableCell className="column-artist" align="left">{row.artist}</CustomTableCell>
+                      <CustomTableCell className="column-album" align="left">{row.album}</CustomTableCell>
                     </TableRow>
                   );
                 })}
@@ -345,7 +354,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ favorites, initialRenderD
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[25, 50, 100]}
+            rowsPerPageOptions={[50, 100, { value: -1, label: 'All' }]}
             component="div"
             count={rows.length}
             rowsPerPage={rowsPerPage}

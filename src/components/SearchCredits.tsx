@@ -14,14 +14,14 @@ interface SearchCreditsProps {
 
 const SearchCredits: React.FC<SearchCreditsProps>= ({ artists, song, onReceiveAlias }) => {
   const [credits, setCredits] = useState<Credit[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
 
 
   useEffect(() => {
     fetch(`/api/getCredits/?artist=${artists[0].name}&song=${song}`)
       .then(response => response.json())
       .then(res => {
-        setIsLoading(false);
+        // setIsLoading(false);
         if (res.data === 'No credits available') {
           setCredits([{ artist_name: ' No credits available as of', role: '6/1/2023' }]);
           return;
@@ -30,18 +30,18 @@ const SearchCredits: React.FC<SearchCreditsProps>= ({ artists, song, onReceiveAl
       })
       .catch(err => {
         console.log(err);
-        setIsLoading(false);
+        // setIsLoading(false);
         return;
       })
   }, []);
 
-  if (isLoading) {
-    return (
-      <Box>
-        <CircularProgress />
-      </Box>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <Box>
+  //       <CircularProgress />
+  //     </Box>
+  //   );
+  // }
 
   return (
     <div className='credits-container'>

@@ -22,32 +22,20 @@ body {
   height: 200px;
 }
 
-.splash {
-  position: absolute;
-  top: 13%;
-  left: 20%;
-  right: 0;
-  bottom: 0;
+.searchform-container {
+  display: flex;
+  justify-content: center;
+  padding-right: 5em
 }
 
 .searchform {
-  display: flex;
-  justify-content: center;
+  background-color: 'purple';
+  width: '1000px'
 }
-.App{
+
+.App {
   display: flex;
   justify-content: center;
-}
-.App-search {
-  background-repeat: repeat-y;
-  min-height: 100vh;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
 li {
@@ -61,7 +49,7 @@ li {
 .even-credit {
   font-size: small;
   font-weight: bold;
-  
+
 }
 
 .odd-credit {
@@ -85,9 +73,9 @@ hr {
   justify-content: center;
 }
 
-#tableTitle {
+.pie-container {
   display: flex;
-  justify-content: center;
+  margin-bottom: 1em;
 }
 
 
@@ -123,18 +111,6 @@ hr {
 
 }
 
-
-
-
-@media (max-width: 900px) {
-  .splash {
-    position: absolute;
-    top: 10%;
-    right: 0;
-    bottom: 0;
-  }
-}
-
 @media (max-width: 600px) {
   .card-buttons {
     display: flex;
@@ -143,21 +119,14 @@ hr {
     justify-content: flex-end;
   }
 
-  .pie-container {
-    display: flex;
-    width: 700px;
-    /* height: 200px; */
-  }
-  .splash {
-    position: absolute;
-    top: 10%;
-    left: 10%;
-    right: 0;
-    bottom: 0;
-  }
 
 }
-@media (orientation: landscape) and (max-width: 900px) {
+@media (max-width: 700px){
+  .searchform-container{
+    padding-right: 0;
+  }
+}
+/* @media (orientation: landscape) and (max-width: 900px) {
   .splash {
     position: absolute;
     top: 20%;
@@ -165,4 +134,4 @@ hr {
     bottom: 0;
     font-size: 12px;
   }
-}
+} */

@@ -72,8 +72,9 @@ const KeyAccordionDetails = styled(AccordionDetails)({
   position: 'absolute',
   zIndex: 2,
   left: '100%',
-  transform: 'translateX(-50%)',
-  width: '90vw',
+  transform: 'translateX(-38%)',
+  width: '250px',
+  height:'280px',
   backdropFilter: 'blur(15px)',
   borderRadius: '1em',
 });
@@ -82,10 +83,10 @@ const TempoAccordionDetails = styled(AccordionDetails)({
   position: 'absolute',
   zIndex: 2,
   left: '100%',
-  transform: 'translateX(-71%)',
-  width: '70vw',
+  transform: 'translateX(-60%)',
   backdropFilter: 'blur(15px)',
   borderRadius: '1em',
+  width:'300px'
 });
 
 //bpm and key helper conversions
@@ -241,6 +242,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
     setTempoSelect([80, 140]);
     setSliderValue([80, 140]);
     setTextFieldTempo('');  // Clear the textfield
+    setActiveSlice('');
   };
   const handleOutsideClick = (event) => {
     if (keyAccordionRef.current && !keyAccordionRef.current.contains(event.target) && openAccordion === 'keyAccordion') {
@@ -267,11 +269,12 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
               textAlign: 'center',
               fontSize: '20px',
               color: 'white',
+              paddingBottom: '10px',
             }}>
               Search Results for {searchResult}:
             </Grid>
             {/* filters row */}
-            <Grid item container justifyContent='center' xs={12}>
+            <Grid item container justifyContent='center' xs={12} md = {8}>
               <Grid item xs={2}>
                 <CustomAccordion
                   ref={keyAccordionRef}
@@ -309,7 +312,9 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
                     <form onSubmit={handleTempoSubmit}>
                       <Box sx={{
                         display: 'flex',
-                        height: '220px',
+                        height: '200px',
+                        width: '300px',
+               
                         flexDirection: 'column',
                         justifyContent: 'center',
                       }}>
@@ -337,14 +342,6 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
                         <Button type="submit" variant="contained" color="primary">
                           Filter Tempo
                         </Button>
-                        <Button
-                          onClick={handleReset}
-                          variant="contained"
-                          color="secondary"
-                        >
-                          Reset
-                        </Button>
-
                       </Box>
                     </form>
 
@@ -352,6 +349,25 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
                 </CustomAccordion>
               </Grid>
 
+              <Grid item xs={2} paddingLeft={'2px'}>
+                <Box
+                  onClick={handleReset}
+                  variant="contained"
+                  color="#ffecb3"
+                  sx={{
+                    // backgroundColor:'purple',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    width: '100px',
+                    height: '24px'
+                  }}
+                >
+                  Reset filters
+                </Box>
+
+              </Grid>
             </Grid>
 
             {/* main search */}

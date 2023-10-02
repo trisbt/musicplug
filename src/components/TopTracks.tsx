@@ -28,31 +28,7 @@ const SmallPlayButton = styled(IconButton)(({ theme }) => ({
   width: '40px',
   height: '40px',
 }));
-const SmallFavButton = styled(IconButton)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
-  backgroundColor: grey[900],
-  '&:hover': {
-    color: 'white',
-    backgroundColor: '#00e676'
-  },
-  fontSize: '15px',
-  width: '40px',
-  height: '40px',
-}));
-const FavSolid = styled(GradeIcon)(({ theme }) => ({
-  color: theme.palette.secondary.main,
-  '&:hover': {
-    color: theme.palette.secondary.dark,
-    backgroundColor: 'none',
-  },
-}));
-const FavOutlined = styled(GradeOutlinedIcon)(({ theme }) => ({
-  color: theme.palette.secondary.main,
-  '&:hover': {
-    backgroundColor: 'none',
-    color: theme.palette.secondary.dark,
-  },
-}));
+
 const LoadButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
   backgroundColor: theme.palette.secondary.dark,
@@ -92,7 +68,7 @@ function tempoRound(num: number): number {
   return Math.round(num * 2) / 2;
 }
 
-const TopTracks = ({ username }) => {
+const TopTracks = () => {
   const [combinedTracks, setCombinedTracks] = useState([
     {
         "name": "Paint The Town Red",
@@ -485,94 +461,10 @@ const TopTracks = ({ username }) => {
         "valence": 0.775
     }
 ]);
-  const [topUserFav, setTopUserFav] = useState([]);
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const navigate = useNavigate();
 
-//old fetch for top tracks
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     try {
-  //       const [topTracksResponse, favsResponse] = await Promise.all([
-  //         fetch('/api/toptracks'),
-  //         username ? fetch('/api/favs', {
-  //           method: 'POST',
-  //           headers: {
-  //             'Content-Type': 'application/json',
-  //           },
-  //           body: JSON.stringify({ username }),
-  //           credentials: 'include',
-  //         }) : Promise.resolve(null)
-  //       ]);
-
-  //       const rawCombinedData = await topTracksResponse.json();
-
-  //       const processedData = rawCombinedData.map(item => {
-  //         const { name, preview_url, explicit, popularity, artists, id } = item;
-  //         const images = item.album.images[0].url;
-  //         const release_date = item.album.release_date;
-  //         const albums = item.album.name;
-  //         const key = keyConvert(item.key, item.mode);
-  //         const tempo = tempoRound(item.tempo);
-  //         const { loudness, energy, acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence } = item;
-
-  //         return {
-  //           name, images, id, preview_url, release_date, artists, albums, explicit, popularity,
-  //           key, tempo, loudness, energy, acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence
-  //         };
-  //       });
-  //       // console.log(processedData);
-  //       setCombinedTracks(processedData);
-
-  //       if (username) {
-  //         const favData = await favsResponse?.json();
-  //         const favArray = favData.favorites.map(el => el.id);
-  //         const obj = {};
-  //         for (const el of favArray) {
-  //           if (!obj[el]) {
-  //             obj[el] = true;
-  //           }
-  //         }
-  //         setTopUserFav(obj);
-  //       }
-
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   }
-
-  //   fetchData();
-  // }, []);
-
-  useEffect(() => {
-    async function fetchFavs() {
-        if (!username) return;  
-        try {
-            const response = await fetch('/api/favs', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username }),
-                credentials: 'include',
-            });
-            const favData = await response.json();
-            const favArray = favData.map(el => el.id);
-            const obj = {};
-            for (const el of favArray) {
-                if (!obj[el]) {
-                    obj[el] = true;
-                }
-            }
-            setTopUserFav(obj);
-
-        } catch (err) {
-            console.log(err);
-        }
-    }
-    fetchFavs();
-}, [username]);  
 
   const playAudio = (event: React.MouseEvent, previewUrl: string | null) => {
     event.stopPropagation();
@@ -592,49 +484,6 @@ const TopTracks = ({ username }) => {
         audioRef.current.play();
         setCurrentlyPlayingUrl(previewUrl);
       }
-    }
-  };
-
-  interface HandleFavoriteItem {
-    id: string;
-    name: string;
-    artists: string[];
-    albums: string;
-    images: string;
-    key: string;
-    tempo: number;
-    loudness: number;
-  }
-
-  const handleFavorite = async (event: React.MouseEvent, item, username: string) => {
-    event.stopPropagation();
-    event.preventDefault();
-    const { id, name, artists, albums, images, key, tempo, loudness } = item;
-    try {
-      const response = await fetch('/api/addFavs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, id, name, artists, albums, images, key, tempo, loudness, }),
-        credentials: 'include',
-      });
-      const data = await response.json();
-      //add like
-      if (data.isFavorite === 'added') {
-        setTopUserFav((prevMap) => ({
-          ...prevMap,
-          [id]: true,
-        }));
-        // remove like
-      } else {
-        setTopUserFav((prevMap) => ({
-          ...prevMap,
-          [id]: false,
-        }));
-      }
-    } catch (error) {
-      console.error('Error adding track to favorites:', error);
     }
   };
 
@@ -714,8 +563,6 @@ const TopTracks = ({ username }) => {
                         explicit: item.explicit,
                         popularity: item.popularity,
                       },
-                      username: username,
-                      isFavorite: topUserFav[item.id] || false,
                     }}
                     key={index}
                   >
@@ -743,13 +590,6 @@ const TopTracks = ({ username }) => {
                           <Grid item xs={3} sm={2} >
                             <CardMedia
                               component="img"
-                              sx={{
-                                // width: '80%',
-                                "@media (max-width: 600px)": {
-                                  // width: '100%',
-                                  // height:'60%'
-                                }
-                              }}
                               image={item.images}
                               alt={item.name}
                             />
@@ -839,25 +679,6 @@ const TopTracks = ({ username }) => {
                                 </Typography>
                               </Typography>
                               {/* </Card> */}
-                            </Grid>
-
-                            {/* fav button */}
-                            <Grid item xs={2.5} sm={6} sx={{
-                              display: 'flex',
-                              justifyContent: 'center'
-                            }}>
-                              {username && (
-                                <SmallFavButton
-                                  size='small'
-                                  className='small-fav-icon-button'
-                                  onClick={(event) => handleFavorite(event, item, username)}
-                                  sx={{
-                                    boxShadow: 3,
-                                  }}
-                                >
-                                  {topUserFav[item.id] ? <FavSolid /> : <FavOutlined />}
-                                </SmallFavButton>
-                              )}
                             </Grid>
 
                             {/* preview button */}

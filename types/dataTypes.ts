@@ -90,17 +90,14 @@ export interface SongDetails {
   
   export interface LocationState {
     songDetails?: SongDetails;
-    username?: string;
-    isFavorite?: boolean;
   }
 
   export interface SearchDataProps {
     key?: string;
-    username?: string; 
-    // showLoadingCircle?: boolean;      
+ 
 }
 
 
 export interface SongPageProps {
-  username?: string; 
+
 }

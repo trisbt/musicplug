@@ -9,9 +9,8 @@ import { grey } from '@mui/material/colors';
 import SearchCredits from './SearchCredits';
 import SearchData from './SearchData';
 import SearchByIdOrArtistSong from '../utils/SearchByIdOrArtistSong';
-import { AuthContextValue } from '@appTypes/authTypes';
 import { Artist, LocationState, ResultItem, SongDetails, SongPageProps } from '@appTypes/dataTypes';
-import { useAuth } from './Auth';
+
 
 
 const PlayButton = styled(Button)(({ theme }) => ({
@@ -37,48 +36,7 @@ const SmallPlayButton = styled(IconButton)(({ theme }) => ({
   width: '50px',
   height: '50px',
 }));
-const FavButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
-  backgroundColor: grey[900],
-  '&:hover': {
-    color: 'white',
-    backgroundColor: '#00e676'
-  },
-  fontSize: '15px',
-  width: '200px',
-  height: '50px',
-  lineHeight: '0',
 
-}));
-const SmallFavButton = styled(IconButton)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
-  backgroundColor: grey[900],
-  '&:hover': {
-    color: 'white',
-    backgroundColor: '#00e676'
-  },
-  fontSize: '15px',
-  width: '40px',
-  height: '40px',
-}));
-const FavSolid = styled(GradeIcon)(({ theme }) => ({
-  color: theme.palette.secondary.main,
-  '&:hover': {
-    color: theme.palette.secondary.dark,
-    backgroundColor: 'none',
-  },
-  width: '30px',
-  height: '30px',
-}));
-const FavOutlined = styled(GradeOutlinedIcon)(({ theme }) => ({
-  color: theme.palette.secondary.main,
-  '&:hover': {
-    backgroundColor: 'none',
-    color: theme.palette.secondary.dark,
-  },
-  width: '30px',
-  height: '30px',
-}));
 
 //progress value color function
 function determineColor(value: number): string {
@@ -109,32 +67,22 @@ const SongPage = (props: SongPageProps) => {
   const [aliasFromChild, setAliasFromChild] = useState<string | null>(null);
   const [currentlyPlayingUrl, setCurrentlyPlayingUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [fetchedData, setFetchedData] = useState<{ songDetails: ResultItem; isFavorite: boolean | null } | null>(null);
+  const [fetchedData, setFetchedData] = useState<{ songDetails: ResultItem} | null>(null);
   const { id, name, artist } = useParams();
-  const { loggedInUser } = useAuth() as AuthContextValue;
   const dataToUse = state || fetchedData;
   const songDetails = dataToUse?.songDetails;
-  const username = loggedInUser;
-  const isFavorite = dataToUse?.isFavorite;
-  const [pageFav, setPageFav] = useState<boolean | null>(isFavorite || null);
+
 
     //for navigation directly to page
     useEffect(() => {
       if (!state) {
         async function fetchData() {
-          const data = await SearchByIdOrArtistSong({ id: id, username: username });
+          const data = await SearchByIdOrArtistSong({ id: id});
           setFetchedData(data);
         }
         fetchData();
       }
-    }, [state, id, username]);
-
-    useEffect(() => {
-      setPageFav(isFavorite || null);
-      document.title = `MusicPlug: ${artist} - ${name}`;
-    }, [isFavorite, name, artist]);
-
-
+    }, [state, id]);
 
   const playAudio = (event: React.MouseEvent, previewUrl: string | null) => {
     if (audioRef.current && previewUrl) {
@@ -179,37 +127,8 @@ const SongPage = (props: SongPageProps) => {
     color: theme.palette.text.secondary,
   }));
 
-  const handleFavorite = async (event: React.MouseEvent, username: string) => {
-    if (!songDetails) {
-      console.error('songDetails is not defined.');
-      return;
-    }
-    const { id, name, artists, albums, images, key, tempo, loudness } = songDetails;
-    try {
-      const response = await fetch('/api/addFavs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, id, name, artists, albums, images, key, tempo, loudness, }),
-        credentials: 'include',
-      });
-      const data = await response.json();
-      //add like
-      if (data.isFavorite === 'added') {
-        setPageFav(true);
-        // remove like
-      } else {
-        setPageFav(false);
-      }
-    } catch (error) {
-      console.error('Error adding track to favorites:', error);
-    }
-  };
-
   return (
     <div className='song-page-container'>
-      {/* <SearchData username={username}/> */}
       {songDetails && (
         <Card sx={{
           width: '90vw',
@@ -300,33 +219,6 @@ const SongPage = (props: SongPageProps) => {
                       </svg>
                     </Link>
 
-                    {/*fav button render*/}
-                    {username && (
-                      <FavButton
-                        // variant="elevated"
-                        className='fav-icon-button'
-                        onClick={(event) => handleFavorite(event, username)}
-                        sx={{
-                          display: { xs: 'none', sm: 'none', md: 'flex' },
-                          padding: '0',
-                          paddingRight: '5px',
-                          boxShadow: 3,
-                          justifyContent: "space-evenly",
-                          borderRadius: '50px',
-                          "@media (max-width: 600px)": {
-                            // margin: '0 0 10px',
-                          }
-                        }}
-                      >
-                        {pageFav ? (
-                          <FavSolid  />
-                        ) : (
-                          <FavOutlined />
-                        )}
-                        add to Favorites
-                      </FavButton>
-                    )}
-
                     {/*play button render*/}
                     {songDetails.preview_url && (
                       <PlayButton className='preview-button' sx={{
@@ -360,25 +252,6 @@ const SongPage = (props: SongPageProps) => {
                     )}
                     <audio ref={audioRef}></audio>
 
-                    {/*small fav button render*/}
-                    {username && (
-                      <SmallFavButton
-                        // backgroundColor='red'
-                        onClick={(event) => handleFavorite(event, username)}
-                        sx={{
-                          display: { xs: 'flex', sm: 'flex', md: 'none' },
-                          boxShadow: 3,
-                          width: '3.5em',
-                          height: '3.5em',
-                        }}
-                      >
-                        {pageFav ? (
-                          <FavSolid  />
-                        ) : (
-                          <FavOutlined  />
-                        )}
-                      </SmallFavButton>
-                    )}
 
                     {/*small play button render*/}
                     {songDetails.preview_url && (

@@ -32,7 +32,7 @@ const Footer: FC = () => {
             textAlign: 'center',
             // padding: '0.5rem',
           }}>
-            Sign Up to store your favorites to use sort, filter, and Circle of Fifths wheel features.
+           Stay tuned for future updates!
           </Typography>
         </Box>
       </Box>

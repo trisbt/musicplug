@@ -33,7 +33,7 @@ const keyConvert: KeyConvertFunction = (num: number, mode: number): string => {
 function tempoRound(num: number): number {
   return Math.round(num * 2) / 2;
 }
-const SearchByIdOrArtistSong = async ({ id, username }) => {
+const SearchByIdOrArtistSong = async ({ id }) => {
   try {
     const response = await fetch(`/api/getById?id=${id}`);
     const data = await response.json();
@@ -67,26 +67,10 @@ const SearchByIdOrArtistSong = async ({ id, username }) => {
       valence: audioData.valence,
     };
     const songDetails: ResultItem = { ...basicData, ...audioFeatures };
-    let favData;
-    if (username) {
-      try {
-        const favResponse = await fetch('/api/findfav', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username, id }),
-          credentials: 'include',
-        });
-        favData = await favResponse.json();
-      } catch (error) {
-        console.error('Error fetching favorites:', error);
-      }
-    }
+
 
     const pageSongDetails = {
       songDetails: songDetails,
-      isFavorite: favData,
     }
     return pageSongDetails;
   } catch (error) {

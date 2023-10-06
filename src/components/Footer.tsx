@@ -24,7 +24,7 @@ const Footer: FC = () => {
             letterSpacing: '1px',
             textAlign: 'center',
           }}>
-            MusicPlug.com allows you to find information for any song, including BPM, Key, and Song Credits.
+            Bpmkey.com is your plug to finding information for any song, including BPM, Key, and Song Credits.
           </Typography>
           <hr />
           <Typography variant="subtitle1" color='#FFFFFF' gutterBottom sx={{

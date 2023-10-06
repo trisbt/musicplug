@@ -7,11 +7,29 @@ import spotifyController from './controllers/spotifyController';
 const app = express();
 const apiRouter = express.Router();
 
+const allowedOrigins = [
+    "http://www.bpmkey.com",
+    "https://www.bpmkey.com",
+    "http://bpmkey.com",
+    "https://bpmkey.com",
+    "http://localhost:5173" // Or whatever port your local development runs on
+  ];
+  
+  app.use(cors({
+      origin: function(origin, callback) {
+        if (!origin) return callback(null, true);  // Allow requests with no origin (like mobile apps or curl requests)
+        if (allowedOrigins.indexOf(origin) === -1) {
+          const msg = `The CORS policy for this site does not allow access from the specified Origin.`;
+          return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+      }
+  }));
+  
+// app.use(cors({
+//     origin: "http://musicplug-frontend.s3-website-us-east-1.amazonaws.com"
+// }));
 
-app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-}));
 
 // Load environment variables
 import dotenv from 'dotenv';
@@ -74,7 +92,7 @@ app.get('*', (req, res) => {
 
 
 
-const port: number = 4000;
-app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
 });

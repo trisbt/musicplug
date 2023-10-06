@@ -422,7 +422,8 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
                         }
                       }}
                     >
-                      <CardContent sx={{
+                      <CardContent  sx={{
+                        width:'80vw',
                         paddingBottom: '15px',
                         '&:last-child': {
                           paddingBottom: '15px',

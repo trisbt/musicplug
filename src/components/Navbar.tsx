@@ -13,7 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Card, Hidden } from '@mui/material';
 import Popper from '@mui/material/Popper';
-import musicpluglogow from '../assets/musicpluglogow.png';
+// import musicpluglogow from '../assets/musicpluglogow.png';
 import SearchData from './SearchData';
 
 interface MenuState {
@@ -46,32 +46,39 @@ function ResponsiveAppBar({ setOffset, offset, setResponse, response, setAudioIn
         }}
       >
         <Container maxWidth="xl">
-          <Toolbar disableGutters sx={{
+          <Toolbar  disableGutters sx={{
             minHeight: '45px',
             '@media (max-width: 600px)': {
               minHeight: '52px',
             }
           }}>
             <Box sx={{
+              position: 'relative', 
               display: 'flex',
               height: '40px',
               alignItems: 'center',
               justifyContent: 'center',
-              overflow: 'hidden' 
+              overflow: 'hidden',
             }}>
               <Card sx={{
-
                 display: 'flex',
-                height: '100px',
+                height: '40px',
                 width: '175px',
-                alignItems: 'center',
+                // alignItems: 'flex',
                 justifyContent: 'center',
                 backgroundColor: 'transparent',
                 boxShadow: '0',
-                overflow: 'hidden' 
+                overflow: 'hidden'
               }}>
                 <Link to="/" onClick={handleHomeClick}>
-                  <img src={musicpluglogow} alt="Plug Logo" className='plug-logo' />
+                  <Typography fontFamily={'logo'} sx={{
+                    fontSize: '35px',
+                    textAlign: 'center',
+                    transform: 'scaleY(1.4)',
+                  }}>
+                    BPMKEY
+                  </Typography>
+                  {/* <img src={musicpluglogow} alt="Plug Logo" className='plug-logo' /> */}
                 </Link>
               </Card>
             </Box>
@@ -109,7 +116,7 @@ function ResponsiveAppBar({ setOffset, offset, setResponse, response, setAudioIn
               />
             </Box>
 
-           
+
           </Toolbar>
         </Container>
       </AppBar >

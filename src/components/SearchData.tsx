@@ -98,7 +98,10 @@ const SearchData = ({
     const idCache: string[] = [];
     if (query.trim() !== '') {
       const searchQuery = encodeURIComponent(query);
-      fetch(`/api/search?query=${searchQuery}&offset=${newOffset}`)
+      //prod
+      fetch(`http://api.bpmkey.com/api/search?query=${searchQuery}&offset=${newOffset}`)
+      //dev
+      // fetch(`/api/search?query=${searchQuery}&offset=${newOffset}`)
         .then(res => res.json())
         .then(data => {
           data.tracks.items.forEach((item) => {
@@ -108,7 +111,10 @@ const SearchData = ({
           navigate(`/?q=${searchQuery}`)
           setResponse(prev => [...prev, ...searchData]);
           setSearchResult(query || inputField);
-          fetch(`/api/advancedSearch?query=${idCache.join(',')}`)
+          //prod
+          fetch(`http://api.bpmkey.com/api/advancedSearch?query=${idCache.join(',')}`)
+          //dev
+          // fetch(`/api/advancedSearch?query=${idCache.join(',')}`)
             .then(res => res.json())
             .then(data => {
               const additionalData = data.audio_features
@@ -177,16 +183,17 @@ const SearchData = ({
                 position: 'absolute',
                 margin: 0,
                 padding: 0,
-                top: 5,
-                left: -6,
+                top: 0,
+                left: -16,
                 // border: '2px solid black',
-                width: '95vw',
+                width: '100vw',
+
                 zIndex: 2,
                 background: 'white',
                 boxSizing: 'border-box', 
               }}
             >
-              <FormControl style={{ width: '100%' }}>
+              <FormControl style={{ width: '100%',height:'52px',}}>
                 <StyledInput
                   className='searchbox'
                   placeholder='Search for songs, artists, albums...'

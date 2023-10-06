@@ -17,6 +17,7 @@
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react-swc": "^3.3.2",
+    "aws-sdk": "^2.1471.0",
     "bcrypt": "^5.1.0",
     "chart.js": "^4.3.3",
     "chartjs-plugin-datalabels": "^2.2.0",

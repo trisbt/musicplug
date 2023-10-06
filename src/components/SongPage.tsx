@@ -37,6 +37,15 @@ const SmallPlayButton = styled(IconButton)(({ theme }) => ({
   height: '50px',
 }));
 
+const transformSpotifyURItoURL = (uri) => {
+  const match = uri.match(/spotify:track:([a-zA-Z0-9]+)/);
+
+  if (match && match[1]) {
+      return `https://open.spotify.com/track/${match[1]}`;
+  }
+  return null; // or throw an error or return the original URI, as per your needs
+}
+
 
 //progress value color function
 function determineColor(value: number): string {
@@ -211,7 +220,7 @@ const SongPage = (props: SongPageProps) => {
                   <Grid item container xs={12} alignItems='center' justifyContent='space-between' >
 
                     {/*link spotify render*/}
-                    <Link to={songDetails.track_href}>
+                    <Link to={transformSpotifyURItoURL(songDetails.uri)}>
                       <svg
                         style={{ marginLeft: '-8px', paddingTop: '5px' }}
                         xmlns="http://www.w3.org/2000/svg" width="62" height="62" viewBox="0 0 24 24">

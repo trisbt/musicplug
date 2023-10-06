@@ -16,7 +16,10 @@ const SearchCredits: React.FC<SearchCreditsProps>= ({ artists, song, onReceiveAl
   const [credits, setCredits] = useState<Credit[]>([]);
 
   useEffect(() => {
-    fetch(`/api/getCredits/?artist=${artists[0].name}&song=${song}`)
+    //prod
+    fetch(`http://api.bpmkey.com/api/getCredits/?artist=${artists[0].name}&song=${song}`)
+    //dev
+    // fetch(`/api/getCredits/?artist=${artists[0].name}&song=${song}`)
       .then(response => response.json())
       .then(res => {
         if (res.data === 'No credits available') {

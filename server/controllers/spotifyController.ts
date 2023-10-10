@@ -1,10 +1,11 @@
 import fetch from 'node-fetch';
-import dotenv from 'dotenv';
-dotenv.config();
+// import dotenv from 'dotenv';
+// dotenv.config();
 import { Request, Response, NextFunction } from 'express';
+import { fetchSecrets } from '../secrets';
 
-const client_id = process.env.client_id;
-const client_secret = process.env.client_secret;
+let client_id: string | undefined;
+let client_secret: string | undefined;
 
 interface SpotifyControllerInterface {
   getAccessToken: (req: Request, res: Response, next: NextFunction) => Promise<void | Response>;
@@ -19,6 +20,8 @@ const spotifyController: SpotifyControllerInterface = {
 
   getAccessToken: async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
     try {
+      const secrets = await fetchSecrets();
+      const { client_id, client_secret } = secrets.spotify;
       const authOptions = {
         method: 'POST',
         url: 'https://accounts.spotify.com/api/token',
@@ -126,7 +129,7 @@ const spotifyController: SpotifyControllerInterface = {
       });
 
       const audioData = await audioResponse.json();
-      
+
       const combinedResults = trackData.map((track, index) => {
         return {
           ...track,

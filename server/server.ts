@@ -3,9 +3,13 @@ import cors from 'cors';
 import path from 'path';
 import discogsSQLController from './controllers/discogsSQLController';
 import spotifyController from './controllers/spotifyController';
+import fs from 'fs';
+import https from 'https';
+
 
 const app = express();
 const apiRouter = express.Router();
+
 
 const allowedOrigins = [
     "http://www.bpmkey.com",
@@ -32,8 +36,8 @@ const allowedOrigins = [
 
 
 // Load environment variables
-import dotenv from 'dotenv';
-dotenv.config();
+// import dotenv from 'dotenv';
+// dotenv.config();
 
 
 app.use(express.json());

@@ -17,7 +17,7 @@ const SearchCredits: React.FC<SearchCreditsProps>= ({ artists, song, onReceiveAl
 
   useEffect(() => {
     //prod
-    fetch(`http://api.bpmkey.com/api/getCredits/?artist=${artists[0].name}&song=${song}`)
+    fetch(`https://api.bpmkey.com/api/getCredits/?artist=${artists[0].name}&song=${song}`)
     //dev
     // fetch(`/api/getCredits/?artist=${artists[0].name}&song=${song}`)
       .then(response => response.json())

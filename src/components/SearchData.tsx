@@ -99,7 +99,7 @@ const SearchData = ({
     if (query.trim() !== '') {
       const searchQuery = encodeURIComponent(query);
       //prod
-      fetch(`http://api.bpmkey.com/api/search?query=${searchQuery}&offset=${newOffset}`)
+      fetch(`https://api.bpmkey.com/api/search?query=${searchQuery}&offset=${newOffset}`)
       //dev
       // fetch(`/api/search?query=${searchQuery}&offset=${newOffset}`)
         .then(res => res.json())
@@ -112,9 +112,9 @@ const SearchData = ({
           setResponse(prev => [...prev, ...searchData]);
           setSearchResult(query || inputField);
           //prod
-          fetch(`http://api.bpmkey.com/api/advancedSearch?query=${idCache.join(',')}`)
+          fetch(`https://api.bpmkey.com/api/advancedSearch?query=${idCache.join(',')}`)
           //dev
-          // fetch(`/api/advancedSearch?query=${idCache.join(',')}`)
+          // fetch(`/api/advancedSearch?query=${idCache.join(',')}`) 
             .then(res => res.json())
             .then(data => {
               const additionalData = data.audio_features

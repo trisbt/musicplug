@@ -38,6 +38,7 @@ const Splash = () => {
                     },
                 }}>
                     Find A Song's Key, Tempo, and Credits
+                    {/* Under Construction check back soon */}
                 </Typography>
             </Card>
         </div>

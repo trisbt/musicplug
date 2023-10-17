@@ -12,7 +12,7 @@ interface SearchCreditsProps {
   onReceiveAlias: (alias: string[]) => void;
 }
 
-const SearchCredits: React.FC<SearchCreditsProps>= ({ artists, song, onReceiveAlias }) => {
+const SearchCredits: React.FC<SearchCreditsProps> = ({ artists, song, onReceiveAlias }) => {
   const [credits, setCredits] = useState<Credit[]>([]);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const SearchCredits: React.FC<SearchCreditsProps>= ({ artists, song, onReceiveAl
       .then(response => response.json())
       .then(res => {
         if (res.data === 'No credits available') {
-          setCredits([{ artist_name: ' No credits available as of', role: '6/1/2023' }]);
+          setCredits([{ artist_name: ' No credits available as of', role: '10/1/2023' }]);
           return;
         }
         setCredits(res.data);
@@ -33,6 +33,11 @@ const SearchCredits: React.FC<SearchCreditsProps>= ({ artists, song, onReceiveAl
         return;
       })
   }, []);
+
+  // useEffect(() => {
+  //   setCredits([{ artist_name: ' Currently updating credits check back soon', role: '10/1/2023' }]);
+  //   return;
+  // }, []);
 
   return (
     <div className='credits-container'>

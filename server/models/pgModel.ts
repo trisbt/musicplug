@@ -20,14 +20,14 @@ async function connectToDb() {
     const secrets = await fetchSecrets();
     const { username, password, engine, host, port } = secrets.postgres;
     pool = new Pool({
-      user: username,  // Generally, the user for PostgreSQL is 'postgres'. However, verify this.
+      user: username,  
       host: host,
-      database: engine,  // Here, the database name is taken from 'username'.
+      database: engine,  
       password: password,
       port: Number(port),
       ssl: { rejectUnauthorized: false }
     });
-
+    
     return pool;
   } catch (error) {
     console.error('Failed to connect to database:', error);

@@ -126,7 +126,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const location = useLocation();
   const [activeSlice, setActiveSlice] = useState<string | null>(null);
-  const [tempoSelect, setTempoSelect] = React.useState([80, 140]);
+  const [tempoSelect, setTempoSelect] = React.useState([0, 300]);
   const [sliderValue, setSliderValue] = useState([80, 140]);
   const [textFieldTempo, setTextFieldTempo] = useState('');
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
@@ -135,7 +135,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
 
   useEffect(() => {
     setActiveSlice(null);
-    setTempoSelect([80, 140]);
+    setTempoSelect([0, 300]);
   }, [data]);
   //close accordion
   useEffect(() => {
@@ -239,7 +239,7 @@ const DisplayData: React.FC<DisplayDataProps> = ({ handleLoadMore, data, audioDa
   //reset filter
   const handleReset = (event) => {
     event.preventDefault();  // To prevent the default behavior
-    setTempoSelect([80, 140]);
+    setTempoSelect([0, 300]);
     setSliderValue([80, 140]);
     setTextFieldTempo('');  // Clear the textfield
     setActiveSlice('');

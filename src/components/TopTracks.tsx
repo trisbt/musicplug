@@ -91,7 +91,7 @@ const TopTracks = () => {
         ],
         "albums": "Scarlet",
         "explicit": true,
-        "popularity": 82,
+        "popularity": 86,
         "key": "Bm",
         "tempo": 100,
         "loudness": -7.683,
@@ -154,6 +154,88 @@ const TopTracks = () => {
         "valence": 0.89
       },
       {
+        "name": "3D (feat. Jack Harlow)",
+        "images": "https://i.scdn.co/image/ab67616d0000b27399583bb32b47e87d55c6064b",
+        "id": "01qFKNWq73UfEslI0GvumE",
+        "preview_url": "https://p.scdn.co/mp3-preview/74f0838fd4469ac28b5fd6be753eb534e52b4810?cid=f0bb764e36ca4e2395b1c38f84c9764c",
+        "release_date": "2023-10-02",
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/6HaGTQPmzraVmaVxvz6EUc"
+            },
+            "href": "https://api.spotify.com/v1/artists/6HaGTQPmzraVmaVxvz6EUc",
+            "id": "6HaGTQPmzraVmaVxvz6EUc",
+            "name": "Jung Kook",
+            "type": "artist",
+            "uri": "spotify:artist:6HaGTQPmzraVmaVxvz6EUc"
+          },
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/2LIk90788K0zvyj2JJVwkJ"
+            },
+            "href": "https://api.spotify.com/v1/artists/2LIk90788K0zvyj2JJVwkJ",
+            "id": "2LIk90788K0zvyj2JJVwkJ",
+            "name": "Jack Harlow",
+            "type": "artist",
+            "uri": "spotify:artist:2LIk90788K0zvyj2JJVwkJ"
+          }
+        ],
+        "albums": "3D : The Remixes",
+        "explicit": true,
+        "popularity": 84,
+        "key": "Db",
+        "tempo": 108,
+        "loudness": -3.287,
+        "energy": 0.824,
+        "acousticness": 0.0322,
+        "analysis_url": "https://api.spotify.com/v1/audio-analysis/01qFKNWq73UfEslI0GvumE",
+        "danceability": 0.853,
+        "duration_ms": 201812,
+        "instrumentalness": 0,
+        "liveness": 0.0859,
+        "time_signature": 4,
+        "track_href": "https://api.spotify.com/v1/tracks/01qFKNWq73UfEslI0GvumE",
+        "uri": "spotify:track:01qFKNWq73UfEslI0GvumE",
+        "valence": 0.888
+      },
+      {
+        "name": "greedy",
+        "images": "https://i.scdn.co/image/ab67616d0000b27322fd802bc61db666c7c81aa8",
+        "id": "3rUGC1vUpkDG9CZFHMur1t",
+        "preview_url": "https://p.scdn.co/mp3-preview/ca7bdcb691fb64a5af8a3253b89356390664fcf1?cid=f0bb764e36ca4e2395b1c38f84c9764c",
+        "release_date": "2023-09-15",
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/45dkTj5sMRSjrmBSBeiHym"
+            },
+            "href": "https://api.spotify.com/v1/artists/45dkTj5sMRSjrmBSBeiHym",
+            "id": "45dkTj5sMRSjrmBSBeiHym",
+            "name": "Tate McRae",
+            "type": "artist",
+            "uri": "spotify:artist:45dkTj5sMRSjrmBSBeiHym"
+          }
+        ],
+        "albums": "greedy",
+        "explicit": true,
+        "popularity": 96,
+        "key": "Ebm",
+        "tempo": 111,
+        "loudness": -3.18,
+        "energy": 0.733,
+        "acousticness": 0.256,
+        "analysis_url": "https://api.spotify.com/v1/audio-analysis/3rUGC1vUpkDG9CZFHMur1t",
+        "danceability": 0.75,
+        "duration_ms": 131872,
+        "instrumentalness": 0,
+        "liveness": 0.114,
+        "time_signature": 1,
+        "track_href": "https://api.spotify.com/v1/tracks/3rUGC1vUpkDG9CZFHMur1t",
+        "uri": "spotify:track:3rUGC1vUpkDG9CZFHMur1t",
+        "valence": 0.844
+      },
+      {
         "name": "Cruel Summer",
         "images": "https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a396a61647",
         "id": "1BxfuPKGuaTgP7aM0Bbdwr",
@@ -173,7 +255,7 @@ const TopTracks = () => {
         ],
         "albums": "Lover",
         "explicit": false,
-        "popularity": 98,
+        "popularity": 99,
         "key": "A",
         "tempo": 170,
         "loudness": -5.707,
@@ -209,7 +291,7 @@ const TopTracks = () => {
         ],
         "albums": "Strangers",
         "explicit": false,
-        "popularity": 95,
+        "popularity": 96,
         "key": "G#m",
         "tempo": 170,
         "loudness": -8.307,
@@ -255,7 +337,7 @@ const TopTracks = () => {
         ],
         "albums": "MAÑANA SERÁ BONITO (BICHOTA SEASON)",
         "explicit": true,
-        "popularity": 93,
+        "popularity": 94,
         "key": "Em",
         "tempo": 170,
         "loudness": -7.455,
@@ -270,42 +352,6 @@ const TopTracks = () => {
         "track_href": "https://api.spotify.com/v1/tracks/5RqSsdzTNPX1uzkmlHCFvK",
         "uri": "spotify:track:5RqSsdzTNPX1uzkmlHCFvK",
         "valence": 0.484
-      },
-      {
-        "name": "greedy",
-        "images": "https://i.scdn.co/image/ab67616d0000b27322fd802bc61db666c7c81aa8",
-        "id": "3rUGC1vUpkDG9CZFHMur1t",
-        "preview_url": "https://p.scdn.co/mp3-preview/ca7bdcb691fb64a5af8a3253b89356390664fcf1?cid=f0bb764e36ca4e2395b1c38f84c9764c",
-        "release_date": "2023-09-15",
-        "artists": [
-          {
-            "external_urls": {
-              "spotify": "https://open.spotify.com/artist/45dkTj5sMRSjrmBSBeiHym"
-            },
-            "href": "https://api.spotify.com/v1/artists/45dkTj5sMRSjrmBSBeiHym",
-            "id": "45dkTj5sMRSjrmBSBeiHym",
-            "name": "Tate McRae",
-            "type": "artist",
-            "uri": "spotify:artist:45dkTj5sMRSjrmBSBeiHym"
-          }
-        ],
-        "albums": "greedy",
-        "explicit": true,
-        "popularity": 94,
-        "key": "Ebm",
-        "tempo": 111,
-        "loudness": -3.18,
-        "energy": 0.733,
-        "acousticness": 0.256,
-        "analysis_url": "https://api.spotify.com/v1/audio-analysis/3rUGC1vUpkDG9CZFHMur1t",
-        "danceability": 0.75,
-        "duration_ms": 131872,
-        "instrumentalness": 0,
-        "liveness": 0.114,
-        "time_signature": 1,
-        "track_href": "https://api.spotify.com/v1/tracks/3rUGC1vUpkDG9CZFHMur1t",
-        "uri": "spotify:track:3rUGC1vUpkDG9CZFHMur1t",
-        "valence": 0.844
       },
       {
         "name": "LALA",
@@ -344,6 +390,42 @@ const TopTracks = () => {
         "valence": 0.607
       },
       {
+        "name": "UN PREVIEW",
+        "images": "https://i.scdn.co/image/ab67616d0000b273c1156c6f6dedd4b9bdf89428",
+        "id": "63ui2w3QJBp8xx0c1MJB2Z",
+        "preview_url": "https://p.scdn.co/mp3-preview/64064ae2901d2fe2afec3d90fa9f73655deceb18?cid=f0bb764e36ca4e2395b1c38f84c9764c",
+        "release_date": "2023-09-25",
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/4q3ewBCX7sLwd24euuV69X"
+            },
+            "href": "https://api.spotify.com/v1/artists/4q3ewBCX7sLwd24euuV69X",
+            "id": "4q3ewBCX7sLwd24euuV69X",
+            "name": "Bad Bunny",
+            "type": "artist",
+            "uri": "spotify:artist:4q3ewBCX7sLwd24euuV69X"
+          }
+        ],
+        "albums": "UN PREVIEW",
+        "explicit": false,
+        "popularity": 92,
+        "key": "Db",
+        "tempo": 95,
+        "loudness": -3.318,
+        "energy": 0.814,
+        "acousticness": 0.0383,
+        "analysis_url": "https://api.spotify.com/v1/audio-analysis/63ui2w3QJBp8xx0c1MJB2Z",
+        "danceability": 0.786,
+        "duration_ms": 165582,
+        "instrumentalness": 0.0000367,
+        "liveness": 0.22,
+        "time_signature": 4,
+        "track_href": "https://api.spotify.com/v1/tracks/63ui2w3QJBp8xx0c1MJB2Z",
+        "uri": "spotify:track:63ui2w3QJBp8xx0c1MJB2Z",
+        "valence": 0.365
+      },
+      {
         "name": "vampire",
         "images": "https://i.scdn.co/image/ab67616d0000b273e85259a1cae29a8d91f2093d",
         "id": "1kuGVB7EU95pJObxwvfwKS",
@@ -363,7 +445,7 @@ const TopTracks = () => {
         ],
         "albums": "GUTS",
         "explicit": true,
-        "popularity": 94,
+        "popularity": 95,
         "key": "F",
         "tempo": 138,
         "loudness": -5.745,
@@ -378,98 +460,6 @@ const TopTracks = () => {
         "track_href": "https://api.spotify.com/v1/tracks/1kuGVB7EU95pJObxwvfwKS",
         "uri": "spotify:track:1kuGVB7EU95pJObxwvfwKS",
         "valence": 0.35
-      },
-      {
-        "name": "Columbia",
-        "images": "https://i.scdn.co/image/ab67616d0000b273a00a817b017c6f6bf8460be9",
-        "id": "6XbtvPmIpyCbjuT0e8cQtp",
-        "preview_url": "https://p.scdn.co/mp3-preview/e3d6df66fe67f618166a2cab858580ac8a96486a?cid=f0bb764e36ca4e2395b1c38f84c9764c",
-        "release_date": "2023-07-07",
-        "artists": [
-          {
-            "external_urls": {
-              "spotify": "https://open.spotify.com/artist/52iwsT98xCoGgiGntTiR7K"
-            },
-            "href": "https://api.spotify.com/v1/artists/52iwsT98xCoGgiGntTiR7K",
-            "id": "52iwsT98xCoGgiGntTiR7K",
-            "name": "Quevedo",
-            "type": "artist",
-            "uri": "spotify:artist:52iwsT98xCoGgiGntTiR7K"
-          }
-        ],
-        "albums": "Columbia",
-        "explicit": false,
-        "popularity": 96,
-        "key": "F",
-        "tempo": 100,
-        "loudness": -5.927,
-        "energy": 0.712,
-        "acousticness": 0.369,
-        "analysis_url": "https://api.spotify.com/v1/audio-analysis/6XbtvPmIpyCbjuT0e8cQtp",
-        "danceability": 0.668,
-        "duration_ms": 186000,
-        "instrumentalness": 0.0000213,
-        "liveness": 0.108,
-        "time_signature": 4,
-        "track_href": "https://api.spotify.com/v1/tracks/6XbtvPmIpyCbjuT0e8cQtp",
-        "uri": "spotify:track:6XbtvPmIpyCbjuT0e8cQtp",
-        "valence": 0.264
-      },
-      {
-        "name": "LADY GAGA",
-        "images": "https://i.scdn.co/image/ab67616d0000b2732fb583ed96f8f35cbf2897ba",
-        "id": "7mXuWTczZNxG5EDcjFEuJR",
-        "preview_url": "https://p.scdn.co/mp3-preview/ec439edcef8f1b71e88cfeb7d200db274901123b?cid=f0bb764e36ca4e2395b1c38f84c9764c",
-        "release_date": "2023-06-29",
-        "artists": [
-          {
-            "external_urls": {
-              "spotify": "https://open.spotify.com/artist/12GqGscKJx3aE4t07u7eVZ"
-            },
-            "href": "https://api.spotify.com/v1/artists/12GqGscKJx3aE4t07u7eVZ",
-            "id": "12GqGscKJx3aE4t07u7eVZ",
-            "name": "Peso Pluma",
-            "type": "artist",
-            "uri": "spotify:artist:12GqGscKJx3aE4t07u7eVZ"
-          },
-          {
-            "external_urls": {
-              "spotify": "https://open.spotify.com/artist/6Sbl0NT50roqWvy746MfVf"
-            },
-            "href": "https://api.spotify.com/v1/artists/6Sbl0NT50roqWvy746MfVf",
-            "id": "6Sbl0NT50roqWvy746MfVf",
-            "name": "Gabito Ballesteros",
-            "type": "artist",
-            "uri": "spotify:artist:6Sbl0NT50roqWvy746MfVf"
-          },
-          {
-            "external_urls": {
-              "spotify": "https://open.spotify.com/artist/7Gi6gjaWy3DxyilpF1a8Is"
-            },
-            "href": "https://api.spotify.com/v1/artists/7Gi6gjaWy3DxyilpF1a8Is",
-            "id": "7Gi6gjaWy3DxyilpF1a8Is",
-            "name": "Junior H",
-            "type": "artist",
-            "uri": "spotify:artist:7Gi6gjaWy3DxyilpF1a8Is"
-          }
-        ],
-        "albums": "GÉNESIS",
-        "explicit": true,
-        "popularity": 94,
-        "key": "Dm",
-        "tempo": 140,
-        "loudness": -7.118,
-        "energy": 0.736,
-        "acousticness": 0.216,
-        "analysis_url": "https://api.spotify.com/v1/audio-analysis/7mXuWTczZNxG5EDcjFEuJR",
-        "danceability": 0.646,
-        "duration_ms": 212878,
-        "instrumentalness": 0,
-        "liveness": 0.415,
-        "time_signature": 3,
-        "track_href": "https://api.spotify.com/v1/tracks/7mXuWTczZNxG5EDcjFEuJR",
-        "uri": "spotify:track:7mXuWTczZNxG5EDcjFEuJR",
-        "valence": 0.873
       }
     ]
   );
@@ -499,39 +489,39 @@ const TopTracks = () => {
     }
   };
   //old fetch for top tracks
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     try {
-  //       const topTracksResponse = await fetch('/api/toptracks');
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const topTracksResponse = await fetch('/api/toptracks');
 
-  //       const rawCombinedData = await topTracksResponse.json();
+        const rawCombinedData = await topTracksResponse.json();
 
-  //       const processedData = rawCombinedData.map(item => {
-  //         const { name, preview_url, explicit, popularity, artists, id } = item;
-  //         const images = item.album.images[0].url;
-  //         const release_date = item.album.release_date;
-  //         const albums = item.album.name;
-  //         const key = keyConvert(item.key, item.mode);
-  //         const tempo = tempoRound(item.tempo);
-  //         const { loudness, energy, acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence } = item;
+        const processedData = rawCombinedData.map(item => {
+          const { name, preview_url, explicit, popularity, artists, id } = item;
+          const images = item.album.images[0].url;
+          const release_date = item.album.release_date;
+          const albums = item.album.name;
+          const key = keyConvert(item.key, item.mode);
+          const tempo = tempoRound(item.tempo);
+          const { loudness, energy, acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence } = item;
 
-  //         return {
-  //           name, images, id, preview_url, release_date, artists, albums, explicit, popularity,
-  //           key, tempo, loudness, energy, acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence
-  //         };
-  //       });
-  //       // console.log(processedData);
-  //       setCombinedTracks(processedData);
+          return {
+            name, images, id, preview_url, release_date, artists, albums, explicit, popularity,
+            key, tempo, loudness, energy, acousticness, analysis_url, danceability, duration_ms, instrumentalness, liveness, time_signature, track_href, uri, valence
+          };
+        });
+        // console.log(processedData);
+        setCombinedTracks(processedData);
 
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   }
+      } catch (err) {
+        console.log(err);
+      }
+    }
 
-  //   fetchData();
-  // }, []);
+    fetchData();
+  }, []);
 
-  // console.log(combinedTracks)
+  console.log(combinedTracks)
   return (
     <div>
 
@@ -625,7 +615,7 @@ const TopTracks = () => {
                       }}
                     >
                       <CardContent sx={{
-                         width:'80vw',
+                        width: '80vw',
                         paddingBottom: '15px',
                         '&:last-child': {
                           paddingBottom: '15px',

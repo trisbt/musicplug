@@ -82,7 +82,7 @@ const Footer: FC = () => {
           </Typography>
           <Typography variant="subtitle2" color='text.secondary' gutterBottom sx={{
           }}>
-            Credits data provided by Discogs Monthly Data Dumps - last updated 06-01-2023
+            Credits data provided by Discogs Monthly Data Dumps - last updated 10-15-2023
           </Typography>
 
         </Box>

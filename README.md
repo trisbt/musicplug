@@ -1,6 +1,6 @@
-# BpmKey
+# MusicPlug
 
-BpmKey is a song search engine powered by the Spotify and Discogs monthly data dumps.
+MusicPlug is a song search engine powered by the Spotify and Discogs monthly data dumps.
 
 ## Features
 
